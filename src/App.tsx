@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, LayoutDashboard, CheckCircle2, Circle, Workflow, Grid } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';

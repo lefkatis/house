@@ -209,7 +209,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
 
   }, [highlightedNode, initialEdges, setNodes, setEdges]);
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+  const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     setHighlightedNode(prev => prev === node.id ? null : node.id);
   }, []);
 
