@@ -129,8 +129,10 @@ export const PROVISIONS: Provision[] = [
   { id: 'mix_9', name: 'Inverter Φωτοβολταϊκών & Μπαταρία (Cat6 & Σωληνώσεις)', room: '⚙️ Μηχανοστάσιο', wall: 'Τοίχος Φωτοβολταϊκών', type: '🔌 Πρίζες', completed: false },
   
   // --- Βοηθητικό Σπίτι ---
-  { id: 'aux_1', name: 'Αναμονές Κρύο/Ζεστό Νερό & Αποχέτευση (Μπάνιο/Κουζίνα)', room: '🏠 Βοηθητικό Σπίτι', wall: 'Υδραυλικά', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'aux_2', name: 'Υποπίνακας Ρεύματος (Αυτόνομο Σύστημα)', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🔌 Πρίζες', completed: false },
-  { id: 'aux_3', name: 'Cat6 Σύνδεση με Κυρίως Σπίτι', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'aux_4', name: 'Πρίζες & Φωτισμός Βοηθητικού Χώρου', room: '🏠 Βοηθητικό Σπίτι', wall: 'Γενικός Χώρος', type: '💡 Φώτα', completed: false },
+  { id: 'aux_1', name: 'Αναμονές Κρύο/Ζεστό Νερό & Αποχέτευση', room: '🏠 Βοηθητικό Σπίτι', wall: 'Τοίχος Κουζίνας', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'aux_2', name: 'Πρίζες Κουζίνας & Συσκευών', room: '🏠 Βοηθητικό Σπίτι', wall: 'Τοίχος Κουζίνας', type: '🔌 Πρίζες', completed: false },
+  { id: 'aux_3', name: 'Πρίζες Κομοδίνων & Φόρτισης', room: '🏠 Βοηθητικό Σπίτι', wall: 'Τοίχος Κρεβατιού', type: '🔌 Πρίζες', completed: false },
+  { id: 'aux_4', name: 'Φωτισμός Ανάγνωσης', room: '🏠 Βοηθητικό Σπίτι', wall: 'Τοίχος Κρεβατιού', type: '💡 Φώτα', completed: false },
+  { id: 'aux_5', name: 'Υποπίνακας Ρεύματος (Αυτόνομο Σύστημα)', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🔌 Πρίζες', completed: false },
+  { id: 'aux_6', name: 'Cat6 Σύνδεση με Κυρίως Σπίτι', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🖥️ Server Cabinet', completed: false },
 ];
