@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "google-docs-server": {
+      "serverUrl": "https://developerknowledge.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "timeout": 300000
+    }
+  }
+}
