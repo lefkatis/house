@@ -1,9 +1,9 @@
-export const CATEGORIES = [
+export const TYPES = [
   '💡 Φώτα',
   '🔌 Πρίζες',
   '🚰 Υδραυλικά',
-  '🎨 Διακόσμηση',
   '🔒 Ασφάλεια',
   '🔧 Συντήρηση',
   '🖥️ Server Cabinet',
+  '📡 Έξυπνο Σπίτι'
 ];
