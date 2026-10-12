@@ -11,7 +11,8 @@ import {
   Sun,
   Moon,
   Monitor,
-  Home
+  Home,
+  Briefcase
 } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { ROOMS } from './data/rooms';
@@ -20,6 +21,7 @@ import Flow from './Flow';
 import ProcurementView from './ProcurementView';
 import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
+import OffersView from './OffersView';
 import { IECSymbol } from './components/IECSymbol';
 
 export default function App() {
@@ -28,7 +30,7 @@ export default function App() {
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [hoveredType, setHoveredType] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers'>('grid');
 
   // Theme state: dark | light | system
   const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
@@ -143,6 +145,13 @@ export default function App() {
                 <FileText size={14} />
                 <span>Γενικές Οδηγίες</span>
               </button>
+              <button 
+                onClick={() => setViewMode('offers')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+              >
+                <Briefcase size={14} />
+                <span>Προσφορές Μελετών</span>
+              </button>
             </div>
 
             {/* Dark / Light / System Theme Switcher */}
@@ -179,6 +188,8 @@ export default function App() {
           <ProcurementView />
         ) : viewMode === 'rules' ? (
           <GeneralRulesView />
+        ) : viewMode === 'offers' ? (
+          <OffersView />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
             
