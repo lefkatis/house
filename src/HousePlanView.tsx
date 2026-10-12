@@ -48,7 +48,7 @@ const SCHEMATIC_ROOMS = [
   { id: '🛏️ Bedroom 2', name: '🛏️ Bedroom 2', x: 240, y: 520, w: 200, h: 180, color: 'violet' },
   { id: '🚽 WC - Main', name: '🚽 WC - Main', x: 460, y: 520, w: 120, h: 180, color: 'pink' },
   { id: '🛏️ Master Bedroom', name: '🛏️ Master Bedroom', x: 600, y: 520, w: 260, h: 180, color: 'indigo' },
-  { id: '🚽 Ensuite Bathroom', name: '🚽 Ensuite Bathroom', x: 880, y: 520, w: 100, h: 180, color: 'pink' },
+  { id: '🚽 WC Ensuite', name: '🚽 WC Ensuite', x: 880, y: 520, w: 100, h: 180, color: 'pink' },
 
   // Auxiliary House (Detached)
   { id: '🏠 Βοηθητικό Σπίτι', name: '🏠 Βοηθητικό Σπίτι', x: 20, y: 720, w: 960, h: 90, color: 'sky' }

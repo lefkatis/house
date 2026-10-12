@@ -112,8 +112,8 @@ export const BLUEPRINT_ROOMS: BlueprintRoomZone[] = [
     color: '#8b5cf6'
   },
   {
-    id: '🚽 Ensuite Bathroom',
-    name: 'Μπάνιο Master (Ensuite)',
+    id: '🚽 WC Ensuite',
+    name: 'WC Ensuite',
     x: 60.5,
     y: 57.5,
     w: 3.5,

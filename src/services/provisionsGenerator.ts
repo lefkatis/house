@@ -21,7 +21,7 @@ export function generateProvisionsFromAnswers(answers: QuestionnaireAnswers) {
 
   if (answers.hasMasterEnsuite) {
     rooms.push('🛏️ Master Bedroom');
-    rooms.push('🚽 Ensuite Bathroom');
+    rooms.push('🚽 WC Ensuite');
   } else {
     rooms.push('🛏️ Master Bedroom');
   }

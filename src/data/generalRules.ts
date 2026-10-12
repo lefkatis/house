@@ -31,7 +31,7 @@ export const GENERAL_RULES: GeneralRule[] = [
     id: 'rule_bathroom_sockets',
     title: 'Πρότυπα Ασφαλείας Μπάνιων Κύπρου (BS 7671)',
     category: '🔌 Πρίζες & Διακόπτες',
-    scope: 'Όλα τα μπάνια και WC (WC Main, Ensuite, WC Ξένων)',
+    scope: 'Όλα τα μπάνια και WC (WC Main, WC Ensuite, WC Ξένων)',
     rule: 'Απαγορεύονται κοινές πρίζες 13A εντός των υγρών ζωνών του μπάνιου βάσει των κανονισμών της ΑΗΚ / BS 7671.',
     criticalRequirement: 'Χρήση αποκλειστικά Shaver Supply Unit IP44 (BS EN 61558-2-5) με ενσωματωμένο μετασχηματιστή απομόνωσης 230V/115V δίπλα στον καθρέφτη/νιπτήρα.',
     notes: 'Ασφαλής τροφοδοσία για ξυριστικές μηχανές και ηλεκτρικές οδοντόβουρτσες.'
@@ -85,7 +85,7 @@ export const GENERAL_RULES: GeneralRule[] = [
     id: 'rule_ventilation',
     title: 'Μηχανικός Εξαερισμός σε Όλα τα Μπάνια & Πλυσταριό',
     category: '🚰 Υδραυλικά & HVAC',
-    scope: 'WC Main, Ensuite, WC Ξένων, Πλυσταριό',
+    scope: 'WC Main, WC Ensuite, WC Ξένων, Πλυσταριό',
     rule: 'Πρόνοια ηλεκτρικής τροφοδοσίας στην οροφή για αθόρυβους μηχανικούς εξαεριστήρες.',
     criticalRequirement: 'Αναμονή 230V με σύνδεση στο φως ή σε ξεχωριστό διακόπτη/χρονοδιακόπτη (Timer CRZ).',
     notes: 'Απαραίτητο για ταχεία απομάκρυνση υδρατμών και αποτροπή μούχλας.'

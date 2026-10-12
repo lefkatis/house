@@ -7,7 +7,7 @@ export const ROOMS = [
   '🛏️ Bedroom 2',
   '🛏️ Master Bedroom',
   '🚽 WC - Main',
-  '🚽 Ensuite Bathroom',
+  '🚽 WC Ensuite',
   '🚽 WC Ξένων',
   '🧺 Πλυσταριό',
   '🚪 Χώρος Εισόδου',

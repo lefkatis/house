@@ -163,11 +163,11 @@ export const PROVISIONS: Provision[] = [
   { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
 
-  // Ensuite Bathroom
-  { id: 'ens_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 Ensuite Bathroom', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
-  { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 Ensuite Bathroom', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
-  { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 Ensuite Bathroom', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
-  { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 Ensuite Bathroom', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
+  // WC Ensuite
+  { id: 'ens_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 WC Ensuite', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
+  { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ensuite', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ensuite', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
+  { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // WC Ξένων (χωρίς πετσετοκρεμάστρα)
   { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
@@ -175,8 +175,8 @@ export const PROVISIONS: Provision[] = [
   { id: 'wcx_3', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ξένων', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Πλυσταριό ---
-  { id: 'ply_1', name: 'Πρίζες 16A (Πλυντήριο / Στεγνωτήριο)', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
-  { id: 'ply_2', name: 'Παροχή & Αποχέτευση Νερού', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'ply_1', name: 'Πρίζες (Πλυντήριο / Στεγνωτήριο)', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
+  { id: 'ply_2', name: 'Παροχή Νερού', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🚰 Υδραυλικά', completed: false },
   { id: 'ply_3', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan / Ventilation)', room: '🧺 Πλυσταριό', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'ply_4', name: 'Μαγνητικές Επαφές (Αν υπάρχει εξωτερική πόρτα)', room: '🧺 Πλυσταριό', wall: 'Πόρτα', type: '🔒 Ασφάλεια', completed: false },
 

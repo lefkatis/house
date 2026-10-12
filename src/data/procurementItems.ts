@@ -349,7 +349,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€110 - €220',
     quantity: 2,
     unit: 'τεμ.',
-    rooms: ['🚽 WC - Main', '🚽 Ensuite Bathroom'],
+    rooms: ['🚽 WC - Main', '🚽 WC Ensuite'],
     isTask: true,
     taskDescription: 'Επιλογή διαστάσεων, ισχύος (400W-600W) και φινιρίσματος (Chrome/Matte Black) για το κυρίως μπάνιο και το ensuite. (Εξαιρείται το WC Ξένων).',
     notes: 'Σύνδεση στην πρόνοια 230V με ασφαλειοδιακόπτη Switched Fused Spur εκτός Zone 2.',
@@ -366,7 +366,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€35 - €55',
     quantity: 4,
     unit: 'τεμ.',
-    rooms: ['🚽 WC - Main', '🚽 Ensuite Bathroom', '🚽 WC Ξένων', '🧺 Πλυσταριό'],
+    rooms: ['🚽 WC - Main', '🚽 WC Ensuite', '🚽 WC Ξένων', '🧺 Πλυσταριό'],
     isTask: false,
     notes: 'Αθόρυβη εξαγωγή υγρασίας και οσμών με χρονοκαθυστέρηση σβησίματος. Τοποθέτηση στην οροφή.',
     purchased: false
@@ -384,7 +384,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€24 - €36',
     quantity: 3,
     unit: 'τεμ.',
-    rooms: ['🚽 WC - Main', '🚽 Ensuite Bathroom', '🚽 WC Ξένων'],
+    rooms: ['🚽 WC - Main', '🚽 WC Ensuite', '🚽 WC Ξένων'],
     isTask: false,
     notes: 'Υποχρεωτικό για πλήρη συμβατότητα με τους κανονισμούς ηλεκτροδότησης Κύπρου (British Standards BS 7671). Ενσωματώνει μετασχηματιστή απομόνωσης για ασφάλεια σε υγρούς χώρους.',
     purchased: false
