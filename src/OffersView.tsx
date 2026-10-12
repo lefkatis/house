@@ -15,19 +15,34 @@ import {
   Download,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  RotateCcw
 } from 'lucide-react';
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
 import { getAssetUrl } from './utils/assets';
 
-const STORAGE_KEY = 'pronies_vendor_offers_v2';
+const STORAGE_KEY = 'pronies_vendor_offers_v6';
 
 export default function OffersView() {
   const [offers, setOffers] = useState<VendorOffer[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed: VendorOffer[] = JSON.parse(saved);
+        // Ensure all initial vendors exist and have their default documents if empty
+        return INITIAL_VENDOR_OFFERS.map(initial => {
+          const match = parsed.find(p => p.id === initial.id);
+          if (!match) return initial;
+          return {
+            ...initial,
+            ...match,
+            // Keep initial documents if saved documents are missing or empty
+            documents: (match.documents && match.documents.length > 0) ? match.documents : initial.documents,
+            vendorName: initial.vendorName,
+            contactPerson: initial.contactPerson || match.contactPerson,
+            pricingBreakdown: match.pricingBreakdown || initial.pricingBreakdown,
+          };
+        });
       }
     } catch (e) {
       console.error('Failed to load offers from localStorage', e);
@@ -261,9 +276,35 @@ export default function OffersView() {
           );
         })}
 
+        <a
+          href="https://drive.google.com/drive/folders/1Dp7fUUe6-rfLnQaIRP7BNPJq_tz5-f2X"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all border border-indigo-200 dark:border-indigo-800/60 bg-indigo-50/80 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 whitespace-nowrap ml-auto"
+          title="Άνοιγμα φακέλου House construction στο Google Drive"
+        >
+          <FolderOpen size={14} className="text-indigo-600 dark:text-indigo-400" />
+          <span>Google Drive Φάκελος</span>
+          <ExternalLink size={11} />
+        </a>
+
+        <button
+          onClick={() => {
+            if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 3 προσφορών με όλα τα τεύχη PDF;')) {
+              setOffers(INITIAL_VENDOR_OFFERS);
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_VENDOR_OFFERS));
+            }
+          }}
+          className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium transition-all border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+          title="Επαναφορά αρχικών δεδομένων προσφορών"
+        >
+          <RotateCcw size={13} />
+          <span className="hidden sm:inline">Επαναφορά</span>
+        </button>
+
         <button
           onClick={() => setSubViewMode('compare')}
-          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ml-auto ${
+          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
             viewMode === 'compare'
               ? 'bg-purple-600 text-white border-purple-600 shadow-md'
               : 'bg-white dark:bg-neutral-900/60 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-200'
@@ -778,15 +819,49 @@ export default function OffersView() {
                   </div>
                 </div>
 
-                {/* PDF Embed iFrame */}
-                <div className="flex-1 w-full bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden relative min-h-[500px]">
-                  <iframe
-                    key={currentDoc.id}
-                    src={getAssetUrl(currentDoc.drivePreviewUrl)}
-                    className="w-full h-full min-h-[500px] border-0"
-                    title={currentDoc.title}
-                    allow="autoplay"
-                  />
+                {/* PDF Embed / Object */}
+                <div className="flex-1 w-full bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden relative min-h-[550px] flex flex-col">
+                  {currentDoc.drivePreviewUrl.includes('drive.google.com') ? (
+                    <iframe
+                      key={currentDoc.id}
+                      src={currentDoc.drivePreviewUrl}
+                      className="w-full flex-1 min-h-[550px] border-0"
+                      title={currentDoc.title}
+                      allow="autoplay"
+                    />
+                  ) : (
+                    <object
+                      key={currentDoc.id}
+                      data={getAssetUrl(currentDoc.drivePreviewUrl)}
+                      type="application/pdf"
+                      className="w-full flex-1 min-h-[550px] border-0"
+                    >
+                      <iframe
+                        src={getAssetUrl(currentDoc.drivePreviewUrl)}
+                        className="w-full flex-1 min-h-[550px] border-0"
+                        title={currentDoc.title}
+                      >
+                        <div className="p-8 text-center flex flex-col items-center justify-center h-full">
+                          <FileText size={48} className="text-neutral-400 mb-3" />
+                          <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+                            {currentDoc.title}
+                          </p>
+                          <p className="text-xs text-neutral-500 mb-4 max-w-md">
+                            Εάν το αρχείο PDF δεν προβάλλεται αυτόματα στο πρόγραμμα περιήγησης, ανοίξτε το απευθείας:
+                          </p>
+                          <a
+                            href={getAssetUrl(currentDoc.driveViewUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-md inline-flex items-center gap-2"
+                          >
+                            <ExternalLink size={14} />
+                            Άνοιγμα PDF σε Νέα Καρτέλα
+                          </a>
+                        </div>
+                      </iframe>
+                    </object>
+                  )}
                 </div>
               </>
             ) : (

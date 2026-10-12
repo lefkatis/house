@@ -4,6 +4,12 @@
       "serverUrl": "https://developerknowledge.googleapis.com/mcp",
       "authProviderType": "google_credentials",
       "timeout": 300000
+    },
+    "cloudflare-api": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "authProviderType": "bearer",
+      "token": "651a2e0ccd222384bf7b6e26c3d62d53:TMis62IvwZLXduwS:JcJuusidky56U9Ncz1junyTK32vcsNZ1"
     }
   }
 }

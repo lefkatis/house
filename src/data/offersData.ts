@@ -58,14 +58,14 @@ export interface VendorOffer {
 }
 
 export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
-  // 1. Μελετητής 1 (CA-PR-2660)
+  // 1. CA Consultants (CA-PR-2660)
   {
     id: 'vendor_1',
-    vendorName: 'Μελετητής 1 (CA-PR-2660)',
+    vendorName: 'CA Consultants (C.A. MEP Engineering)',
     referenceCode: 'CA-PR-2660',
     status: 'received',
     statusLabel: 'Λήφθηκε & Σε Αξιολόγηση',
-    contactPerson: 'Τεχνικό Γραφείο Μελετών',
+    contactPerson: 'C.A. Engineering Consultants',
     scope: ['Μηχανολογική Μελέτη', 'Ηλεκτρολογική Μελέτη', 'Επίβλεψη Η/Μ'],
     electricalCostEur: null,
     mechanicalCostEur: null,
@@ -74,7 +74,7 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
     totalCostEur: null,
     paymentTerms: 'Σταδιακή εξόφληση ανά παραδοτέο',
     deliveryTimeWeeks: '3-4 εβδομάδες',
-    notes: 'Προσφορά για την κατοικία Ανδρέα & Μαρίας στα Λατσιά (ΤΕΜ. 2021). Περιλαμβάνει 2 ξεχωριστά τεύχη: Μηχανολογική Μελέτη (CA-PR-2660) και Ηλεκτρολογική Μελέτη.',
+    notes: 'Προσφορά CA Consultants (CA-PR-2660) για την κατοικία Ανδρέα & Μαρίας στα Λατσιά (ΤΕΜ. 2021). Περιλαμβάνει 2 ξεχωριστά τεύχη: Μηχανολογική Μελέτη (CA-PR-2660) και Ηλεκτρολογική Μελέτη.',
     documents: [
       {
         id: 'doc_ca_pr_2660_mech',
@@ -88,7 +88,7 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
       },
       {
         id: 'doc_ca_pr_2660_elec',
-        title: 'Ηλεκτρολογικά',
+        title: 'Ηλεκτρολογικά (CΑ-PR-2660)',
         type: 'electrical',
         fileName: 'Προσφορά Ηλεκτρολογικών Οικίας Ανδρέα & Μαρίας στα Λατσιά ΤΕΜ.2021 (Aνδρέας Λευκάτης).pdf',
         driveViewUrl: 'https://drive.google.com/file/d/14V39SedX5_DqHEne-T5tKHp7KTh_L-NI/view?usp=drivesdk',
@@ -122,7 +122,7 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
   // 2. LOUIS VACANAS MEP Consulting Engineers LLC
   {
     id: 'vendor_2',
-    vendorName: 'LOUIS VACANAS MEP Consulting Engineers',
+    vendorName: 'Louis Vacanas MEP Consulting Engineers LLC',
     referenceCode: '39-2026/1 ΛΒ',
     status: 'received',
     statusLabel: 'Λήφθηκε (€4,100 + ΦΠΑ)',
@@ -145,18 +145,18 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
     totalCostEur: 4100,
     paymentTerms: 'Διακανονισμός εντός 15 ημερών από την υποβολή τιμολογίου. Πληρωμή επίβλεψης σε 2 στάδια (μέσο & τέλος).',
     deliveryTimeWeeks: '3-4 εβδομάδες',
-    notes: 'Πλήρης προσφορά 15 σελίδων από το γραφείο Louis Vacanas. Καλύπτει Μελέτη, Επίβλεψη, Παραλαβή και έκδοση ΠΕΑ. Συνοδεύεται από Ασφάλεια Επαγγελματικής Ευθύνης €1,000,000 (Κεντρική Ασφαλιστική) και αναλυτικό βιογραφικό έργων.',
+    notes: 'Πλήρης προσφορά 15 σελίδων από το γραφείο Louis Vacanas MEP Consulting Engineers LLC (Μελετητής: Λούης Βακανάς). Καλύπτει Μελέτη, Επίβλεψη, Παραλαβή και έκδοση ΠΕΑ. Συνοδεύεται από Ασφάλεια Επαγγελματικής Ευθύνης €1,000,000 (Κεντρική Ασφαλιστική) και αναλυτικό βιογραφικό έργων.',
     documents: [
       {
         id: 'doc_vacanas_full',
-        title: 'Προσφορά Η/Μ & Ενεργειακής Μελέτης (15 Σελ.)',
+        title: 'Προσφορά Η/Μ & Ενεργειακής Μελέτης (39-2026)',
         type: 'combined',
-        fileName: 'Προσφορά_Louis_Vacanas_39-2026_Λατσιά.pdf',
+        fileName: '39-2026 Προσφορά - Louis Vacanas MEP Consulting Engineers.pdf',
         driveViewUrl: '/offers/offer_louis_vacanas.pdf',
         drivePreviewUrl: '/offers/offer_louis_vacanas.pdf',
         localFileUrl: '/offers/offer_louis_vacanas.pdf',
         uploadDate: '24/09/2026',
-        notes: 'Επίσημη υπογεγραμμένη προσφορά (Αρ. Πρ.: 39-2026/1 ΛΒ). Περιλαμβάνει ανάλυση σταδίων μελέτης/επίβλεψης, ασφάλεια επαγγελματικής ευθύνης (€1.000.000) και portfolio έργων.'
+        notes: 'Επίσημη υπογεγραμμένη προσφορά (Αρ. Πρ.: 39-2026/1 ΛΒ - Μελετητής: Λούης Βακανάς). Περιλαμβάνει ανάλυση σταδίων μελέτης/επίβλεψης, ασφάλεια επαγγελματικής ευθύνης (€1.000.000) και portfolio έργων.'
       }
     ],
     pricingBreakdown: {
@@ -203,7 +203,7 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
   {
     id: 'vendor_3',
     vendorName: 'THE E&E MEP STUDIO LLC',
-    referenceCode: 'Ref.808.OF.1/2025',
+    referenceCode: 'PR.808-MEP-ELEC-MECH',
     status: 'received',
     statusLabel: 'Λήφθηκε (€6,100 + ΦΠΑ)',
     contactPerson: 'Ευριπίδης Παπαχριστοφόρου (Ηλεκτρομηχανολόγος Μηχανικός)',
@@ -224,18 +224,18 @@ export const INITIAL_VENDOR_OFFERS: VendorOffer[] = [
     totalCostEur: 6100,
     paymentTerms: 'Ανά στάδιο εργασιών (Σχεδιασμός, Προσφορές, Επίβλεψη).',
     deliveryTimeWeeks: '3-4 εβδομάδες',
-    notes: 'Προσφορά από το γραφείο The E&E MEP Studio LLC (Ref.808.OF.1/2025). Χωρίζεται αυστηρά σε 3 διακριτά στάδια: Σχεδιασμός/Άδεια (€3.900), Προσφορές (€1.200) και Επίβλεψη (€1.000).',
+    notes: 'Προσφορά από το γραφείο THE E&E MEP STUDIO LLC (Κωδ: PR.808-MEP-ELEC-MECH / Ref.808.OF.1/2025 - Μελετητής: Ευριπίδης Παπαχριστοφόρου). Χωρίζεται σε 3 διακριτά στάδια: Σχεδιασμός/Άδεια (€3.900), Προσφορές (€1.200) και Επίβλεψη (€1.000).',
     documents: [
       {
         id: 'doc_mep_studio_full',
-        title: 'Προσφορά Η/Μ Μελέτης, Προσφορών & Επίβλεψης (3 Σελ.)',
+        title: 'Προσφορά Η/Μ Μελέτης, Προσφορών & Επίβλεψης (PR.808)',
         type: 'combined',
-        fileName: 'Προσφορά_THE_MEP_STUDIO_808-OF-1-2025.pdf',
+        fileName: 'PR.808-MEP-ELEC-MECH - THE E&E MEP STUDIO.pdf',
         driveViewUrl: '/offers/offer_the_mep_studio.pdf',
         drivePreviewUrl: '/offers/offer_the_mep_studio.pdf',
         localFileUrl: '/offers/offer_the_mep_studio.pdf',
         uploadDate: '08/10/2025',
-        notes: 'Επίσημη προσφορά 3 σελίδων με πλήρη διαχωρισμό σταδίων Α.Ο., προσφοροδότησης εργολάβων και 10 επισκέψεων επίβλεψης.'
+        notes: 'Επίσημη προσφορά από τον μελετητή Ευριπίδη Παπαχριστοφόρου με πλήρη διαχωρισμό σταδίων Α.Ο., προσφοροδότησης εργολάβων και 10 επισκέψεων επίβλεψης.'
       }
     ],
     pricingBreakdown: {
