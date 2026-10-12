@@ -48,7 +48,15 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'kou_5', name: 'Διακόπτης Σκουπιδοφάγου', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'kou_isl_1', name: 'Χωνευτές / Pop-up Πρίζες Πάγκου Νησίδας (13A για Μικροσυσκευές)', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
+  { 
+    id: 'kou_isl_1', 
+    name: 'Χωνευτές / Pop-up Πρίζες Νησίδας (Πάγκος ή Πλαϊνό Panel, 13A)', 
+    room: '🍳 Κουζίνα', 
+    wall: 'Νησίδα (Πλαϊνό ή Πάγκος)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Δυνατότητα τοποθέτησης είτε pop-up στον πάγκο είτε χωνευτά στο πλαϊνό panel της νησίδας'
+  },
   { id: 'kou_isl_2', name: 'Εφεδρική Πρίζα 13A Νησίδας', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω / Πάγκος', type: '💡 Φώτα', completed: false },
@@ -204,7 +212,7 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_10', name: 'Γεώτρηση (Πρόνοια, Αναμονές Ρεύματος & Αντλίας)', room: '🌳 Κήπος / Πισίνα', wall: 'Μηχανοστάσιο Γεώτρησης', type: '🚰 Υδραυλικά', completed: false },
 
   // --- Parking ---
-  { id: 'par_1', name: 'Push Button Control', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'par_1', name: 'Button', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'par_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
   { id: 'par_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
   { id: 'par_4', name: 'PoE Κάμερα Parking', room: '🚗 Parking', wall: 'Οροφή Parking', type: '🔒 Ασφάλεια', completed: false },
