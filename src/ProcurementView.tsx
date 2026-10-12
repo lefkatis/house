@@ -30,12 +30,20 @@ export default function ProcurementView() {
   const filteredItems = useMemo(() => {
     return items.filter(item => {
       // Category filter
-      if (selectedCategory !== 'ALL' && item.category !== selectedCategory) {
-        return false;
+      if (selectedCategory !== 'ALL') {
+        if (selectedCategory.includes('Εργασίες Έρευνας')) {
+          if (!item.isTask) return false;
+        } else {
+          if (item.category !== selectedCategory) return false;
+          // Mode filter (all / products / tasks) only applies within normal categories
+          if (filterMode === 'tasks' && !item.isTask) return false;
+          if (filterMode === 'products' && item.isTask) return false;
+        }
+      } else {
+        // Mode filter (all / products / tasks)
+        if (filterMode === 'tasks' && !item.isTask) return false;
+        if (filterMode === 'products' && item.isTask) return false;
       }
-      // Mode filter (all / products / tasks)
-      if (filterMode === 'tasks' && !item.isTask) return false;
-      if (filterMode === 'products' && item.isTask) return false;
 
       // Search query
       if (searchQuery.trim()) {
@@ -44,8 +52,9 @@ export default function ProcurementView() {
         const matchBrand = item.brand?.toLowerCase().includes(q) ?? false;
         const matchModel = item.model?.toLowerCase().includes(q) ?? false;
         const matchNotes = item.notes.toLowerCase().includes(q);
+        const matchDesc = item.taskDescription?.toLowerCase().includes(q) ?? false;
         const matchRoom = item.rooms.some(r => r.toLowerCase().includes(q));
-        if (!matchName && !matchBrand && !matchModel && !matchNotes && !matchRoom) {
+        if (!matchName && !matchBrand && !matchModel && !matchNotes && !matchDesc && !matchRoom) {
           return false;
         }
       }
@@ -92,7 +101,11 @@ export default function ProcurementView() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-shrink-0">
         
         {/* Total Cost */}
-        <div className="bg-gradient-to-br from-indigo-950/60 to-neutral-900/90 border border-indigo-800/40 rounded-xl p-3 shadow-lg">
+        <div 
+          onClick={() => { setSelectedCategory('ALL'); setFilterMode('all'); }}
+          className="bg-gradient-to-br from-indigo-950/60 to-neutral-900/90 border border-indigo-800/40 hover:border-indigo-500/70 cursor-pointer rounded-xl p-3 shadow-lg transition-all"
+          title="Προβολή όλων"
+        >
           <div className="flex items-center justify-between text-indigo-400 mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Εκτιμώμενο Κόστος</span>
             <Euro size={16} />
@@ -106,7 +119,11 @@ export default function ProcurementView() {
         </div>
 
         {/* Products */}
-        <div className="bg-neutral-900/60 border border-neutral-800 rounded-xl p-3 shadow-lg">
+        <div 
+          onClick={() => { setSelectedCategory('ALL'); setFilterMode('products'); }}
+          className="bg-neutral-900/60 border border-neutral-800 hover:border-cyan-500/70 cursor-pointer rounded-xl p-3 shadow-lg transition-all"
+          title="Φιλτράρισμα μόνο συγκεκριμένων συσκευών"
+        >
           <div className="flex items-center justify-between text-cyan-400 mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Συγκεκριμένα Προϊόντα</span>
             <ShoppingCart size={16} />
@@ -120,7 +137,11 @@ export default function ProcurementView() {
         </div>
 
         {/* Tasks for user */}
-        <div className="bg-amber-950/30 border border-amber-800/40 rounded-xl p-3 shadow-lg">
+        <div 
+          onClick={() => { setSelectedCategory('Εργασίες Έρευνας (Tasks to Find)'); setFilterMode('all'); }}
+          className="bg-amber-950/30 border border-amber-800/40 hover:border-amber-500 cursor-pointer rounded-xl p-3 shadow-lg transition-all"
+          title="Φιλτράρισμα εργασιών έρευνας"
+        >
           <div className="flex items-center justify-between text-amber-400 mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Εργασίες Έρευνας</span>
             <AlertCircle size={16} />
@@ -200,27 +221,52 @@ export default function ProcurementView() {
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 flex-shrink-0 text-xs">
         <button
           onClick={() => setSelectedCategory('ALL')}
-          className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
+          className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border flex items-center gap-1.5 ${
             selectedCategory === 'ALL'
               ? 'bg-indigo-600/30 border-indigo-500 text-indigo-200'
               : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:border-neutral-700'
           }`}
         >
-          Όλες οι Κατηγορίες
+          <span>Όλες οι Κατηγορίες</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+            selectedCategory === 'ALL'
+              ? 'bg-indigo-500/30 text-indigo-200'
+              : 'bg-neutral-800 text-neutral-400'
+          }`}>
+            {items.length}
+          </span>
         </button>
-        {PROCUREMENT_CATEGORIES.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
-              selectedCategory === cat
-                ? 'bg-indigo-600/30 border-indigo-500 text-indigo-200'
-                : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:border-neutral-700'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+        {PROCUREMENT_CATEGORIES.map(cat => {
+          const count = cat.includes('Εργασίες Έρευνας')
+            ? items.filter(i => i.isTask).length
+            : items.filter(i => i.category === cat).length;
+
+          return (
+            <button
+              key={cat}
+              onClick={() => {
+                setSelectedCategory(cat);
+                if (cat.includes('Εργασίες Έρευνας')) {
+                  setFilterMode('all');
+                }
+              }}
+              className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border flex items-center gap-1.5 ${
+                selectedCategory === cat
+                  ? 'bg-indigo-600/30 border-indigo-500 text-indigo-200'
+                  : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:border-neutral-700'
+              }`}
+            >
+              <span>{cat}</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                selectedCategory === cat
+                  ? 'bg-indigo-500/30 text-indigo-200'
+                  : 'bg-neutral-800 text-neutral-400'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Items Grid */}
