@@ -18,6 +18,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
+import { getAssetUrl } from './utils/assets';
 
 const STORAGE_KEY = 'pronies_vendor_offers_v2';
 
@@ -756,7 +757,7 @@ export default function OffersView() {
 
                   <div className="flex items-center gap-2">
                     <a
-                      href={currentDoc.driveViewUrl}
+                      href={getAssetUrl(currentDoc.driveViewUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all inline-flex items-center gap-1.5"
@@ -766,7 +767,7 @@ export default function OffersView() {
                     </a>
                     {currentDoc.localFileUrl && (
                       <a
-                        href={currentDoc.localFileUrl}
+                        href={getAssetUrl(currentDoc.localFileUrl)}
                         download={currentDoc.fileName}
                         className="px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white text-xs font-semibold transition-all inline-flex items-center gap-1.5"
                       >
@@ -781,7 +782,7 @@ export default function OffersView() {
                 <div className="flex-1 w-full bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden relative min-h-[500px]">
                   <iframe
                     key={currentDoc.id}
-                    src={currentDoc.drivePreviewUrl}
+                    src={getAssetUrl(currentDoc.drivePreviewUrl)}
                     className="w-full h-full min-h-[500px] border-0"
                     title={currentDoc.title}
                     allow="autoplay"
