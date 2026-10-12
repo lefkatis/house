@@ -21,7 +21,7 @@ import {
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
 import { getAssetUrl } from './utils/assets';
 
-const STORAGE_KEY = 'pronies_vendor_offers_v6';
+const STORAGE_KEY = 'pronies_vendor_offers_v7';
 
 export default function OffersView() {
   const [offers, setOffers] = useState<VendorOffer[]>(() => {
@@ -50,7 +50,7 @@ export default function OffersView() {
     return INITIAL_VENDOR_OFFERS;
   });
 
-  const [selectedVendorId, setSelectedVendorId] = useState<string>('vendor_2');
+  const [selectedVendorId, setSelectedVendorId] = useState<string>('vendor_1');
   const [activeDocId, setActiveDocId] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showAddDocModal, setShowAddDocModal] = useState<boolean>(false);
