@@ -12,8 +12,7 @@ import {
   Moon,
   Monitor,
   Home,
-  Briefcase,
-  Sparkles
+  Briefcase
 } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { ROOMS } from './data/rooms';
@@ -24,22 +23,6 @@ import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
 import OffersView from './OffersView';
 import { IECSymbol } from './components/IECSymbol';
-import MyHouseDashboard from './components/MyHouseDashboard';
-import { 
-  CustomProjectData, 
-  QuestionnaireAnswers, 
-  CustomProvision 
-} from './types/questionnaire';
-import { 
-  loadProjectData, 
-  checkBackendHealth, 
-  saveQuestionnaire, 
-  updateProvision, 
-  updateProcurement, 
-  addCustomProvision, 
-  deleteProvision,
-  getLocalFallbackData 
-} from './services/api';
 
 export default function App() {
   const [provisions] = useState<Provision[]>(PROVISIONS);
@@ -48,63 +31,11 @@ export default function App() {
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [hoveredType, setHoveredType] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers'>('grid');
-  
-  // App Mode: 'my_house' (custom home configured via questionnaire & saved in SQLite) vs 'reference' (demo villa)
-  const [appMode, setAppMode] = useState<'my_house' | 'reference'>('my_house');
-  const [projectData, setProjectData] = useState<CustomProjectData>(() => getLocalFallbackData());
-  const [isSqliteConnected, setIsSqliteConnected] = useState<boolean>(false);
 
   // Theme state: dark | light | system
   const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
     return (localStorage.getItem('pronies_theme') as 'dark' | 'light' | 'system') || 'dark';
   });
-
-  // Load project from SQLite backend on mount
-  useEffect(() => {
-    checkBackendHealth().then(res => setIsSqliteConnected(res.isOnline));
-    loadProjectData().then(({ data, isFromSqlite }) => {
-      setProjectData(data);
-      setIsSqliteConnected(isFromSqlite);
-    });
-  }, []);
-
-  const handleSaveQuestionnaire = async (answers: QuestionnaireAnswers) => {
-    const { data, isSavedToSqlite } = await saveQuestionnaire(answers);
-    setProjectData(data);
-    setIsSqliteConnected(isSavedToSqlite);
-  };
-
-  const handleToggleProvision = async (provisionId: string, completed: boolean) => {
-    await updateProvision('project_default', provisionId, { completed });
-    setProjectData(prev => ({
-      ...prev,
-      provisions: prev.provisions.map(p => p.id === provisionId ? { ...p, completed } : p)
-    }));
-  };
-
-  const handleToggleProcurement = async (itemId: string, purchased: boolean) => {
-    await updateProcurement('project_default', itemId, { purchased });
-    setProjectData(prev => ({
-      ...prev,
-      procurement: prev.procurement.map(i => i.id === itemId ? { ...i, purchased } : i)
-    }));
-  };
-
-  const handleAddProvision = async (provision: Omit<CustomProvision, 'id'>) => {
-    const created = await addCustomProvision('project_default', provision);
-    setProjectData(prev => ({
-      ...prev,
-      provisions: [...prev.provisions, created]
-    }));
-  };
-
-  const handleDeleteProvision = async (provisionId: string) => {
-    await deleteProvision('project_default', provisionId);
-    setProjectData(prev => ({
-      ...prev,
-      provisions: prev.provisions.filter(p => p.id !== provisionId)
-    }));
-  };
 
   useEffect(() => {
     const root = document.documentElement;
@@ -177,80 +108,51 @@ export default function App() {
 
           <div className="flex items-center flex-wrap gap-2">
             
-            {/* Primary Mode Selector: Custom Home (with Questionnaire & SQLite) vs Reference Plan */}
+            {/* View Mode Navigation Tabs */}
             <div className="flex items-center space-x-1 bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800">
               <button 
-                onClick={() => setAppMode('my_house')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  appMode === 'my_house' 
-                    ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md' 
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
+                onClick={() => setViewMode('grid')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <Sparkles size={13} className={appMode === 'my_house' ? 'text-cyan-200' : 'text-indigo-400'} />
-                <span>Το Δικό Μου Σπίτι</span>
-                <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-full font-semibold">SQLite</span>
+                <Grid size={14} />
+                <span>Λίστα</span>
               </button>
               <button 
-                onClick={() => setAppMode('reference')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  appMode === 'reference' 
-                    ? 'bg-indigo-600 text-white shadow-md' 
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
+                onClick={() => setViewMode('flow')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <LayoutDashboard size={13} />
-                <span>Πρότυπο Σπίτι (Demo)</span>
+                <Workflow size={14} />
+                <span>Διάγραμμα</span>
+              </button>
+              <button 
+                onClick={() => setViewMode('plan')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'plan' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+              >
+                <Home size={14} />
+                <span>Κάτοψη</span>
+              </button>
+              <button 
+                onClick={() => setViewMode('buy')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+              >
+                <ShoppingCart size={14} />
+                <span>Αγορές & Εξοπλισμός</span>
+              </button>
+              <button 
+                onClick={() => setViewMode('rules')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+              >
+                <FileText size={14} />
+                <span>Γενικές Οδηγίες</span>
+              </button>
+              <button 
+                onClick={() => setViewMode('offers')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+              >
+                <Briefcase size={14} />
+                <span>Προσφορές Μελετών</span>
               </button>
             </div>
-
-            {/* View Mode Navigation Tabs (for Reference Mode) */}
-            {appMode === 'reference' && (
-              <div className="flex items-center space-x-1 bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800">
-                <button 
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <Grid size={14} />
-                  <span>Λίστα</span>
-                </button>
-                <button 
-                  onClick={() => setViewMode('flow')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <Workflow size={14} />
-                  <span>Διάγραμμα</span>
-                </button>
-                <button 
-                  onClick={() => setViewMode('plan')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'plan' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <Home size={14} />
-                  <span>Κάτοψη</span>
-                </button>
-                <button 
-                  onClick={() => setViewMode('buy')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <ShoppingCart size={14} />
-                  <span>Αγορές & Εξοπλισμός</span>
-                </button>
-                <button 
-                  onClick={() => setViewMode('rules')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <FileText size={14} />
-                  <span>Γενικές Οδηγίες</span>
-                </button>
-                <button 
-                  onClick={() => setViewMode('offers')}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                >
-                  <Briefcase size={14} />
-                  <span>Προσφορές Μελετών</span>
-                </button>
-              </div>
-            )}
 
             {/* Dark / Light / System Theme Switcher */}
             <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
@@ -280,17 +182,7 @@ export default function App() {
           </div>
         </header>
 
-        {appMode === 'my_house' ? (
-          <MyHouseDashboard
-            projectData={projectData}
-            isSqliteConnected={isSqliteConnected}
-            onSaveQuestionnaire={handleSaveQuestionnaire}
-            onToggleProvision={handleToggleProvision}
-            onToggleProcurement={handleToggleProcurement}
-            onAddProvision={handleAddProvision}
-            onDeleteProvision={handleDeleteProvision}
-          />
-        ) : viewMode === 'plan' ? (
+        {viewMode === 'plan' ? (
           <HousePlanView />
         ) : viewMode === 'buy' ? (
           <ProcurementView />
