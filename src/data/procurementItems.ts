@@ -252,10 +252,10 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   },
   {
     id: 'buy_reed_switches',
-    name: 'Χωνευτές Μαγνητικές Επαφές Κουφωμάτων',
+    name: 'Contact Sensors Κουφωμάτων (Χωνευτές)',
     category: '🔒 Συναγερμός & Ασφάλεια',
     brand: 'Προς Επιλογή Συναγερμού',
-    model: 'Χωνευτές Μαγνητικές Επαφές NC για αλουμίνια',
+    model: 'Contact Sensors NC για αλουμίνια',
     link: undefined,
     estimatedPriceEur: 8,
     priceRange: '€6 - €12',
@@ -263,7 +263,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🖥️ Γραφείο', '🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2', '🧺 Πλυσταριό'],
     isTask: true,
-    taskDescription: 'Συνεννόηση με τον εγκαταστάτη κουφωμάτων & συναγερμού για χωνευτές επαφές στα προφίλ αλουμινίου πριν την τοποθέτηση.',
+    taskDescription: 'Συνεννόηση με τον εγκαταστάτη κουφωμάτων & συναγερμού για χωνευτές contact sensors στα προφίλ αλουμινίου πριν την τοποθέτηση.',
     notes: 'Ενσύρματη καλωδίωση συναγερμού σε όλα τα ανοιγόμενα/συρόμενα κουφώματα για πλήρη περιμετρική προστασία.',
     purchased: false
   },

@@ -19,7 +19,7 @@ export const PROVISIONS: Provision[] = [
   { id: 'sal_6', name: 'Access Point (Ethernet Port)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'sal_7', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 1', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'sal_8', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 2', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
-  { id: 'sal_9', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'sal_9', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
   { id: 'sal_10', name: 'Πρίζα TV & Ηχοσυστήματος', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Τηλεόρασης', type: '🔌 Πρίζες', completed: false },
   { id: 'sal_11', name: 'Κρυφός Φωτισμός', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '💡 Φώτα', completed: false },
   { 
@@ -81,8 +81,8 @@ export const PROVISIONS: Provision[] = [
     details: 'Εκκρεμεί οριστικοποίηση των ακριβών τοίχων/διαστάσεων βάσει των τελικών σχεδίων κουζίνας.'
   },
   { id: 'kou_10', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'kou_11', name: 'Μαγνητικές Επαφές (Κούφωμα)', room: '🍳 Κουζίνα', wall: 'Παράθυρο', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'kou_glass', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🍳 Κουζίνα', wall: 'Τζαμαρία', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_11', name: 'Contact Sensors (Κούφωμα)', room: '🍳 Κουζίνα', wall: 'Παράθυρο', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_glass', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🍳 Κουζίνα', wall: 'Τζαμαρία', type: '🔒 Ασφάλεια', completed: false },
   
   // --- Pantry ---
   { id: 'pan_1', name: 'Μελλοντικές Αναμονές Νερού (Ζεστό/Κρύο) & Αποχέτευση', room: '🥫 Pantry', wall: 'Τοίχος Υδραυλικών', type: '🚰 Υδραυλικά', completed: false },
@@ -106,7 +106,7 @@ export const PROVISIONS: Provision[] = [
     pendingReview: true,
     details: 'Εκκρεμεί οριστικοποίηση θέσης A/C και θερμοστάτη ενδοδαπέδιας.'
   },
-  { id: 'gra_8', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🖥️ Γραφείο', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'gra_8', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων', room: '🖥️ Γραφείο', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Master Bedroom ---
   { id: 'mb_1', name: 'Παροχή Ρεύματος & Cat6 στο 150cm (Για TV)', room: '🛏️ Master Bedroom', wall: 'Τοίχος Απέναντι Κρεβατιού', type: '🔌 Πρίζες', completed: false },
@@ -123,7 +123,7 @@ export const PROVISIONS: Provision[] = [
     details: 'Εκκρεμεί οριστικοποίηση θέσης A/C και θερμοστάτη ενδοδαπέδιας.'
   },
   { id: 'mb_5', name: 'Presense Sensor', room: '🛏️ Master Bedroom', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'mb_6', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'mb_6', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
   { id: 'mb_7', name: 'Έξυπνοι Διακόπτες / Ρελέ (Smart Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Bedroom 1 ---
@@ -139,7 +139,7 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'b1_2', name: 'Presense Sensor', room: '🛏️ Bedroom 1', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b1_3', name: 'Πρίζες & Cat6 (Γραφείο/TV)', room: '🛏️ Bedroom 1', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
-  { id: 'b1_4', name: 'Μαγνητικές Επαφές', room: '🛏️ Bedroom 1', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'b1_4', name: 'Contact Sensors', room: '🛏️ Bedroom 1', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Bedroom 2 ---
   { 
@@ -154,7 +154,7 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'b2_2', name: 'Presense Sensor', room: '🛏️ Bedroom 2', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b2_3', name: 'Πρίζες & Cat6 (Γραφείο/TV)', room: '🛏️ Bedroom 2', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
-  { id: 'b2_4', name: 'Μαγνητικές Επαφές', room: '🛏️ Bedroom 2', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'b2_4', name: 'Contact Sensors', room: '🛏️ Bedroom 2', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Bathrooms & WC ---
   // WC - Main
@@ -178,13 +178,22 @@ export const PROVISIONS: Provision[] = [
   { id: 'ply_1', name: 'Πρίζες (Πλυντήριο / Στεγνωτήριο)', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
   { id: 'ply_2', name: 'Παροχή Νερού', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🚰 Υδραυλικά', completed: false },
   { id: 'ply_3', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan / Ventilation)', room: '🧺 Πλυσταριό', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
-  { id: 'ply_4', name: 'Μαγνητικές Επαφές (Αν υπάρχει εξωτερική πόρτα)', room: '🧺 Πλυσταριό', wall: 'Πόρτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'ply_4', name: 'Contact Sensors', room: '🧺 Πλυσταριό', wall: 'Πόρτα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Διάδρομος ---
   { id: 'dia_1', name: 'Αισθητήρας Θερμοκρασίας & Υγρασίας (Κεντρικός Έλεγχος)', room: '🛤️ Διάδρομος', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'dia_2', name: 'Εσωτερική Σειρήνα Συναγερμού', room: '🛤️ Διάδρομος', wall: 'Οροφή', type: '🔒 Ασφάλεια', completed: false },
+  { 
+    id: 'dia_2', 
+    name: 'Εσωτερική Σειρήνα Συναγερμού (TBD)', 
+    room: '🛤️ Διάδρομος', 
+    wall: 'Οροφή (TBD)', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    pendingReview: true,
+    details: 'Εκκρεμεί οριστικοποίηση χωροθέτησης της εσωτερικής σειρήνας (TBD).'
+  },
   { id: 'dia_3', name: 'Access Point (Ethernet Port)', room: '🛤️ Διάδρομος', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'dia_4', name: 'Φωτισμός Αισθητήρα', room: '🛤️ Διάδρομος', wall: 'Δάπεδο / Οροφή', type: '💡 Φώτα', completed: false },
+  { id: 'dia_4', name: 'Αισθητήρες Φωτισμού', room: '🛤️ Διάδρομος', wall: 'Δάπεδο / Οροφή', type: '💡 Φώτα', completed: false },
 
   // --- Χώρος Εισόδου ---
   { id: 'eis_1', name: 'Smart Doorbell (Κύρια Πόρτα) - PoE Cat6', room: '🚪 Χώρος Εισόδου', wall: 'Εξώπορτα', type: '🔒 Ασφάλεια', completed: false },
@@ -212,7 +221,7 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_10', name: 'Γεώτρηση (Πρόνοια, Αναμονές Ρεύματος & Αντλίας)', room: '🌳 Κήπος / Πισίνα', wall: 'Μηχανοστάσιο Γεώτρησης', type: '🚰 Υδραυλικά', completed: false },
 
   // --- Parking ---
-  { id: 'par_1', name: 'Button', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'par_1', name: 'Garage Button', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'par_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
   { id: 'par_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
   { id: 'par_4', name: 'PoE Κάμερα Parking', room: '🚗 Parking', wall: 'Οροφή Parking', type: '🔒 Ασφάλεια', completed: false },

@@ -30,7 +30,7 @@ export function getIECSymbolType(provisionName: string, category: string): { typ
   const c = category.toLowerCase();
 
   // Button
-  if (n === 'button' || n.includes('μπουτόν') || n.includes('push button')) {
+  if (n.includes('button') || n.includes('μπουτόν')) {
     return { type: 'button', label: 'IEC 60617-11-14-11: Μπουτόν Επαφής (Push Button)', code: '11-14-11' };
   }
 
@@ -92,8 +92,8 @@ export function getIECSymbolType(provisionName: string, category: string): { typ
   }
 
   // Safety
-  if (n.includes('μαγνητικές επαφές') || n.includes('κούφωμα')) {
-    return { type: 'reed_contact', label: 'IEC 60617: Μαγνητική Επαφή Κουφώματος (Magnetic Reed Contact)', code: '11-16-05' };
+  if (n.includes('contact sensor') || n.includes('μαγνητικές επαφές') || n.includes('κούφωμα')) {
+    return { type: 'reed_contact', label: 'IEC 60617: Contact Sensor Κουφώματος (Magnetic Reed Contact)', code: '11-16-05' };
   }
   if (n.includes('θραύσης') || n.includes('glass break')) {
     return { type: 'glass_break', label: 'IEC 60617: Αισθητήρας Θραύσης Κρυστάλλων (Glass Break Detector)', code: '11-16-06' };

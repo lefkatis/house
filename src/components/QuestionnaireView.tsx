@@ -570,7 +570,7 @@ export default function QuestionnaireView({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <ToggleCard 
-                title="Ενσύρματες Μαγνητικές Επαφές στα Κουφώματα"
+                title="Contact Sensors (Ενσύρματες στα Κουφώματα)"
                 description="Κρυφές χωνευτές επαφές σε όλα τα παράθυρα και μπαλκονόπορτες."
                 whyNeeded="Ενεργοποιούν συναγερμό πριν σπάσει το τζάμι και επιτρέπουν αυτόματο κλείσιμο του κλιματιστικού όταν ανοίγει παράθυρο."
                 checked={formData.wiredMagneticContacts}
