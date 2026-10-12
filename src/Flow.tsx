@@ -66,6 +66,22 @@ type FlowProps = {
 
 export default function Flow({ provisions, rooms }: FlowProps) {
   const [highlightedNode, setHighlightedNode] = useState<string | null>(null);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    const checkDark = () => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     const nodes: Node[] = [];
@@ -76,7 +92,16 @@ export default function Flow({ provisions, rooms }: FlowProps) {
       id: 'hq',
       position: { x: 0, y: 0 },
       data: { label: '🏢 Pronies HQ' },
-      style: { backgroundColor: '#4f46e5', color: '#fff', fontWeight: 'bold', borderRadius: '8px', padding: '10px 20px', fontSize: '14px', border: 'none' },
+      style: { 
+        backgroundColor: '#4f46e5', 
+        color: '#fff', 
+        fontWeight: 'bold', 
+        borderRadius: '8px', 
+        padding: '10px 20px', 
+        fontSize: '14px', 
+        border: 'none',
+        boxShadow: isDark ? '0 4px 12px rgba(79, 70, 229, 0.4)' : '0 4px 12px rgba(79, 70, 229, 0.25)'
+      },
     });
 
     rooms.forEach((room, i) => {
@@ -88,7 +113,16 @@ export default function Flow({ provisions, rooms }: FlowProps) {
         id: roomId,
         position: { x: 0, y: 0 },
         data: { label: room },
-        style: { backgroundColor: '#374151', color: '#e5e7eb', border: '2px solid #6366f1', borderRadius: '6px', padding: '6px 12px', fontSize: '12px' },
+        style: { 
+          backgroundColor: isDark ? '#374151' : '#ffffff', 
+          color: isDark ? '#f3f4f6' : '#0f172a', 
+          border: '2px solid #6366f1', 
+          borderRadius: '6px', 
+          padding: '6px 12px', 
+          fontSize: '12px',
+          fontWeight: '600',
+          boxShadow: isDark ? '0 2px 4px rgba(0,0,0,0.3)' : '0 2px 4px rgba(0,0,0,0.06)'
+        },
       });
 
       edges.push({
@@ -115,14 +149,22 @@ export default function Flow({ provisions, rooms }: FlowProps) {
           id: wallId,
           position: { x: 0, y: 0 },
           data: { label: `🧱 ${wall}` },
-          style: { backgroundColor: '#312e81', color: '#c7d2fe', border: '1px solid #4338ca', borderRadius: '4px', padding: '4px 8px', fontSize: '10px' },
+          style: { 
+            backgroundColor: isDark ? '#312e81' : '#e0e7ff', 
+            color: isDark ? '#c7d2fe' : '#3730a3', 
+            border: isDark ? '1px solid #4338ca' : '1px solid #a5b4fc', 
+            borderRadius: '4px', 
+            padding: '4px 8px', 
+            fontSize: '10px',
+            fontWeight: '600'
+          },
         });
 
         edges.push({
           id: `e-${roomId}-${wallId}`,
           source: roomId,
           target: wallId,
-          style: { stroke: '#4338ca' },
+          style: { stroke: isDark ? '#4338ca' : '#818cf8' },
         });
 
         sourceNodeForProvisions = wallId;
@@ -135,7 +177,15 @@ export default function Flow({ provisions, rooms }: FlowProps) {
             id: provId,
             position: { x: 0, y: 0 },
             data: { label: `${typeEmoji} ${prov.name}` },
-            style: { backgroundColor: '#1f2937', color: '#9ca3af', border: '1px solid #4b5563', borderRadius: '4px', padding: '4px 8px', fontSize: '10px', transition: 'opacity 0.3s' },
+            style: { 
+              backgroundColor: isDark ? '#1f2937' : '#f8fafc', 
+              color: isDark ? '#d1d5db' : '#334155', 
+              border: isDark ? '1px solid #4b5563' : '1px solid #cbd5e1', 
+              borderRadius: '4px', 
+              padding: '4px 8px', 
+              fontSize: '10px', 
+              transition: 'opacity 0.3s' 
+            },
           });
 
           edges.push({
@@ -143,7 +193,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
             source: sourceNodeForProvisions,
             target: provId,
             animated: true,
-            style: { stroke: '#4b5563', transition: 'opacity 0.3s' },
+            style: { stroke: isDark ? '#4b5563' : '#94a3b8', transition: 'opacity 0.3s' },
           });
         });
         
@@ -152,7 +202,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
     });
 
     return getLayoutedElements(nodes, edges);
-  }, [provisions, rooms]);
+  }, [provisions, rooms, isDark]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -218,7 +268,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
   }, []);
 
   return (
-    <div className="w-full h-[85vh] border border-neutral-800 rounded-2xl overflow-hidden bg-neutral-950">
+    <div className="w-full h-[85vh] border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 transition-colors">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -227,12 +277,20 @@ export default function Flow({ provisions, rooms }: FlowProps) {
         onNodeClick={onNodeClick}
         onPaneClick={onPaneClick}
         fitView
-        colorMode="dark"
+        colorMode={isDark ? 'dark' : 'light'}
         minZoom={0.1}
       >
-        <Controls />
-        <MiniMap nodeStrokeColor="#6366f1" nodeColor="#374151" maskColor="rgba(0,0,0,0.8)" />
-        <Background color="#374151" gap={16} />
+        <Controls className="dark:bg-neutral-800 dark:border-neutral-700 bg-white border-neutral-200" />
+        <MiniMap 
+          nodeStrokeColor="#6366f1" 
+          nodeColor={isDark ? '#374151' : '#cbd5e1'} 
+          maskColor={isDark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)'} 
+          className="dark:bg-neutral-900 bg-white dark:border-neutral-800 border-neutral-200"
+        />
+        <Background 
+          color={isDark ? '#374151' : '#cbd5e1'} 
+          gap={16} 
+        />
       </ReactFlow>
     </div>
   );
