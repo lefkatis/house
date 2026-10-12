@@ -15,13 +15,25 @@ import {
   List,
   ArrowUpDown,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Pencil
 } from 'lucide-react';
 import { PROCUREMENT_CATEGORIES } from './data/procurementCategories';
 import { PROCUREMENT_ITEMS, ProcurementItem } from './data/procurementItems';
 
-export default function ProcurementView() {
-  const [items, setItems] = useState<ProcurementItem[]>(PROCUREMENT_ITEMS);
+export interface ProcurementViewProps {
+  items?: ProcurementItem[];
+  onTogglePurchased?: (id: string, purchased: boolean) => void;
+  onEditItem?: (item: ProcurementItem) => void;
+}
+
+export default function ProcurementView({
+  items: itemsProp,
+  onTogglePurchased,
+  onEditItem
+}: ProcurementViewProps = {}) {
+  const [localItems, setLocalItems] = useState<ProcurementItem[]>(PROCUREMENT_ITEMS);
+  const items = itemsProp || localItems;
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filterMode, setFilterMode] = useState<'all' | 'products' | 'tasks'>('all');
@@ -30,7 +42,14 @@ export default function ProcurementView() {
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   const togglePurchased = (id: string) => {
-    setItems(prev => prev.map(item => 
+    if (onTogglePurchased) {
+      const target = items.find(i => i.id === id);
+      if (target) {
+        onTogglePurchased(id, !target.purchased);
+        return;
+      }
+    }
+    setLocalItems(prev => prev.map(item => 
       item.id === id ? { ...item, purchased: !item.purchased } : item
     ));
   };
@@ -470,9 +489,18 @@ export default function ProcurementView() {
                           )}
                         </td>
 
-                        {/* Actions: Link & Expand Toggle */}
+                        {/* Actions: Link, Edit & Expand Toggle */}
                         <td className="py-2.5 px-3 text-center">
                           <div className="flex items-center justify-center gap-1">
+                            {onEditItem && (
+                              <button
+                                onClick={() => onEditItem(item)}
+                                className="p-1.5 rounded-lg text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                title="Επεξεργασία είδους"
+                              >
+                                <Pencil size={13} />
+                              </button>
+                            )}
                             {item.link ? (
                               <a
                                 href={item.link}
@@ -610,21 +638,32 @@ export default function ProcurementView() {
                         )}
                       </div>
 
-                      {/* Purchased Toggle */}
-                      <button
-                        onClick={() => togglePurchased(item.id)}
-                        className={`text-xs flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors flex-shrink-0 ${
-                          item.purchased
-                            ? 'bg-emerald-100 dark:bg-emerald-600/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40'
-                            : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300'
-                        }`}
-                        title={item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί'}
-                      >
-                        {item.purchased ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-                        <span className="text-[10px] font-medium hidden sm:inline">
-                          {item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί'}
-                        </span>
-                      </button>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {onEditItem && (
+                          <button
+                            onClick={() => onEditItem(item)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            title="Επεξεργασία είδους"
+                          >
+                            <Pencil size={12} />
+                          </button>
+                        )}
+                        {/* Purchased Toggle */}
+                        <button
+                          onClick={() => togglePurchased(item.id)}
+                          className={`text-xs flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${
+                            item.purchased
+                              ? 'bg-emerald-100 dark:bg-emerald-600/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40'
+                              : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300'
+                          }`}
+                          title={item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί'}
+                        >
+                          {item.purchased ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                          <span className="text-[10px] font-medium hidden sm:inline">
+                            {item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί'}
+                          </span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Title & Brand */}

@@ -10,7 +10,10 @@ import {
   RefreshCw, 
   Filter, 
   AlertTriangle,
-  LayoutDashboard
+  LayoutDashboard,
+  CheckCircle2,
+  Circle,
+  Pencil
 } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { CATEGORIES } from './data/categories';
@@ -56,7 +59,20 @@ const SCHEMATIC_ROOMS = [
 
 const PINS_STORAGE_KEY = 'pronies_architectural_pins_v1';
 
-export default function HousePlanView() {
+export interface HousePlanViewProps {
+  provisions?: Provision[];
+  onToggleCompleted?: (id: string, completed: boolean) => void;
+  onTogglePending?: (id: string, pendingReview: boolean) => void;
+  onEditProvision?: (provision: Provision) => void;
+}
+
+export default function HousePlanView({
+  provisions: provisionsProp,
+  onToggleCompleted,
+  onTogglePending,
+  onEditProvision
+}: HousePlanViewProps = {}) {
+  const provisions = provisionsProp || PROVISIONS;
   const [activeTab, setActiveTab] = useState<PlanTab>('schematic');
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -99,13 +115,13 @@ export default function HousePlanView() {
 
   // Filter provisions for the side list
   const filteredProvisions = useMemo(() => {
-    return PROVISIONS.filter(p => {
+    return provisions.filter(p => {
       if (selectedRoom && p.room !== selectedRoom) return false;
       if (selectedCategory !== 'ALL' && p.type !== selectedCategory) return false;
       if (showOnlyPending && !p.pendingReview) return false;
       return true;
     });
-  }, [selectedRoom, selectedCategory, showOnlyPending]);
+  }, [provisions, selectedRoom, selectedCategory, showOnlyPending]);
 
   // Click on architectural blueprint to place / move pin
   const handleBlueprintClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -168,7 +184,7 @@ export default function HousePlanView() {
         </div>
 
         {/* Plan Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto p-1 bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs">
           <button
             onClick={() => setActiveTab('schematic')}
             className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
@@ -248,15 +264,15 @@ export default function HousePlanView() {
                 : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
             }`}
           >
-            Όλα ({PROVISIONS.length})
+            Όλα ({provisions.length})
           </button>
         </div>
 
         {/* Room Pills */}
-        <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-0.5">
+        <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5">
           {BLUEPRINT_ROOMS.map(room => {
             const isSelected = selectedRoom === room.id;
-            const count = PROVISIONS.filter(p => p.room === room.id).length;
+            const count = provisions.filter(p => p.room === room.id).length;
             return (
               <button
                 key={room.id}
@@ -277,7 +293,7 @@ export default function HousePlanView() {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-0.5 border-l border-neutral-300 dark:border-neutral-800 pl-2">
+        <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5 border-l border-neutral-300 dark:border-neutral-800 pl-2">
           <button
             onClick={() => setSelectedCategory('ALL')}
             className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all ${
@@ -356,7 +372,7 @@ export default function HousePlanView() {
                 {/* Rooms */}
                 {SCHEMATIC_ROOMS.map(room => {
                   const isSelected = selectedRoom === room.id;
-                  const roomProvisions = PROVISIONS.filter(p => p.room === room.id);
+                  const roomProvisions = provisions.filter(p => p.room === room.id);
                   const pendingCount = roomProvisions.filter(p => p.pendingReview).length;
                   const count = roomProvisions.length;
 
@@ -499,34 +515,79 @@ export default function HousePlanView() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     className={`p-2.5 rounded-xl border transition-all text-xs ${
-                      p.pendingReview
+                      p.completed
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 opacity-75'
+                        : p.pendingReview
                         ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900/40'
                         : 'bg-neutral-50/70 dark:bg-neutral-800/40 border-neutral-200 dark:border-neutral-700/70 hover:border-indigo-400'
                     }`}
                   >
                     <div className="flex items-start gap-2.5">
+                      {/* Completion Checkbox */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleCompleted?.(p.id, !p.completed);
+                        }}
+                        className={`p-0.5 rounded transition-colors mt-0.5 ${
+                          p.completed
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
+                        }`}
+                        title={p.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                      >
+                        {p.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                      </button>
+
                       {/* IEC 60617 Symbol */}
                       <IECSymbol provisionName={p.name} category={p.type} size={22} />
 
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center flex-wrap gap-1 mb-1">
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-                            {p.room}
-                          </span>
-                          {p.wall && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50">
-                              {p.wall}
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <div className="flex items-center flex-wrap gap-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                              {p.room}
                             </span>
-                          )}
-                          {p.pendingReview && (
-                            <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1">
-                              <AlertTriangle size={9} />
-                              TBD
-                            </span>
+                            {p.wall && (
+                              <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50">
+                                {p.wall}
+                              </span>
+                            )}
+                            {p.pendingReview && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onTogglePending?.(p.id, false);
+                                }}
+                                className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1 hover:bg-amber-300 transition-colors"
+                                title="Κλικ για αφαίρεση TBD"
+                              >
+                                <AlertTriangle size={9} />
+                                TBD
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Edit button */}
+                          {onEditProvision && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEditProvision(p);
+                              }}
+                              className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              title="Επεξεργασία παροχής"
+                            >
+                              <Pencil size={12} />
+                            </button>
                           )}
                         </div>
 
-                        <h4 className="text-xs font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+                        <h4 className={`text-xs font-bold leading-snug ${
+                          p.completed 
+                            ? 'line-through text-neutral-400 dark:text-neutral-500' 
+                            : 'text-neutral-900 dark:text-neutral-100'
+                        }`}>
                           {p.name}
                         </h4>
 
@@ -879,36 +940,74 @@ export default function HousePlanView() {
                     className={`p-2.5 rounded-xl border transition-all text-xs ${
                       isHovered
                         ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-400 shadow-sm'
+                        : provision.completed
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 opacity-75'
                         : provision.pendingReview
                         ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900/40'
                         : 'bg-neutral-50/60 dark:bg-neutral-950/60 border-neutral-200 dark:border-neutral-800/80 hover:border-neutral-300'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1.5 mb-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                        {/* Completion Checkbox */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleCompleted?.(provision.id, !provision.completed);
+                          }}
+                          className={`p-0.5 rounded transition-colors flex-shrink-0 ${
+                            provision.completed
+                              ? 'text-emerald-600 dark:text-emerald-400'
+                              : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
+                          }`}
+                          title={provision.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                        >
+                          {provision.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                        </button>
+
                         {/* IEC Symbol badge */}
                         <div className="w-5 h-5 rounded-md bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center text-neutral-700 dark:text-neutral-300 p-0.5 flex-shrink-0">
                           <IECSymbol provisionName={provision.name} category={provision.type} size={15} showTooltip={false} />
                         </div>
-                        <span className="font-bold text-neutral-900 dark:text-neutral-100 leading-tight">
+                        <span className={`font-bold leading-tight truncate ${
+                          provision.completed 
+                            ? 'line-through text-neutral-400 dark:text-neutral-500' 
+                            : 'text-neutral-900 dark:text-neutral-100'
+                        }`}>
                           {provision.name}
                         </span>
                       </div>
 
-                      {/* Reposition / Pin button */}
-                      <button
-                        onClick={() => setSelectedProvisionToPlace(isPlacing ? null : provision.id)}
-                        className={`p-1 rounded transition-colors text-[10px] flex-shrink-0 ${
-                          isPlacing
-                            ? 'bg-indigo-600 text-white'
-                            : hasPin
-                            ? 'text-neutral-400 hover:text-indigo-500'
-                            : 'text-amber-500 hover:bg-amber-500/10'
-                        }`}
-                        title={hasPin ? 'Αλλαγή θέσης καρφίτσας στο σχέδιο' : 'Τοποθέτηση καρφίτσας στο σχέδιο'}
-                      >
-                        <MapPin size={12} className={hasPin ? 'fill-current' : ''} />
-                      </button>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        {/* Edit button */}
+                        {onEditProvision && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditProvision(provision);
+                            }}
+                            className="p-1 rounded text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            title="Επεξεργασία παροχής"
+                          >
+                            <Pencil size={12} />
+                          </button>
+                        )}
+
+                        {/* Reposition / Pin button */}
+                        <button
+                          onClick={() => setSelectedProvisionToPlace(isPlacing ? null : provision.id)}
+                          className={`p-1 rounded transition-colors text-[10px] ${
+                            isPlacing
+                              ? 'bg-indigo-600 text-white'
+                              : hasPin
+                              ? 'text-neutral-400 hover:text-indigo-500'
+                              : 'text-amber-500 hover:bg-amber-500/10'
+                          }`}
+                          title={hasPin ? 'Αλλαγή θέσης καρφίτσας στο σχέδιο' : 'Τοποθέτηση καρφίτσας στο σχέδιο'}
+                        >
+                          <MapPin size={12} className={hasPin ? 'fill-current' : ''} />
+                        </button>
+                      </div>
                     </div>
 
                     <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-1.5">
@@ -920,10 +1019,17 @@ export default function HousePlanView() {
                         {provision.room}
                       </span>
                       {provision.pendingReview && (
-                        <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onTogglePending?.(provision.id, false);
+                          }}
+                          className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5 hover:underline"
+                          title="Κλικ για αφαίρεση TBD"
+                        >
                           <AlertTriangle size={10} />
                           TBD
-                        </span>
+                        </button>
                       )}
                     </div>
                   </div>

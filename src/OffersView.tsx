@@ -245,7 +245,7 @@ export default function OffersView() {
       </div>
 
       {/* Main Vendor Tabs */}
-      <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-2 overflow-x-auto flex-shrink-0">
+      <div className="flex flex-wrap items-center gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-2 flex-shrink-0">
         {offers.map(vendor => {
           const isSelected = selectedVendorId === vendor.id;
           const hasDocs = vendor.documents.length > 0;

@@ -3,18 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle, 
   Zap, 
-  Info 
+  Info,
+  Pencil
 } from 'lucide-react';
-import { GENERAL_RULES } from './data/generalRules';
+import { GENERAL_RULES, GeneralRule } from './data/generalRules';
 
-export default function GeneralRulesView() {
+interface GeneralRulesViewProps {
+  rules?: GeneralRule[];
+  onEditRule?: (rule: GeneralRule) => void;
+}
+
+export default function GeneralRulesView({ rules: rulesProp, onEditRule }: GeneralRulesViewProps = {}) {
+  const rules = rulesProp || GENERAL_RULES;
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
   const categories = ['ALL', '🔌 Πρίζες & Διακόπτες', '📡 Smart Home & Δίκτυο', '🔒 Ασφάλεια', '🚰 Υδραυλικά & HVAC'] as const;
 
   const filteredRules = selectedCategory === 'ALL'
-    ? GENERAL_RULES
-    : GENERAL_RULES.filter(r => r.category === selectedCategory);
+    ? rules
+    : rules.filter(r => r.category === selectedCategory);
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4 overflow-y-auto max-h-[85vh] pr-1">
@@ -36,14 +43,14 @@ export default function GeneralRulesView() {
           </div>
 
           <div className="hidden md:flex flex-col items-end justify-center bg-white/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/30 rounded-xl p-3 text-right">
-            <span className="text-2xl font-black text-indigo-600 dark:text-indigo-300">{GENERAL_RULES.length}</span>
+            <span className="text-2xl font-black text-indigo-600 dark:text-indigo-300">{rules.length}</span>
             <span className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-semibold">Κανόνες Μελέτης</span>
           </div>
         </div>
       </div>
 
       {/* Category Filter Pills */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 flex-shrink-0 text-xs">
+      <div className="flex flex-wrap items-center gap-1.5 pb-1 flex-shrink-0 text-xs">
         {categories.map(cat => (
           <button
             key={cat}
@@ -72,14 +79,25 @@ export default function GeneralRulesView() {
               className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/70 p-4 backdrop-blur-md flex flex-col justify-between hover:border-indigo-400 dark:hover:border-indigo-600/50 shadow-sm dark:shadow-md transition-all duration-200"
             >
               <div>
-                {/* Header: Category & Scope */}
+                {/* Header: Category, Scope & Edit */}
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/50">
-                    {rule.category}
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40">
-                    {rule.scope}
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/50">
+                      {rule.category}
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40">
+                      {rule.scope}
+                    </span>
+                  </div>
+                  {onEditRule && (
+                    <button
+                      onClick={() => onEditRule(rule)}
+                      className="p-1 rounded text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      title="Επεξεργασία κανόνα"
+                    >
+                      <Pencil size={12} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Title */}

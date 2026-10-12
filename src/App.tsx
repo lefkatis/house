@@ -12,9 +12,11 @@ import {
   Moon,
   Monitor,
   Home,
-  Briefcase
+  Briefcase,
+  CheckCircle2,
+  Circle,
+  Pencil
 } from 'lucide-react';
-import { PROVISIONS, Provision } from './data/provisions';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
 import Flow from './Flow';
@@ -23,9 +25,34 @@ import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
 import OffersView from './OffersView';
 import { IECSymbol } from './components/IECSymbol';
+import { useSqlite } from './services/sqliteDb';
+import { SqliteToolbar } from './components/SqliteToolbar';
+import { EditItemModal, EditableItem } from './components/EditItemModal';
 
 export default function App() {
-  const [provisions] = useState<Provision[]>(PROVISIONS);
+  const {
+    provisions,
+    procurementItems,
+    generalRules,
+    canUndo,
+    canRedo,
+    undoCount,
+    redoCount,
+    lastAction,
+    toggleProvisionCompleted,
+    toggleProvisionPending,
+    updateProvision,
+    toggleProcurementPurchased,
+    updateProcurementItem,
+    updateGeneralRule,
+    undo,
+    redo,
+    downloadDatabase,
+    importDatabase,
+    resetToDefaults
+  } = useSqlite();
+
+  const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
@@ -154,6 +181,20 @@ export default function App() {
               </button>
             </div>
 
+            {/* SQLite Undo/Redo & Database Management Toolbar */}
+            <SqliteToolbar
+              canUndo={canUndo}
+              canRedo={canRedo}
+              undoCount={undoCount}
+              redoCount={redoCount}
+              lastAction={lastAction}
+              onUndo={undo}
+              onRedo={redo}
+              onDownload={downloadDatabase}
+              onImport={importDatabase}
+              onReset={resetToDefaults}
+            />
+
             {/* Dark / Light / System Theme Switcher */}
             <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
               <button
@@ -183,11 +224,23 @@ export default function App() {
         </header>
 
         {viewMode === 'plan' ? (
-          <HousePlanView />
+          <HousePlanView 
+            provisions={provisions}
+            onToggleCompleted={toggleProvisionCompleted}
+            onTogglePending={toggleProvisionPending}
+            onEditProvision={(p) => setEditingItem({ type: 'provision', data: p })}
+          />
         ) : viewMode === 'buy' ? (
-          <ProcurementView />
+          <ProcurementView 
+            items={procurementItems}
+            onTogglePurchased={toggleProcurementPurchased}
+            onEditItem={(item) => setEditingItem({ type: 'procurement', data: item })}
+          />
         ) : viewMode === 'rules' ? (
-          <GeneralRulesView />
+          <GeneralRulesView 
+            rules={generalRules}
+            onEditRule={(rule) => setEditingItem({ type: 'rule', data: rule })}
+          />
         ) : viewMode === 'offers' ? (
           <OffersView />
         ) : (
@@ -289,33 +342,70 @@ export default function App() {
                           transition={{ duration: 0.15 }}
                           key={provision.id}
                           className={`rounded-xl p-3 border backdrop-blur-md transition-all duration-300 ${
-                            provision.pendingReview 
+                            provision.completed
+                              ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 opacity-75'
+                              : provision.pendingReview 
                               ? 'bg-amber-50/90 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800/60 shadow-sm' 
                               : 'bg-white dark:bg-neutral-800/40 border-neutral-200 dark:border-neutral-700 hover:border-indigo-500/50 dark:hover:border-indigo-500/50 shadow-sm'
                           }`}
                         >
                           <div className="flex items-start gap-2.5">
+                            {/* Completion Checkbox */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleProvisionCompleted(provision.id);
+                              }}
+                              className={`p-0.5 rounded transition-colors flex-shrink-0 mt-0.5 ${
+                                provision.completed
+                                  ? 'text-emerald-600 dark:text-emerald-400'
+                                  : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
+                              }`}
+                              title={provision.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                            >
+                              {provision.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                            </button>
+
                             {/* Standardized IEC 60617 Symbol */}
                             <IECSymbol provisionName={provision.name} category={provision.type} size={24} />
 
                             <div className="space-y-1.5 flex-1 min-w-0">
-                              <div className="flex items-center flex-wrap gap-1">
-                                <span className="text-[10px] font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 px-1.5 py-0.5 rounded">
-                                  {provision.room}
-                                </span>
-                                {provision.wall && (
-                                  <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-500/30">
-                                    {provision.wall}
+                              <div className="flex items-center justify-between gap-1">
+                                <div className="flex items-center flex-wrap gap-1">
+                                  <span className="text-[10px] font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 px-1.5 py-0.5 rounded">
+                                    {provision.room}
                                   </span>
-                                )}
-                                {provision.pendingReview && (
-                                  <span className="text-[10px] font-extrabold uppercase tracking-wider bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded border border-amber-300 dark:border-amber-700/60 flex items-center gap-1">
-                                    <AlertTriangle size={10} />
-                                    TBD (Εκκρεμεί)
-                                  </span>
-                                )}
+                                  {provision.wall && (
+                                    <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-500/30">
+                                      {provision.wall}
+                                    </span>
+                                  )}
+                                  {provision.pendingReview && (
+                                    <span className="text-[10px] font-extrabold uppercase tracking-wider bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded border border-amber-300 dark:border-amber-700/60 flex items-center gap-1">
+                                      <AlertTriangle size={10} />
+                                      TBD (Εκκρεμεί)
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Edit Button */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingItem({ type: 'provision', data: provision });
+                                  }}
+                                  className="p-1 rounded text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  title="Επεξεργασία παροχής"
+                                >
+                                  <Pencil size={12} />
+                                </button>
                               </div>
-                              <h3 className="text-sm font-bold leading-tight text-neutral-900 dark:text-neutral-100">
+
+                              <h3 className={`text-sm font-bold leading-tight ${
+                                provision.completed 
+                                  ? 'line-through text-neutral-400 dark:text-neutral-500' 
+                                  : 'text-neutral-900 dark:text-neutral-100'
+                              }`}>
                                 {provision.name}
                               </h3>
                               {provision.details && (
@@ -356,6 +446,15 @@ export default function App() {
           </div>
         </div>
         )}
+
+        {/* Global SQLite Edit Modal */}
+        <EditItemModal
+          item={editingItem}
+          onClose={() => setEditingItem(null)}
+          onSaveProvision={updateProvision}
+          onSaveProcurement={updateProcurementItem}
+          onSaveRule={updateGeneralRule}
+        />
       </div>
     </div>
   );
