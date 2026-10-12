@@ -288,7 +288,7 @@ export default function ProcurementView() {
       </div>
 
       {/* Category Pills */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 flex-shrink-0 text-xs">
+      <div className="flex flex-wrap items-center gap-1.5 text-xs">
         <button
           onClick={() => setSelectedCategory('ALL')}
           className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border flex items-center gap-1.5 ${
