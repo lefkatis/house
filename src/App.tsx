@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, LayoutDashboard, CheckCircle2, Circle, Workflow, Grid } from 'lucide-react';
+import { Settings, LayoutDashboard, CheckCircle2, Circle, Workflow, Grid, ShoppingCart } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
 import Flow from './Flow';
+import ProcurementView from './ProcurementView';
 
 export default function App() {
   const [provisions, setProvisions] = useState<Provision[]>(PROVISIONS);
@@ -12,7 +13,7 @@ export default function App() {
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [hoveredType, setHoveredType] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'flow'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'buy'>('grid');
 
   const toggleRoom = (room: string) => {
     if (selectedRooms.size === ROOMS.length) {
@@ -66,6 +67,13 @@ export default function App() {
 
           <div className="flex items-center space-x-1 bg-neutral-900 p-1 rounded-lg border border-neutral-800">
             <button 
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
+            >
+              <Grid size={14} />
+              <span>Λίστα</span>
+            </button>
+            <button 
               onClick={() => setViewMode('flow')}
               className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
             >
@@ -73,16 +81,19 @@ export default function App() {
               <span>Διάγραμμα</span>
             </button>
             <button 
-              onClick={() => setViewMode('grid')}
-              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
+              onClick={() => setViewMode('buy')}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
             >
-              <Grid size={14} />
-              <span>Λίστα</span>
+              <ShoppingCart size={14} />
+              <span>🛒 Αγορές & Εξοπλισμός</span>
             </button>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
+        {viewMode === 'buy' ? (
+          <ProcurementView />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
             
           {/* Left Panel: Filters */}
           <div className="lg:col-span-3 space-y-4">
@@ -237,6 +248,7 @@ export default function App() {
             
           </div>
         </div>
+        )}
       </div>
     </div>
   );
