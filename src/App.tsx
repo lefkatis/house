@@ -169,7 +169,7 @@ export default function App() {
             </motion.div>
             <div>
               <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-cyan-500 dark:to-cyan-400">
-                Pronies HQ
+                LefkPronies
               </h1>
               <p className="text-neutral-500 dark:text-neutral-400 text-xs tracking-wide">Έξυπνο Σύστημα Διαχείρισης</p>
             </div>
