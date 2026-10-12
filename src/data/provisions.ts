@@ -11,29 +11,31 @@ export const PROVISIONS: Provision[] = [
   // --- Σαλόνι / Τραπεζαρία ---
   { id: 'sal_1', name: 'Κεντρικό Touch Panel (Ύψος Ματιού)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_2', name: 'Καλωδίωση Cat6 PoE (Touch Panel)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'sal_3', name: 'Έξυπνοι Διακόπτες (Shelly Relays - Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'sal_3', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_4', name: 'Ηλεκτρικές Κουρτίνες (Παροχή Ρεύματος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'sal_5', name: 'Aqara FP300 mmWave Motion Sensor (220V/12V)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'sal_5', name: 'Αισθητήρας Παρουσίας mmWave (220V/12V)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_6', name: 'PoE Access Point', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'sal_7', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 1', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'sal_8', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 2', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
-  { id: 'sal_9', name: 'Μαγνητικές Επαφές & Glass Break Sensor (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'sal_9', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
   { id: 'sal_10', name: 'Πρίζα TV & Ηχοσυστήματος', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Τηλεόρασης', type: '🔌 Πρίζες', completed: false },
   { id: 'sal_11', name: 'Κρυφός Φωτισμός', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '💡 Φώτα', completed: false },
   { id: 'sal_12', name: 'Θερμοστάτης Ενδοδαπέδιας (Smart)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Κουζίνα ---
-  { id: 'kou_1', name: 'Aqara Smoke Detector', room: '🍳 Κουζίνα', wall: 'Οροφή (Πάνω από Νησίδα)', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'kou_2', name: 'Aqara FP300 mmWave Motion Sensor (220V/12V)', room: '🍳 Κουζίνα', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'kou_1', name: 'Αισθητήρας Καπνού & Φωτιάς', room: '🍳 Κουζίνα', wall: 'Οροφή (Πάνω από Νησίδα)', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_2', name: 'Αισθητήρας Παρουσίας mmWave (220V/12V)', room: '🍳 Κουζίνα', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'kou_3', name: 'PoE Access Point', room: '🍳 Κουζίνα', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'kou_4', name: '4x Πρίζες 13A (Κάτω από Νεροχύτη)', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_5', name: 'Διακόπτης Σκουπιδοφάγου', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'kou_isl_1', name: 'Χωνευτές / Pop-up Πρίζες Πάγκου Νησίδας (13A για Μικροσυσκευές)', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
+  { id: 'kou_isl_2', name: 'Εφεδρική Πρίζα 13A Νησίδας', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους + Χώρος για Τροφοδοτικά)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω', type: '💡 Φώτα', completed: false },
   { id: 'kou_9', name: 'Πρίζες Συσκευών (Φούρνος, Μικροκύματα, Πλυντήριο Πιάτων)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εστιών', type: '🔌 Πρίζες', completed: false },
-  { id: 'kou_10', name: 'Έξυπνοι Διακόπτες (Shelly Relays - Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'kou_11', name: 'Μαγνητικές Επαφές & Glass Break', room: '🍳 Κουζίνα', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_10', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'kou_11', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🍳 Κουζίνα', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
   
   // --- Pantry ---
   { id: 'pan_1', name: 'Μελλοντικές Αναμονές Νερού (Ζεστό/Κρύο) & Αποχέτευση', room: '🥫 Pantry', wall: 'Τοίχος Υδραυλικών', type: '🚰 Υδραυλικά', completed: false },
@@ -45,43 +47,58 @@ export const PROVISIONS: Provision[] = [
   { id: 'gra_2', name: 'Πολλαπλές Πρίζες 16A (Γραφείο Επιλογή Β)', room: '🖥️ Γραφείο', wall: 'Δεξιός Τοίχος', type: '🔌 Πρίζες', completed: false },
   { id: 'gra_3', name: 'Αναμονές Δικτύου Cat6 (Πολλαπλές) - Τοίχος Α', room: '🖥️ Γραφείο', wall: 'Αριστερός Τοίχος', type: '🖥️ Server Cabinet', completed: false },
   { id: 'gra_4', name: 'Αναμονές Δικτύου Cat6 (Πολλαπλές) - Τοίχος Β', room: '🖥️ Γραφείο', wall: 'Δεξιός Τοίχος', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'gra_5', name: 'Aqara FP300 mmWave Motion Sensor', room: '🖥️ Γραφείο', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'gra_5', name: 'Αισθητήρας Παρουσίας mmWave', room: '🖥️ Γραφείο', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'gra_6', name: 'PoE Access Point', room: '🖥️ Γραφείο', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'gra_7', name: 'Split Unit (A/C) & Ενδοδαπέδια Θέρμανση', room: '🖥️ Γραφείο', wall: 'Τοίχος A/C', type: '🔧 Συντήρηση', completed: false },
-  { id: 'gra_8', name: 'Μαγνητικές Επαφές & Glass Break', room: '🖥️ Γραφείο', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'gra_8', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🖥️ Γραφείο', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Master Bedroom ---
   { id: 'mb_1', name: 'Παροχή Ρεύματος & Cat6 στο 150cm (Για TV)', room: '🛏️ Master Bedroom', wall: 'Τοίχος Απέναντι Κρεβατιού', type: '🔌 Πρίζες', completed: false },
   { id: 'mb_2', name: 'Κρυφός Φωτισμός (Οροφή & Περιμετρικά)', room: '🛏️ Master Bedroom', wall: 'Οροφή', type: '💡 Φώτα', completed: false },
   { id: 'mb_3', name: 'Φωτισμός Ντουλάπας & Αισθητήρες (LED Drivers)', room: '🛏️ Master Bedroom', wall: 'Γκαρνταρόμπα', type: '💡 Φώτα', completed: false },
   { id: 'mb_4', name: 'Split Unit & Θερμοστάτης Ενδοδαπέδιας', room: '🛏️ Master Bedroom', wall: 'Τοίχος A/C', type: '🔧 Συντήρηση', completed: false },
-  { id: 'mb_5', name: 'Aqara FP300 mmWave Motion Sensor', room: '🛏️ Master Bedroom', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'mb_6', name: 'Μαγνητικές Επαφές & Glass Break', room: '🛏️ Master Bedroom', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'mb_7', name: 'Έξυπνοι Διακόπτες (Shelly Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'mb_5', name: 'Αισθητήρας Παρουσίας mmWave', room: '🛏️ Master Bedroom', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'mb_6', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'mb_7', name: 'Έξυπνοι Διακόπτες / Ρελέ (Smart Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Bedroom 1 ---
   { id: 'b1_1', name: 'Split Unit & Θερμοστάτης Ενδοδαπέδιας', room: '🛏️ Bedroom 1', wall: 'Τοίχος A/C', type: '🔧 Συντήρηση', completed: false },
-  { id: 'b1_2', name: 'Aqara FP300 mmWave Motion Sensor', room: '🛏️ Bedroom 1', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'b1_2', name: 'Αισθητήρας Παρουσίας mmWave', room: '🛏️ Bedroom 1', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b1_3', name: 'Πρίζες & Cat6 (Γραφείο/TV)', room: '🛏️ Bedroom 1', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b1_4', name: 'Μαγνητικές Επαφές', room: '🛏️ Bedroom 1', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Bedroom 2 ---
   { id: 'b2_1', name: 'Split Unit & Θερμοστάτης Ενδοδαπέδιας', room: '🛏️ Bedroom 2', wall: 'Τοίχος A/C', type: '🔧 Συντήρηση', completed: false },
-  { id: 'b2_2', name: 'Aqara FP300 mmWave Motion Sensor', room: '🛏️ Bedroom 2', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'b2_2', name: 'Αισθητήρας Παρουσίας mmWave', room: '🛏️ Bedroom 2', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b2_3', name: 'Πρίζες & Cat6 (Γραφείο/TV)', room: '🛏️ Bedroom 2', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b2_4', name: 'Μαγνητικές Επαφές', room: '🛏️ Bedroom 2', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Bathrooms & WC ---
-  { id: 'bth_1', name: 'Θερμαντικά Σώματα / Πετσετοκρεμάστρες', room: '🚽 WC - Main', wall: 'Τοίχος Πόρτας', type: '🔧 Συντήρηση', completed: false },
-  { id: 'bth_2', name: 'Εξαερισμός', room: '🚽 Ensuite Bathroom', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  // WC - Main
+  { id: 'wcm_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 WC - Main', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
+  { id: 'wcm_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC - Main', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
+  { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+
+  // Ensuite Bathroom
+  { id: 'ens_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 Ensuite Bathroom', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
+  { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 Ensuite Bathroom', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 Ensuite Bathroom', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
+  { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 Ensuite Bathroom', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
+
+  // WC Ξένων (χωρίς πετσετοκρεμάστρα)
+  { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  { id: 'wcx_2', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ξένων', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
+  { id: 'wcx_3', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ξένων', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Πλυσταριό ---
   { id: 'ply_1', name: 'Πρίζες 16A (Πλυντήριο / Στεγνωτήριο)', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
   { id: 'ply_2', name: 'Παροχή & Αποχέτευση Νερού', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'ply_3', name: 'Μαγνητικές Επαφές (Αν υπάρχει εξωτερική πόρτα)', room: '🧺 Πλυσταριό', wall: 'Πόρτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'ply_3', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan / Ventilation)', room: '🧺 Πλυσταριό', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+  { id: 'ply_4', name: 'Μαγνητικές Επαφές (Αν υπάρχει εξωτερική πόρτα)', room: '🧺 Πλυσταριό', wall: 'Πόρτα', type: '🔒 Ασφάλεια', completed: false },
 
   // --- Διάδρομος ---
-  { id: 'dia_1', name: 'Aqara Αισθητήρας Θερμοκρασίας (Κεντρικός Έλεγχος)', room: '🛤️ Διάδρομος', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'dia_1', name: 'Αισθητήρας Θερμοκρασίας & Υγρασίας (Κεντρικός Έλεγχος)', room: '🛤️ Διάδρομος', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'dia_2', name: 'Εσωτερική Σειρήνα Συναγερμού', room: '🛤️ Διάδρομος', wall: 'Οροφή', type: '🔒 Ασφάλεια', completed: false },
   { id: 'dia_3', name: 'PoE Access Point', room: '🛤️ Διάδρομος', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'dia_4', name: 'Φωτισμός Αισθητήρα', room: '🛤️ Διάδρομος', wall: 'Δάπεδο / Οροφή', type: '💡 Φώτα', completed: false },
@@ -111,11 +128,12 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_9', name: 'Βρύσες Ποτίσματος / Λασάνι', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kyp_10', name: 'Γεώτρηση (Πρόνοια, Αναμονές Ρεύματος & Αντλίας)', room: '🌳 Κήπος / Πισίνα', wall: 'Μηχανοστάσιο Γεώτρησης', type: '🚰 Υδραυλικά', completed: false },
 
-  // --- Parking ---
-  { id: 'par_1', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
-  { id: 'par_2', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'par_3', name: 'PoE Κάμερα Parking', room: '🚗 Parking', wall: 'Οροφή Parking', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'par_4', name: 'Φωτισμός Αισθητήρα', room: '🚗 Parking', wall: 'Οροφή Parking', type: '💡 Φώτα', completed: false },
+  // --- Garage / Parking ---
+  { id: 'gar_1', name: 'Μπουτόν Ανοίγματος Γκαραζόπορτας (Push Button Control)', room: '🚗 Garage / Parking', wall: 'Τοίχος Εισόδου Γκαράζ', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'gar_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Garage / Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
+  { id: 'gar_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Garage / Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'gar_4', name: 'PoE Κάμερα Garage / Parking', room: '🚗 Garage / Parking', wall: 'Οροφή Garage', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'gar_5', name: 'Φωτισμός Αισθητήρα', room: '🚗 Garage / Parking', wall: 'Οροφή Garage', type: '💡 Φώτα', completed: false },
 
   // --- Μηχανοστάσιο ---
   { id: 'mix_1', name: 'Server Rack (Mini PC, Switch, NVR, Modem, Firewall)', room: '⚙️ Μηχανοστάσιο', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },
