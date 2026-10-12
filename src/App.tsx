@@ -83,14 +83,14 @@ export default function App() {
               className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
             >
               <ShoppingCart size={14} />
-              <span>🛒 Αγορές & Εξοπλισμός</span>
+              <span>Αγορές & Εξοπλισμός</span>
             </button>
             <button 
               onClick={() => setViewMode('rules')}
               className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
             >
               <FileText size={14} />
-              <span>📋 Γενικές Οδηγίες</span>
+              <span>Γενικές Οδηγίες</span>
             </button>
           </div>
         </header>
