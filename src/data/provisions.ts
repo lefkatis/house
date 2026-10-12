@@ -5,6 +5,8 @@ export type Provision = {
   wall: string;
   type: string;
   completed: boolean;
+  pendingReview?: boolean; // When true, marked as "TBD / Προς Οριστικοποίηση"
+  details?: string;
 };
 
 export const PROVISIONS: Provision[] = [
@@ -26,16 +28,44 @@ export const PROVISIONS: Provision[] = [
   { id: 'kou_1', name: 'Αισθητήρας Καπνού & Φωτιάς', room: '🍳 Κουζίνα', wall: 'Οροφή (Πάνω από Νησίδα)', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kou_2', name: 'Αισθητήρας Παρουσίας mmWave (220V/12V)', room: '🍳 Κουζίνα', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'kou_3', name: 'PoE Access Point', room: '🍳 Κουζίνα', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'kou_4', name: '4x Πρίζες 13A (Κάτω από Νεροχύτη)', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🔌 Πρίζες', completed: false },
-  { id: 'kou_5', name: 'Διακόπτης Σκουπιδοφάγου', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🔌 Πρίζες', completed: false },
-  { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Νησίδα (Νεροχύτης)', type: '🚰 Υδραυλικά', completed: false },
+  { 
+    id: 'kou_4', 
+    name: '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Αντίστροφη Όσμωση, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)', 
+    room: '🍳 Κουζίνα', 
+    wall: 'Πάγκος Νεροχύτη', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: '1) Αντίστροφη Όσμωση (RO), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
+  },
+  { id: 'kou_5', name: 'Διακόπτης Σκουπιδοφάγου', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🔌 Πρίζες', completed: false },
+  { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kou_isl_1', name: 'Χωνευτές / Pop-up Πρίζες Πάγκου Νησίδας (13A για Μικροσυσκευές)', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_isl_2', name: 'Εφεδρική Πρίζα 13A Νησίδας', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
   { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους + Χώρος για Τροφοδοτικά)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω', type: '💡 Φώτα', completed: false },
-  { id: 'kou_9', name: 'Πρίζες Συσκευών (Φούρνος, Μικροκύματα, Πλυντήριο Πιάτων)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εστιών', type: '🔌 Πρίζες', completed: false },
+  { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω / Πάγκος', type: '💡 Φώτα', completed: false },
+  { 
+    id: 'kou_drivers', 
+    name: 'Χώρος για Τροφοδοτικά (LED Drivers)', 
+    room: '🍳 Κουζίνα', 
+    wall: 'Εκκρεμεί Χωροθέτηση (TBD)', 
+    type: '💡 Φώτα', 
+    completed: false,
+    pendingReview: true,
+    details: 'Εκκρεμεί οριστικοποίηση της θέσης για τα τροφοδοτικά LED (π.χ. σε ψευδοροφή ή πάνω ντουλάπι).'
+  },
+  { 
+    id: 'kou_9', 
+    name: 'Πρίζες Συσκευών (Φούρνος, Μικροκύματα, Πλυντήριο Πιάτων)', 
+    room: '🍳 Κουζίνα', 
+    wall: 'Εκκρεμεί Χωροθέτηση (TBD)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    pendingReview: true,
+    details: 'Εκκρεμεί οριστικοποίηση των ακριβών τοίχων/διαστάσεων βάσει των τελικών σχεδίων κουζίνας.'
+  },
   { id: 'kou_10', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'kou_11', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων', room: '🍳 Κουζίνα', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_11', name: 'Μαγνητικές Επαφές (Κούφωμα)', room: '🍳 Κουζίνα', wall: 'Παράθυρο', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'kou_glass', name: 'Μαγνητικές Επαφές & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🍳 Κουζίνα', wall: 'Τζαμαρία', type: '🔒 Ασφάλεια', completed: false },
   
   // --- Pantry ---
   { id: 'pan_1', name: 'Μελλοντικές Αναμονές Νερού (Ζεστό/Κρύο) & Αποχέτευση', room: '🥫 Pantry', wall: 'Τοίχος Υδραυλικών', type: '🚰 Υδραυλικά', completed: false },
@@ -128,12 +158,13 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_9', name: 'Βρύσες Ποτίσματος / Λασάνι', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kyp_10', name: 'Γεώτρηση (Πρόνοια, Αναμονές Ρεύματος & Αντλίας)', room: '🌳 Κήπος / Πισίνα', wall: 'Μηχανοστάσιο Γεώτρησης', type: '🚰 Υδραυλικά', completed: false },
 
-  // --- Garage / Parking ---
-  { id: 'gar_1', name: 'Μπουτόν Ανοίγματος Γκαραζόπορτας (Push Button Control)', room: '🚗 Garage / Parking', wall: 'Τοίχος Εισόδου Γκαράζ', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'gar_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Garage / Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
-  { id: 'gar_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Garage / Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'gar_4', name: 'PoE Κάμερα Garage / Parking', room: '🚗 Garage / Parking', wall: 'Οροφή Garage', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'gar_5', name: 'Φωτισμός Αισθητήρα', room: '🚗 Garage / Parking', wall: 'Οροφή Garage', type: '💡 Φώτα', completed: false },
+  // --- Parking ---
+  { id: 'par_1', name: 'Push Button Control', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'par_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
+  { id: 'par_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'par_4', name: 'PoE Κάμερα Parking', room: '🚗 Parking', wall: 'Οροφή Parking', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'par_5', name: 'Φωτισμός', room: '🚗 Parking', wall: 'Οροφή Parking', type: '💡 Φώτα', completed: false },
+  { id: 'par_6', name: 'Αισθητήρας Παρουσίας (Presence Sensor)', room: '🚗 Parking', wall: 'Οροφή Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Μηχανοστάσιο ---
   { id: 'mix_1', name: 'Server Rack (Mini PC, Switch, NVR, Modem, Firewall)', room: '⚙️ Μηχανοστάσιο', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },

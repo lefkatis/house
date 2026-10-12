@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, LayoutDashboard, CheckCircle2, Circle, Workflow, Grid, ShoppingCart } from 'lucide-react';
+import { Settings, LayoutDashboard, Workflow, Grid, ShoppingCart, FileText, AlertTriangle } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
 import Flow from './Flow';
 import ProcurementView from './ProcurementView';
+import GeneralRulesView from './GeneralRulesView';
 
 export default function App() {
-  const [provisions, setProvisions] = useState<Provision[]>(PROVISIONS);
+  const [provisions] = useState<Provision[]>(PROVISIONS);
   const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [hoveredType, setHoveredType] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'buy'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'buy' | 'rules'>('grid');
 
   const toggleRoom = (room: string) => {
     if (selectedRooms.size === ROOMS.length) {
@@ -37,9 +38,6 @@ export default function App() {
     }
   };
 
-  const toggleProvision = (id: string) => {
-    setProvisions(provisions.map(p => p.id === id ? { ...p, completed: !p.completed } : p));
-  };
 
   const filteredProvisions = provisions.filter(p => selectedRooms.has(p.room) && selectedTypes.has(p.type));
 
@@ -87,11 +85,20 @@ export default function App() {
               <ShoppingCart size={14} />
               <span>🛒 Αγορές & Εξοπλισμός</span>
             </button>
+            <button 
+              onClick={() => setViewMode('rules')}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-400 hover:text-neutral-200'}`}
+            >
+              <FileText size={14} />
+              <span>📋 Γενικές Οδηγίες</span>
+            </button>
           </div>
         </header>
 
         {viewMode === 'buy' ? (
           <ProcurementView />
+        ) : viewMode === 'rules' ? (
+          <GeneralRulesView />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
             
@@ -190,15 +197,14 @@ export default function App() {
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.15 }}
                           key={provision.id}
-                          onClick={() => toggleProvision(provision.id)}
-                          className={`cursor-pointer rounded-xl p-3 border backdrop-blur-md transition-all duration-300 ${
-                            provision.completed 
-                              ? 'bg-emerald-950/20 border-emerald-900/50' 
+                          className={`rounded-xl p-3 border backdrop-blur-md transition-all duration-300 ${
+                            provision.pendingReview 
+                              ? 'bg-amber-950/20 border-amber-800/60 hover:border-amber-600/80 shadow-sm' 
                               : 'bg-neutral-800/40 border-neutral-700 hover:border-indigo-500/50 hover:bg-neutral-800/80 shadow-sm'
                           }`}
                         >
                           <div className="flex items-start justify-between">
-                            <div className="space-y-1.5 flex-1 pr-2">
+                            <div className="space-y-1.5 flex-1">
                               <div className="flex items-center flex-wrap gap-1">
                                 <span className="text-[10px] font-bold uppercase tracking-wider bg-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded">
                                   {provision.room}
@@ -208,20 +214,27 @@ export default function App() {
                                     {provision.wall}
                                   </span>
                                 )}
+                                {provision.pendingReview && (
+                                  <span className="text-[10px] font-extrabold uppercase tracking-wider bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/60 flex items-center gap-1">
+                                    <AlertTriangle size={10} />
+                                    TBD (Εκκρεμεί)
+                                  </span>
+                                )}
                               </div>
-                              <h3 className={`text-sm font-bold leading-tight ${provision.completed ? 'text-neutral-500 line-through decoration-emerald-900' : 'text-neutral-100'}`}>
+                              <h3 className="text-sm font-bold leading-tight text-neutral-100">
                                 {provision.name}
                               </h3>
+                              {provision.details && (
+                                <p className="text-[11px] text-neutral-400 leading-snug pt-0.5">
+                                  {provision.details}
+                                </p>
+                              )}
                               <div className="flex items-center space-x-1 mt-1">
                                 <span className="text-[10px] font-medium text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-900/50">
                                   {provision.type}
                                 </span>
                               </div>
                             </div>
-
-                            <button className={`mt-0.5 flex-shrink-0 ${provision.completed ? 'text-emerald-500' : 'text-neutral-600 hover:text-indigo-400'}`}>
-                              {provision.completed ? <CheckCircle2 size={18} /> : <Circle size={18} />}
-                            </button>
                           </div>
                         </motion.div>
                       )

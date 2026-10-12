@@ -95,7 +95,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€14 - €18',
     quantity: 12,
     unit: 'τεμ.',
-    rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🚪 Χώρος Εισόδου', '🚗 Garage / Parking', '🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2'],
+    rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🚪 Χώρος Εισόδου', '🚗 Parking', '🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2'],
     isTask: false,
     notes: 'Χωνευτό ρελέ πίσω από μονούς διακόπτες τοίχου (απαιτεί βαθιά κουτιά 6cm και ουδέτερο). Dry contacts κατάλληλο και για μπουτόν γκαραζόπορτας και ηλεκτρικές κλειδαριές.',
     purchased: false
@@ -245,7 +245,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€85 - €115',
     quantity: 5,
     unit: 'τεμ.',
-    rooms: ['🌳 Κήπος / Πισίνα', '🚗 Garage / Parking'],
+    rooms: ['🌳 Κήπος / Πισίνα', '🚗 Parking'],
     isTask: false,
     notes: 'Περιμετρική κάλυψη (αυλή, πισίνα, είσοδος, parking). Σύνδεση με Cat6 PoE στο rack και συνεχής καταγραφή σε NVR/Mini PC.',
     purchased: false
@@ -417,7 +417,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€580 - €850',
     quantity: 1,
     unit: 'τεμ.',
-    rooms: ['🚗 Garage / Parking'],
+    rooms: ['🚗 Parking'],
     isTask: true,
     taskDescription: 'Επιλογή τριφασικού φορτιστή (Wallbox, Easee ή Tesla Wall Connector) με δυνατότητα dynamic load balancing και έξυπνης φόρτισης από φωτοβολταϊκά.',
     notes: 'Τριφασική παροχή 32A στο Garage / Parking. Άμεση ανάγκη λόγω υπάρχοντος ηλεκτρικού οχήματος.',
@@ -434,7 +434,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     priceRange: '€7 - €15',
     quantity: 1,
     unit: 'τεμ.',
-    rooms: ['🚗 Garage / Parking'],
+    rooms: ['🚗 Parking'],
     isTask: false,
     notes: 'Σύνδεση με το Shelly Plus 1 (Dry Contacts) και την πλακέτα του μοτέρ της γκαραζόπορτας για τοπικό άνοιγμα/κλείσιμο.',
     purchased: false
