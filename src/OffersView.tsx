@@ -169,63 +169,63 @@ export default function OffersView() {
   const totalPdfsCount = offers.reduce((acc, curr) => acc + curr.documents.length, 0);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-4 overflow-y-auto max-h-[85vh] pr-1">
+    <div className="flex-1 w-full flex flex-col gap-3 sm:gap-4 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
       {/* Top Banner / Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-shrink-0">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0">
         
         {/* Total Vendors */}
-        <div className="bg-white/80 dark:bg-gradient-to-br dark:from-indigo-950/60 dark:to-neutral-900/90 border border-neutral-200 dark:border-indigo-800/40 rounded-xl p-3 shadow-md backdrop-blur-md">
+        <div className="bg-white/80 dark:bg-gradient-to-br dark:from-indigo-950/60 dark:to-neutral-900/90 border border-neutral-200 dark:border-indigo-800/40 rounded-xl p-2.5 sm:p-3 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-indigo-600 dark:text-indigo-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Προσφορές Μελετών</span>
-            <FolderOpen size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Προσφορές Μελετών</span>
+            <FolderOpen size={15} />
           </div>
-          <div className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {totalOffersCount} <span className="text-sm font-normal text-neutral-500 dark:text-neutral-400">Γραφεία</span>
+          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+            {totalOffersCount} <span className="text-xs sm:text-sm font-normal text-neutral-500 dark:text-neutral-400">Γραφεία</span>
           </div>
-          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
+          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
             {receivedOffersCount} διαθέσιμες προσφορές
           </div>
         </div>
 
         {/* Total PDFs */}
-        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3 shadow-md backdrop-blur-md">
+        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-cyan-600 dark:text-cyan-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Συνημμένα Τεύχη PDF</span>
-            <FileText size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Συνημμένα Τεύχη PDF</span>
+            <FileText size={15} />
           </div>
-          <div className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {totalPdfsCount} <span className="text-sm font-normal text-neutral-500 dark:text-neutral-400">έγγραφα</span>
+          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+            {totalPdfsCount} <span className="text-xs sm:text-sm font-normal text-neutral-500 dark:text-neutral-400">έγγραφα</span>
           </div>
-          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
+          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
             Μηχανολογικά, Ηλεκτρολογικά & ΠΕΑ
           </div>
         </div>
 
         {/* Current Active Vendor */}
-        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3 shadow-md backdrop-blur-md">
+        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-md backdrop-blur-md">
           <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Επιλεγμένος Μελετητής</span>
-            <CheckCircle2 size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Επιλεγμένος Μελετητής</span>
+            <CheckCircle2 size={15} />
           </div>
-          <div className="text-base font-bold text-neutral-900 dark:text-emerald-300 tracking-tight truncate">
+          <div className="text-sm sm:text-base font-bold text-neutral-900 dark:text-emerald-300 tracking-tight truncate">
             {currentVendor.vendorName}
           </div>
-          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">
+          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">
             {currentVendor.referenceCode ? `Κωδ: ${currentVendor.referenceCode}` : 'Χωρίς κωδικό'} • {currentVendor.statusLabel}
           </div>
         </div>
 
         {/* View Toggle */}
-        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3 shadow-md backdrop-blur-md flex flex-col justify-between">
+        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-md backdrop-blur-md flex flex-col justify-between">
           <div className="flex items-center justify-between text-purple-600 dark:text-purple-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Προβολή</span>
-            <Scale size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Προβολή</span>
+            <Scale size={15} />
           </div>
-          <div className="flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-950/80 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-950/80 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
             <button
               onClick={() => setSubViewMode('details')}
-              className={`flex-1 py-1 px-2 rounded text-xs font-semibold transition-all ${
+              className={`flex-1 py-1 px-1.5 sm:px-2 rounded text-[11px] sm:text-xs font-semibold transition-all ${
                 viewMode === 'details' ? 'bg-indigo-600 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
@@ -233,11 +233,11 @@ export default function OffersView() {
             </button>
             <button
               onClick={() => setSubViewMode('compare')}
-              className={`flex-1 py-1 px-2 rounded text-xs font-semibold transition-all ${
+              className={`flex-1 py-1 px-1.5 sm:px-2 rounded text-[11px] sm:text-xs font-semibold transition-all ${
                 viewMode === 'compare' ? 'bg-purple-600 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              Σύγκριση Μελετητών
+              Σύγκριση
             </button>
           </div>
         </div>
@@ -480,7 +480,7 @@ export default function OffersView() {
         </div>
       ) : (
         /* VENDOR DETAILS & PDF VIEWER */
-        <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-[500px]">
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 flex-shrink-0 lg:flex-1 min-h-[450px] lg:min-h-[500px]">
           
           {/* Left Panel: Vendor Info, Sub-Tabs & Detailed Pricing */}
           <div className="w-full lg:w-96 flex flex-col gap-3 flex-shrink-0">
@@ -769,7 +769,7 @@ export default function OffersView() {
           </div>
 
           {/* Right Panel: Interactive PDF Preview / Embed */}
-          <div className="flex-1 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 shadow-xl backdrop-blur-md flex flex-col min-h-[600px]">
+          <div className="flex-1 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-xl backdrop-blur-md flex flex-col min-h-[460px] lg:min-h-[600px]">
             
             {currentDoc ? (
               <>
@@ -820,7 +820,7 @@ export default function OffersView() {
                 </div>
 
                 {/* PDF Embed / Object */}
-                <div className="flex-1 w-full bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden relative min-h-[550px] flex flex-col">
+                <div className="w-full h-[450px] sm:h-[550px] lg:flex-1 lg:h-auto bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden relative min-h-[450px] lg:min-h-[550px] flex flex-col">
                   {currentDoc.drivePreviewUrl.includes('drive.google.com') ? (
                     <iframe
                       key={currentDoc.id}

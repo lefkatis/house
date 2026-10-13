@@ -13,7 +13,9 @@ import {
   LayoutDashboard,
   CheckCircle2,
   Circle,
-  Pencil
+  Pencil,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { PROVISIONS, Provision } from './data/provisions';
 import { CATEGORIES } from './data/categories';
@@ -77,6 +79,7 @@ export default function HousePlanView({
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [showOnlyPending, setShowOnlyPending] = useState<boolean>(false);
+  const [showMobilePlanFilters, setShowMobilePlanFilters] = useState<boolean>(false);
   const [hoveredProvisionId, setHoveredProvisionId] = useState<string | null>(null);
   const [hoveredRoomId, setHoveredRoomId] = useState<string | null>(null);
 
@@ -164,7 +167,7 @@ export default function HousePlanView({
   }, [filteredProvisions, pinsMap]);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-3 overflow-y-auto max-h-[85vh] pr-1">
+    <div className="flex-1 w-full flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
       {/* Top Banner: Drawing Selector & Controls */}
       <div className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md backdrop-blur-md flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between flex-shrink-0">
@@ -175,7 +178,7 @@ export default function HousePlanView({
             <Home size={12} />
             Αρχιτεκτονικά Σχέδια & Παροχές (HOUSE 2021)
           </div>
-          <h2 className="text-base font-black text-neutral-900 dark:text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-sm sm:text-base font-black text-neutral-900 dark:text-white tracking-tight flex flex-wrap items-center gap-2">
             <span>Αρχιτεκτονική Κάτοψη & Χαρτογράφηση Δωματίων</span>
             <span className="text-xs px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-mono font-normal">
               A1.2 • 1:100 @ A2
@@ -187,7 +190,7 @@ export default function HousePlanView({
         <div className="flex flex-wrap items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs">
           <button
             onClick={() => setActiveTab('schematic')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'schematic'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -199,7 +202,7 @@ export default function HousePlanView({
 
           <button
             onClick={() => setActiveTab('ground')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'ground'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -211,7 +214,7 @@ export default function HousePlanView({
 
           <button
             onClick={() => setActiveTab('site')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'site'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -223,7 +226,7 @@ export default function HousePlanView({
 
           <button
             onClick={() => setActiveTab('roof')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'roof'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -234,7 +237,7 @@ export default function HousePlanView({
 
           <button
             onClick={() => setActiveTab('full_pdf')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'full_pdf'
                 ? 'bg-purple-600 text-white shadow-md'
                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
@@ -248,100 +251,160 @@ export default function HousePlanView({
       </div>
 
       {/* FILTER & ROOM QUICK SELECT BAR */}
-      <div className="bg-neutral-100/80 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 flex flex-wrap items-center gap-2 text-xs flex-shrink-0">
+      <div className="bg-neutral-100/80 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2 sm:p-2.5 flex flex-col gap-2 text-xs flex-shrink-0">
         
-        {/* Room selector */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1">
-            <Filter size={12} />
-            Δωμάτιο:
-          </span>
-          <button
-            onClick={() => setSelectedRoom(null)}
-            className={`px-2.5 py-1 rounded-lg font-semibold border transition-all ${
-              selectedRoom === null
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
-                : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
-            }`}
-          >
-            Όλα ({provisions.length})
-          </button>
-        </div>
+        {/* Top Filter Bar Row (Mobile Toggle + Active Status + TBD Button) */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {/* Mobile Filter Toggle */}
+            <button
+              onClick={() => setShowMobilePlanFilters(!showMobilePlanFilters)}
+              className="lg:hidden flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 font-bold text-neutral-700 dark:text-neutral-200 shadow-sm"
+            >
+              <Filter size={12} className="text-indigo-500" />
+              <span>Φίλτρα</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                {selectedRoom ? selectedRoom : 'Όλα τα Δωμάτια'}
+              </span>
+              {showMobilePlanFilters ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            </button>
 
-        {/* Room Pills */}
-        <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5">
-          {BLUEPRINT_ROOMS.map(room => {
-            const isSelected = selectedRoom === room.id;
-            const count = provisions.filter(p => p.room === room.id).length;
-            return (
+            {/* Desktop Room Selector Label & All Button */}
+            <div className="hidden lg:flex items-center gap-1.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1">
+                <Filter size={12} />
+                Δωμάτιο:
+              </span>
               <button
-                key={room.id}
-                onClick={() => setSelectedRoom(isSelected ? null : room.id)}
-                className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all flex items-center gap-1 ${
-                  isSelected
+                onClick={() => setSelectedRoom(null)}
+                className={`px-2.5 py-1 rounded-lg font-semibold border transition-all ${
+                  selectedRoom === null
                     ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
                     : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
                 }`}
               >
-                <span>{room.id}</span>
-                <span className={`text-[9px] px-1 rounded-full ${isSelected ? 'bg-indigo-700 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500'}`}>
-                  {count}
-                </span>
+                Όλα ({provisions.length})
               </button>
-            );
-          })}
-        </div>
+            </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5 border-l border-neutral-300 dark:border-neutral-800 pl-2">
+            {/* Active selection pills indicator on mobile */}
+            {(selectedRoom || selectedCategory !== 'ALL') && (
+              <div className="flex items-center gap-1 lg:hidden">
+                {selectedRoom && (
+                  <button
+                    onClick={() => setSelectedRoom(null)}
+                    className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1 font-semibold"
+                    title="Καθαρισμός δωματίου"
+                  >
+                    <span>{selectedRoom}</span>
+                    <span className="text-xs">✕</span>
+                  </button>
+                )}
+                {selectedCategory !== 'ALL' && (
+                  <button
+                    onClick={() => setSelectedCategory('ALL')}
+                    className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 flex items-center gap-1 font-semibold"
+                    title="Καθαρισμός κατηγορίας"
+                  >
+                    <span>{selectedCategory}</span>
+                    <span className="text-xs">✕</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* TBD Filter */}
           <button
-            onClick={() => setSelectedCategory('ALL')}
-            className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all ${
-              selectedCategory === 'ALL'
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
-                : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
+            onClick={() => setShowOnlyPending(!showOnlyPending)}
+            className={`px-2.5 py-1 rounded-lg font-bold border transition-all flex items-center gap-1 text-[11px] ${
+              showOnlyPending
+                ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                : 'bg-white dark:bg-neutral-950 border-amber-600/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10'
             }`}
           >
-            Όλες οι Κατηγορίες
+            <AlertTriangle size={12} />
+            <span>Μόνο TBD</span>
           </button>
-          {CATEGORIES.map(cat => (
+        </div>
+
+        {/* Detailed Pills Row (Collapsible on mobile, always visible on lg+) */}
+        <div className={`${showMobilePlanFilters ? 'flex' : 'hidden'} lg:flex flex-wrap items-center gap-2 pt-1 border-t border-neutral-200 dark:border-neutral-800/60`}>
+          
+          {/* Room Pills */}
+          <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5">
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(selectedCategory === cat ? 'ALL' : cat)}
-              className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all ${
-                selectedCategory === cat
+              onClick={() => setSelectedRoom(null)}
+              className={`lg:hidden px-2 py-1 rounded-lg font-semibold border text-[11px] transition-all ${
+                selectedRoom === null
                   ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
                   : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
               }`}
             >
-              {cat}
+              Όλα ({provisions.length})
             </button>
-          ))}
-        </div>
+            {BLUEPRINT_ROOMS.map(room => {
+              const isSelected = selectedRoom === room.id;
+              const count = provisions.filter(p => p.room === room.id).length;
+              return (
+                <button
+                  key={room.id}
+                  onClick={() => setSelectedRoom(isSelected ? null : room.id)}
+                  className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all flex items-center gap-1 ${
+                    isSelected
+                      ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+                      : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
+                  }`}
+                >
+                  <span>{room.id}</span>
+                  <span className={`text-[9px] px-1 rounded-full ${isSelected ? 'bg-indigo-700 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500'}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* TBD Filter */}
-        <button
-          onClick={() => setShowOnlyPending(!showOnlyPending)}
-          className={`ml-auto px-2.5 py-1 rounded-lg font-bold border transition-all flex items-center gap-1 text-[11px] ${
-            showOnlyPending
-              ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-              : 'bg-white dark:bg-neutral-950 border-amber-600/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10'
-          }`}
-        >
-          <AlertTriangle size={12} />
-          <span>Μόνο Εκκρεμή (TBD)</span>
-        </button>
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1 max-w-full pb-0.5 sm:border-l border-neutral-300 dark:border-neutral-800 sm:pl-2">
+            <button
+              onClick={() => setSelectedCategory('ALL')}
+              className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all ${
+                selectedCategory === 'ALL'
+                  ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+                  : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
+              }`}
+            >
+              Όλες οι Κατηγορίες
+            </button>
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(selectedCategory === cat ? 'ALL' : cat)}
+                className={`px-2 py-1 rounded-lg font-medium whitespace-nowrap border text-[11px] transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+                    : 'bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+        </div>
 
       </div>
 
       {/* MAIN VIEW AREA */}
       {activeTab === 'schematic' ? (
         /* INTERACTIVE SVG SCHEMATIC FLOOR PLAN (HOUSE DIVIDED WITHOUT PDF) */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-shrink-0 lg:flex-1 min-h-[340px] sm:min-h-[480px] lg:min-h-[600px]">
           
           {/* Left/Center Column: Interactive SVG Floor Plan */}
-          <div className="lg:col-span-8 xl:col-span-8 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col relative overflow-hidden">
-            <div className="flex items-center justify-between mb-2 flex-shrink-0 text-xs">
+          <div className="lg:col-span-8 xl:col-span-8 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-2.5 sm:p-3 shadow-md flex flex-col relative min-h-[300px] sm:min-h-[440px] lg:min-h-[580px]">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 flex-shrink-0 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
                   <LayoutDashboard size={14} className="text-indigo-500" />
@@ -356,10 +419,12 @@ export default function HousePlanView({
               </span>
             </div>
 
-            <div className="w-full flex-1 overflow-auto bg-neutral-50 dark:bg-neutral-950/80 rounded-xl p-2 border border-neutral-200 dark:border-neutral-800/80 flex items-center justify-center">
+            <div className="w-full lg:flex-1 overflow-auto bg-neutral-50 dark:bg-neutral-950/80 rounded-xl p-1.5 sm:p-2 border border-neutral-200 dark:border-neutral-800/80 flex items-center justify-center min-h-[260px] sm:min-h-[380px] lg:min-h-[500px]">
               <svg 
+                width="100%"
+                height="100%"
                 viewBox="0 0 1000 830" 
-                className="w-full h-auto max-h-[640px] select-none"
+                className="w-full h-auto min-h-[240px] sm:min-h-[360px] max-h-[640px] block select-none"
               >
                 {/* Background grid markings */}
                 <defs>
@@ -484,7 +549,7 @@ export default function HousePlanView({
           </div>
 
           {/* Right Column: Selected Room / Filtered Provisions Drawer */}
-          <div className="lg:col-span-4 xl:col-span-4 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col min-h-[500px]">
+          <div className="lg:col-span-4 xl:col-span-4 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col max-h-[450px] lg:max-h-none min-h-[320px] lg:min-h-[500px]">
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
               <div>
                 <h3 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
@@ -612,8 +677,8 @@ export default function HousePlanView({
         </div>
       ) : activeTab === 'full_pdf' ? (
         /* FULL ARCHITECTURAL PDF EMBED */
-        <div className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 shadow-xl flex flex-col min-h-[600px]">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800 mb-3 flex-shrink-0">
+        <div className="flex-shrink-0 lg:flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col min-h-[450px] lg:min-h-[600px]">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-neutral-200 dark:border-neutral-800 mb-3 flex-shrink-0">
             <div>
               <h3 className="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                 <FileText size={16} className="text-purple-500" />
@@ -624,7 +689,7 @@ export default function HousePlanView({
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <a
                 href={getAssetUrl('/house_plans.pdf')}
                 target="_blank"
@@ -645,18 +710,18 @@ export default function HousePlanView({
             </div>
           </div>
 
-          <div className="flex-1 w-full bg-neutral-950 rounded-xl border border-neutral-800 overflow-hidden min-h-[550px]">
+          <div className="w-full h-[420px] sm:h-[520px] lg:flex-1 lg:h-auto bg-neutral-950 rounded-xl border border-neutral-800 overflow-hidden min-h-[400px] lg:min-h-[550px]">
             <iframe
               src={`${getAssetUrl('/house_plans.pdf')}#toolbar=1&navpanes=1`}
-              className="w-full h-full min-h-[550px] border-0"
+              className="w-full h-full min-h-[400px] lg:min-h-[550px] border-0"
               title="Αρχιτεκτονικά Σχέδια PDF"
             />
           </div>
         </div>
       ) : activeTab === 'site' || activeTab === 'roof' ? (
         /* SITE OR ROOF PLAN PREVIEW */
-        <div className="flex-1 bg-white dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 shadow-xl flex flex-col items-center min-h-[550px] overflow-auto">
-          <div className="w-full flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800 mb-3">
+        <div className="flex-shrink-0 lg:flex-1 bg-white dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col items-center min-h-[300px] sm:min-h-[440px] lg:min-h-[550px]">
+          <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-neutral-200 dark:border-neutral-800 mb-3">
             <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
               {activeTab === 'site' ? 'Χωροταξικό Σχέδιο Οικοπέδου (A1.1)' : 'Κάτοψη Οροφής & Ηλιακά (A1.3)'}
             </span>
@@ -671,23 +736,23 @@ export default function HousePlanView({
             </a>
           </div>
 
-          <div className="flex-1 flex items-center justify-center max-w-full overflow-auto">
+          <div className="w-full lg:flex-1 flex items-center justify-center max-w-full min-h-[240px] sm:min-h-[360px] overflow-auto">
             <img 
               src={getAssetUrl(activeTab === 'site' ? '/plan_site.png' : '/plan_roof.png')} 
               alt="Αρχιτεκτονικό Σχέδιο"
-              className="max-w-full h-auto rounded-xl shadow-lg border border-neutral-300 dark:border-neutral-800"
+              className="w-full lg:w-auto max-w-full h-auto lg:max-h-[640px] block rounded-xl shadow-lg border border-neutral-300 dark:border-neutral-800"
             />
           </div>
         </div>
       ) : (
         /* INTERACTIVE GROUND FLOOR PLAN (A1.2) - MAIN FEATURE */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-shrink-0 lg:flex-1 min-h-[340px] sm:min-h-[480px] lg:min-h-[600px]">
           
           {/* Central Architectural Blueprint Viewer */}
-          <div className="lg:col-span-8 xl:col-span-9 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col relative overflow-hidden">
+          <div className="lg:col-span-8 xl:col-span-9 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-2.5 sm:p-3 shadow-md flex flex-col relative min-h-[300px] sm:min-h-[440px] lg:min-h-[580px]">
             
             {/* Viewer Header & Actions */}
-            <div className="flex items-center justify-between mb-2 flex-shrink-0 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 flex-shrink-0 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
                   <Home size={14} className="text-indigo-500" />
@@ -726,7 +791,7 @@ export default function HousePlanView({
             {selectedProvisionToPlace && (
               <div className="bg-indigo-600/20 border border-indigo-500 rounded-xl p-2 mb-2 text-xs text-indigo-300 flex items-center justify-between animate-pulse">
                 <span>
-                  📍 Κάντε κλικ οπουδήποτε πάνω στην αρχιτεκτονική κάτοψη για να τοποθετήσετε την παροχή: <strong>{PROVISIONS.find(p => p.id === selectedProvisionToPlace)?.name}</strong>
+                  📍 Κάντε κλικ οπουδήποτε πάνω στην αρχιτεκτονική κάτοψη για να τοποθετήσετε την παροχή: <strong>{provisions.find(p => p.id === selectedProvisionToPlace)?.name}</strong>
                 </span>
                 <button 
                   onClick={() => setSelectedProvisionToPlace(null)}
@@ -741,17 +806,17 @@ export default function HousePlanView({
             <div 
               ref={planContainerRef}
               onClick={handleBlueprintClick}
-              className={`flex-1 relative overflow-auto rounded-xl border border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center p-1 select-none ${
+              className={`w-full lg:flex-1 relative overflow-auto rounded-xl border border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center p-1 select-none min-h-[250px] sm:min-h-[380px] lg:min-h-[480px] ${
                 selectedProvisionToPlace ? 'cursor-crosshair' : 'cursor-default'
               }`}
             >
-              <div className="relative inline-block max-w-full">
+              <div className="relative inline-block w-full lg:w-auto max-w-full">
                 
                 {/* The Real Architectural Blueprint Image */}
                 <img 
                   src={getAssetUrl('/plan_ground_floor.png')} 
                   alt="Αρχιτεκτονική Κάτοψη Ισογείου"
-                  className="w-full h-auto max-h-[640px] block rounded-lg shadow-sm"
+                  className="w-full lg:w-auto max-w-full h-auto lg:max-h-[640px] block rounded-lg shadow-sm"
                 />
 
                 {/* SVG Overlay for Room Highlighting & Hotspots */}
@@ -829,6 +894,7 @@ export default function HousePlanView({
                       onMouseLeave={() => setHoveredProvisionId(null)}
                       onClick={(e) => {
                         e.stopPropagation();
+                        setHoveredProvisionId(hoveredProvisionId === provision.id ? null : provision.id);
                         setSelectedRoom(provision.room);
                       }}
                       className={`absolute -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer transition-transform duration-200 ${
@@ -848,8 +914,8 @@ export default function HousePlanView({
                         </div>
                       </div>
 
-                      {/* Tooltip on Hover */}
-                      <div className="absolute left-1/2 bottom-full mb-1.5 -translate-x-1/2 hidden group-hover:flex flex-col bg-neutral-900/95 border border-neutral-700 text-white rounded-lg p-2.5 shadow-2xl z-40 min-w-[200px] max-w-[260px] pointer-events-none backdrop-blur-md">
+                      {/* Tooltip on Hover or Tap */}
+                      <div className={`absolute left-1/2 bottom-full mb-1.5 -translate-x-1/2 ${isHovered ? 'flex' : 'hidden group-hover:flex'} flex-col bg-neutral-900/95 border border-neutral-700 text-white rounded-lg p-2.5 shadow-2xl z-40 min-w-[200px] max-w-[260px] pointer-events-none backdrop-blur-md`}>
                         <div className="flex items-center gap-1.5 mb-1">
                           <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-900 text-indigo-300">
                             {provision.type}
@@ -879,7 +945,7 @@ export default function HousePlanView({
 
             {/* Blueprint Legend Footer */}
             <div className="flex flex-wrap items-center justify-between gap-2 pt-2 mt-2 border-t border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 flex-shrink-0">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="flex items-center gap-1 font-medium">
                   <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>
                   Παροχή / Εξοπλισμός (IEC 60617)
@@ -901,7 +967,7 @@ export default function HousePlanView({
           </div>
 
           {/* Right Sidebar: Provisions List mapped to the selected room */}
-          <div className="lg:col-span-4 xl:col-span-3 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col min-h-[500px]">
+          <div className="lg:col-span-4 xl:col-span-3 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col max-h-[450px] lg:max-h-none min-h-[300px] lg:min-h-[500px]">
             
             {/* List Header */}
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">

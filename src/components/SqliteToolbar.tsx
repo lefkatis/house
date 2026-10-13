@@ -101,7 +101,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
       <button
         onClick={onUndo}
         disabled={!canUndo}
-        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
           canUndo
             ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-neutral-800 shadow-sm'
             : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-60'
@@ -109,7 +109,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
         title="Αναίρεση προηγούμενης αλλαγής (Ctrl+Z / Cmd+Z)"
       >
         <Undo2 size={13} />
-        <span>Αναίρεση</span>
+        <span className="hidden xs:inline sm:inline">Αναίρεση</span>
         {undoCount > 0 && (
           <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-extrabold">
             {undoCount}
@@ -121,7 +121,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
       <button
         onClick={onRedo}
         disabled={!canRedo}
-        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
           canRedo
             ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-neutral-800 shadow-sm'
             : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-60'
@@ -129,7 +129,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
         title="Επανάληψη αναιρεμένης αλλαγής (Ctrl+Y / Cmd+Shift+Z)"
       >
         <Redo2 size={13} />
-        <span>Επανάληψη</span>
+        <span className="hidden xs:inline sm:inline">Επανάληψη</span>
         {redoCount > 0 && (
           <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 font-extrabold">
             {redoCount}
@@ -141,7 +141,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
       <div className="relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-700/80 text-neutral-700 dark:text-neutral-200 font-semibold transition-colors"
+          className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-700/80 text-neutral-700 dark:text-neutral-200 font-semibold transition-colors"
           title="Διαχείριση SQLite & Αρχείων Βάσης"
         >
           <Database size={13} className="text-indigo-500" />
@@ -150,7 +150,7 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150 text-xs">
+          <div className="absolute right-0 mt-1.5 w-60 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl z-50 p-1.5 animate-in fade-in slide-in-from-top-2 duration-150 text-xs">
             
             <div className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
               SQLite Storage &middot; WASM

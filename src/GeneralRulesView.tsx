@@ -24,17 +24,17 @@ export default function GeneralRulesView({ rules: rulesProp, onEditRule }: Gener
     : rules.filter(r => r.category === selectedCategory);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-4 overflow-y-auto max-h-[85vh] pr-1">
+    <div className="flex-1 w-full flex flex-col gap-3 sm:gap-4 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-indigo-50/80 via-white to-indigo-50/50 dark:from-neutral-900 dark:via-indigo-950/40 dark:to-neutral-900 border border-indigo-200 dark:border-indigo-900/40 rounded-2xl p-4 shadow-sm dark:shadow-xl flex-shrink-0 transition-colors">
+      <div className="bg-gradient-to-r from-indigo-50/80 via-white to-indigo-50/50 dark:from-neutral-900 dark:via-indigo-950/40 dark:to-neutral-900 border border-indigo-200 dark:border-indigo-900/40 rounded-2xl p-3 sm:p-4 shadow-sm dark:shadow-xl flex-shrink-0 transition-colors">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 border border-indigo-300 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 border border-indigo-300 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1.5 sm:mb-2">
               <Info size={12} />
               Καθολικοί Κανόνες Σπιτιού
             </div>
-            <h2 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight">
+            <h2 className="text-base sm:text-xl font-black text-neutral-900 dark:text-white tracking-tight">
               Γενικές Προδιαγραφές για Όλες τις Πρίζες & Διακόπτες
             </h2>
             <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-1 max-w-3xl leading-relaxed">

@@ -15,7 +15,10 @@ import {
   Briefcase,
   CheckCircle2,
   Circle,
-  Pencil
+  Pencil,
+  Filter,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
@@ -58,6 +61,7 @@ export default function App() {
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [hoveredType, setHoveredType] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers'>('grid');
+  const [showMobileFilters, setShowMobileFilters] = useState<boolean>(true);
 
   // Theme state: dark | light | system
   const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
@@ -112,112 +116,157 @@ export default function App() {
   const filteredProvisions = provisions.filter(p => selectedRooms.has(p.room) && selectedTypes.has(p.type));
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 md:p-4 overflow-hidden flex flex-col transition-colors duration-200">
-      <div className="max-w-[1600px] w-full mx-auto flex flex-col flex-1 gap-4">
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-3 md:p-4 overflow-x-hidden flex flex-col transition-colors duration-200">
+      <div className="max-w-[1600px] w-full mx-auto flex flex-col flex-1 gap-3 sm:gap-4">
         
         {/* Header */}
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-neutral-300 dark:border-neutral-800">
-          <div className="flex items-center space-x-3">
-            <motion.div 
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.5 }}
-              className="p-2 bg-indigo-600 rounded-lg text-white shadow-lg shadow-indigo-500/20"
-            >
-              <LayoutDashboard size={20} />
-            </motion.div>
-            <div>
-              <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-cyan-500 dark:to-cyan-400">
-                LefkPronies
-              </h1>
-              <p className="text-neutral-500 dark:text-neutral-400 text-xs tracking-wide">Έξυπνο Σύστημα Διαχείρισης</p>
+        <header className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center gap-2.5 pb-3 border-b border-neutral-300 dark:border-neutral-800">
+          
+          {/* Top Row on mobile/Fold: Logo + Quick Toolbars */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center space-x-2.5 sm:space-x-3">
+              <motion.div 
+                whileHover={{ rotate: 180 }}
+                transition={{ duration: 0.5 }}
+                className="p-1.5 sm:p-2 bg-indigo-600 rounded-lg text-white shadow-lg shadow-indigo-500/20 flex-shrink-0"
+              >
+                <LayoutDashboard size={18} />
+              </motion.div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-cyan-500 dark:to-cyan-400 leading-tight">
+                  LefkPronies
+                </h1>
+                <p className="text-neutral-500 dark:text-neutral-400 text-[11px] sm:text-xs tracking-wide">Έξυπνο Σύστημα Διαχείρισης</p>
+              </div>
+            </div>
+
+            {/* Utility Controls visible on right side of top row on < xl */}
+            <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 xl:hidden">
+              <SqliteToolbar
+                canUndo={canUndo}
+                canRedo={canRedo}
+                undoCount={undoCount}
+                redoCount={redoCount}
+                lastAction={lastAction}
+                onUndo={undo}
+                onRedo={redo}
+                onDownload={downloadDatabase}
+                onImport={importDatabase}
+                onReset={resetToDefaults}
+              />
+
+              <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'light' ? 'bg-white dark:bg-neutral-800 text-amber-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Φωτεινό Θέμα (Light)"
+                >
+                  <Sun size={14} />
+                </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'bg-white dark:bg-neutral-800 text-indigo-400 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Σκοτεινό Θέμα (Dark)"
+                >
+                  <Moon size={14} />
+                </button>
+                <button
+                  onClick={() => setTheme('system')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'system' ? 'bg-white dark:bg-neutral-800 text-cyan-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Θέμα Συστήματος (System)"
+                >
+                  <Monitor size={14} />
+                </button>
+              </div>
             </div>
           </div>
 
           <div className="flex items-center flex-wrap gap-2">
             
-            {/* View Mode Navigation Tabs */}
-            <div className="flex items-center space-x-1 bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800">
+            {/* View Mode Navigation Tabs - Wraps cleanly with zero horizontal scroll on Fold 6 & phones */}
+            <div className="flex flex-wrap items-center gap-1 bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 w-full xl:w-auto">
               <button 
                 onClick={() => setViewMode('grid')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <Grid size={14} />
+                <Grid size={13} />
                 <span>Λίστα</span>
               </button>
               <button 
                 onClick={() => setViewMode('flow')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <Workflow size={14} />
+                <Workflow size={13} />
                 <span>Διάγραμμα</span>
               </button>
               <button 
                 onClick={() => setViewMode('plan')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'plan' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'plan' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <Home size={14} />
+                <Home size={13} />
                 <span>Κάτοψη</span>
               </button>
               <button 
                 onClick={() => setViewMode('buy')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <ShoppingCart size={14} />
+                <ShoppingCart size={13} />
                 <span>Αγορές & Εξοπλισμός</span>
               </button>
               <button 
                 onClick={() => setViewMode('rules')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <FileText size={14} />
+                <FileText size={13} />
                 <span>Γενικές Οδηγίες</span>
               </button>
               <button 
                 onClick={() => setViewMode('offers')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
               >
-                <Briefcase size={14} />
+                <Briefcase size={13} />
                 <span>Προσφορές Μελετών</span>
               </button>
             </div>
 
-            {/* SQLite Undo/Redo & Database Management Toolbar */}
-            <SqliteToolbar
-              canUndo={canUndo}
-              canRedo={canRedo}
-              undoCount={undoCount}
-              redoCount={redoCount}
-              lastAction={lastAction}
-              onUndo={undo}
-              onRedo={redo}
-              onDownload={downloadDatabase}
-              onImport={importDatabase}
-              onReset={resetToDefaults}
-            />
+            {/* Desktop xl+ Utility Controls */}
+            <div className="hidden xl:flex items-center gap-2">
+              <SqliteToolbar
+                canUndo={canUndo}
+                canRedo={canRedo}
+                undoCount={undoCount}
+                redoCount={redoCount}
+                lastAction={lastAction}
+                onUndo={undo}
+                onRedo={redo}
+                onDownload={downloadDatabase}
+                onImport={importDatabase}
+                onReset={resetToDefaults}
+              />
 
-            {/* Dark / Light / System Theme Switcher */}
-            <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
-              <button
-                onClick={() => setTheme('light')}
-                className={`p-1.5 rounded-lg transition-colors ${theme === 'light' ? 'bg-white dark:bg-neutral-800 text-amber-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                title="Φωτεινό Θέμα (Light)"
-              >
-                <Sun size={15} />
-              </button>
-              <button
-                onClick={() => setTheme('dark')}
-                className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'bg-white dark:bg-neutral-800 text-indigo-400 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                title="Σκοτεινό Θέμα (Dark)"
-              >
-                <Moon size={15} />
-              </button>
-              <button
-                onClick={() => setTheme('system')}
-                className={`p-1.5 rounded-lg transition-colors ${theme === 'system' ? 'bg-white dark:bg-neutral-800 text-cyan-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                title="Θέμα Συστήματος (System)"
-              >
-                <Monitor size={15} />
-              </button>
+              <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'light' ? 'bg-white dark:bg-neutral-800 text-amber-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Φωτεινό Θέμα (Light)"
+                >
+                  <Sun size={15} />
+                </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'bg-white dark:bg-neutral-800 text-indigo-400 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Σκοτεινό Θέμα (Dark)"
+                >
+                  <Moon size={15} />
+                </button>
+                <button
+                  onClick={() => setTheme('system')}
+                  className={`p-1.5 rounded-lg transition-colors ${theme === 'system' ? 'bg-white dark:bg-neutral-800 text-cyan-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
+                  title="Θέμα Συστήματος (System)"
+                >
+                  <Monitor size={15} />
+                </button>
+              </div>
             </div>
 
           </div>
@@ -244,73 +293,90 @@ export default function App() {
         ) : viewMode === 'offers' ? (
           <OffersView />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
             
-          {/* Left Panel: Filters */}
-          <div className="lg:col-span-3 space-y-4">
+          {/* Left Panel: Filters (Collapsible on mobile / Fold 6, 2-col on Fold 6 inner screen) */}
+          <div className="lg:col-span-3 flex flex-col gap-2.5 sm:gap-3">
             
-            {/* Rooms */}
-            <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3.5 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-sm font-bold text-indigo-600 dark:text-indigo-300">Δωμάτια</h2>
-                <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                  <button onClick={() => setSelectedRooms(new Set(ROOMS))} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Όλα</button>
-                  <button onClick={() => setSelectedRooms(new Set())} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Κανένα</button>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {ROOMS.map(room => (
-                  <button
-                    key={room}
-                    onMouseEnter={() => setHoveredRoom(room)}
-                    onMouseLeave={() => setHoveredRoom(null)}
-                    onClick={() => toggleRoom(room)}
-                    className={`px-2 py-1 rounded-md text-xs font-medium transition-colors border ${
-                      selectedRooms.has(room) 
-                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-700 dark:text-indigo-200' 
-                        : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
-                    }`}
-                  >
-                    {room}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Mobile / Foldable Filter Collapse Toggle */}
+            <button
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className="lg:hidden flex items-center justify-between w-full px-3.5 py-2 bg-white/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-neutral-200 shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <Filter size={14} className="text-indigo-500" />
+                <span>Φίλτρα Δωματίων & Κατηγοριών</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                  {selectedRooms.size}/{ROOMS.length} • {selectedTypes.size}/{TYPES.length}
+                </span>
+              </span>
+              {showMobileFilters ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+            </button>
 
-            {/* Types */}
-            <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3.5 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-sm font-bold text-cyan-600 dark:text-cyan-300">Κατηγορίες</h2>
-                <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                  <button onClick={() => setSelectedTypes(new Set(TYPES))} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Όλες</button>
-                  <button onClick={() => setSelectedTypes(new Set())} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Καμία</button>
+            <div className={`${showMobileFilters ? 'grid' : 'hidden'} lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3`}>
+              {/* Rooms */}
+              <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
+                <div className="flex justify-between items-center mb-2.5">
+                  <h2 className="text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-300">Δωμάτια</h2>
+                  <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
+                    <button onClick={() => setSelectedRooms(new Set(ROOMS))} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Όλα</button>
+                    <button onClick={() => setSelectedRooms(new Set())} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Κανένα</button>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {ROOMS.map(room => (
+                    <button
+                      key={room}
+                      onMouseEnter={() => setHoveredRoom(room)}
+                      onMouseLeave={() => setHoveredRoom(null)}
+                      onClick={() => toggleRoom(room)}
+                      className={`px-2 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors border ${
+                        selectedRooms.has(room) 
+                          ? 'bg-indigo-600/20 border-indigo-500 text-indigo-700 dark:text-indigo-200' 
+                          : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
+                      }`}
+                    >
+                      {room}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                {TYPES.map(type => (
-                  <button
-                    key={type}
-                    onMouseEnter={() => setHoveredType(type)}
-                    onMouseLeave={() => setHoveredType(null)}
-                    onClick={() => toggleType(type)}
-                    className={`px-2 py-1 rounded-md text-xs font-medium transition-colors border ${
-                      selectedTypes.has(type) 
-                        ? 'bg-cyan-600/20 border-cyan-500 text-cyan-700 dark:text-cyan-200' 
-                        : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
+
+              {/* Types */}
+              <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
+                <div className="flex justify-between items-center mb-2.5">
+                  <h2 className="text-xs sm:text-sm font-bold text-cyan-600 dark:text-cyan-300">Κατηγορίες</h2>
+                  <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
+                    <button onClick={() => setSelectedTypes(new Set(TYPES))} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Όλες</button>
+                    <button onClick={() => setSelectedTypes(new Set())} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Καμία</button>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {TYPES.map(type => (
+                    <button
+                      key={type}
+                      onMouseEnter={() => setHoveredType(type)}
+                      onMouseLeave={() => setHoveredType(null)}
+                      onClick={() => toggleType(type)}
+                      className={`px-2 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors border ${
+                        selectedTypes.has(type) 
+                          ? 'bg-cyan-600/20 border-cyan-500 text-cyan-700 dark:text-cyan-200' 
+                          : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right Panel: Interactive Grid or Flow */}
-          <div className="lg:col-span-9 bg-white/60 dark:bg-neutral-900/30 border border-neutral-300 dark:border-neutral-800 rounded-2xl p-4 relative overflow-hidden flex flex-col h-[85vh]">
+          <div className="lg:col-span-9 bg-white/60 dark:bg-neutral-900/30 border border-neutral-300 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 relative overflow-hidden flex flex-col min-h-[500px] lg:h-[83vh]">
             
-            <div className="flex justify-between items-center mb-4 flex-shrink-0">
-              <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-200">
+            <div className="flex justify-between items-center mb-3 sm:mb-4 flex-shrink-0">
+              <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-200">
                 {viewMode === 'grid' ? 'Λίστα Παροχών' : 'Διάγραμμα Παροχών'}
               </h2>
               <div className="bg-indigo-100 dark:bg-indigo-900/50 border border-indigo-300 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold">
@@ -319,12 +385,12 @@ export default function App() {
             </div>
 
             {viewMode === 'flow' ? (
-              <div className="flex-1 w-full h-full relative -m-4 mt-0 border-t border-neutral-200 dark:border-neutral-800">
+              <div className="flex-1 w-full min-h-[480px] sm:min-h-[560px] lg:h-full relative -m-3 sm:-m-4 mt-0 border-t border-neutral-200 dark:border-neutral-800">
                 <Flow provisions={filteredProvisions} rooms={Array.from(selectedRooms)} />
               </div>
             ) : (
-              <div className="overflow-y-auto flex-1 w-full h-full pr-2 pb-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              <div className="overflow-y-auto flex-1 w-full h-full pr-1 sm:pr-2 pb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
                   <AnimatePresence>
                     {filteredProvisions.map((provision) => {
                       

@@ -144,29 +144,29 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between bg-neutral-50/50 dark:bg-neutral-950/40">
-          <div>
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between bg-neutral-50/50 dark:bg-neutral-950/40">
+          <div className="min-w-0 pr-2">
             <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
               SQLite Επεξεργασία &middot; {item.type === 'provision' ? 'Πρόνοια' : item.type === 'procurement' ? 'Εξοπλισμός / Αγορά' : 'Κανόνας'}
             </span>
-            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
+            <h3 className="text-sm sm:text-base font-bold text-neutral-900 dark:text-neutral-100 truncate">
               {item.type === 'provision' ? pName || 'Επεξεργασία Πρόνοιας' : item.type === 'procurement' ? prName || 'Επεξεργασία Εξοπλισμού' : rTitle || 'Επεξεργασία Κανόνα'}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex-shrink-0"
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Body Form */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-4 text-xs">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 text-xs">
           
           {/* PROVISION FORM */}
           {item.type === 'provision' && (

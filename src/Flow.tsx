@@ -268,7 +268,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
   }, []);
 
   return (
-    <div className="w-full h-[85vh] border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 transition-colors">
+    <div className="w-full h-[480px] sm:h-[580px] lg:h-[78vh] border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 transition-colors">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -285,7 +285,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
           nodeStrokeColor="#6366f1" 
           nodeColor={isDark ? '#374151' : '#cbd5e1'} 
           maskColor={isDark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)'} 
-          className="dark:bg-neutral-900 bg-white dark:border-neutral-800 border-neutral-200"
+          className="hidden sm:block dark:bg-neutral-900 bg-white dark:border-neutral-800 border-neutral-200"
         />
         <Background 
           color={isDark ? '#374151' : '#cbd5e1'} 

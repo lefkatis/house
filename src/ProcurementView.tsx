@@ -138,25 +138,25 @@ export default function ProcurementView({
   }, [items]);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-4 overflow-y-auto max-h-[85vh] pr-1">
+    <div className="flex-1 w-full flex flex-col gap-3 sm:gap-4 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
       {/* Top Banner / Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-shrink-0">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0">
         
         {/* Total Cost */}
         <div 
           onClick={() => { setSelectedCategory('ALL'); setFilterMode('all'); }}
-          className="bg-gradient-to-br from-indigo-50 via-white to-indigo-50/50 dark:from-indigo-950/60 dark:to-neutral-900/90 border border-indigo-200 dark:border-indigo-800/40 hover:border-indigo-400 dark:hover:border-indigo-500/70 cursor-pointer rounded-xl p-3 shadow-sm dark:shadow-lg transition-all"
+          className="bg-gradient-to-br from-indigo-50 via-white to-indigo-50/50 dark:from-indigo-950/60 dark:to-neutral-900/90 border border-indigo-200 dark:border-indigo-800/40 hover:border-indigo-400 dark:hover:border-indigo-500/70 cursor-pointer rounded-xl p-2.5 sm:p-3 shadow-sm dark:shadow-lg transition-all"
           title="Προβολή όλων"
         >
           <div className="flex items-center justify-between text-indigo-600 dark:text-indigo-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Εκτιμώμενο Κόστος</span>
-            <Euro size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Εκτιμώμενο Κόστος</span>
+            <Euro size={15} />
           </div>
-          <div className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
             ~€{stats.totalEst.toLocaleString()}
           </div>
-          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
+          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
             Υπολογισμός για {items.length} είδη & υλικά
           </div>
         </div>
@@ -164,17 +164,17 @@ export default function ProcurementView({
         {/* Products */}
         <div 
           onClick={() => { setSelectedCategory('ALL'); setFilterMode('products'); }}
-          className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 hover:border-cyan-400 dark:hover:border-cyan-500/70 cursor-pointer rounded-xl p-3 shadow-sm dark:shadow-lg transition-all"
+          className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 hover:border-cyan-400 dark:hover:border-cyan-500/70 cursor-pointer rounded-xl p-2.5 sm:p-3 shadow-sm dark:shadow-lg transition-all"
           title="Φιλτράρισμα μόνο συγκεκριμένων συσκευών"
         >
           <div className="flex items-center justify-between text-cyan-600 dark:text-cyan-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Συγκεκριμένα Προϊόντα</span>
-            <ShoppingCart size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Συγκεκριμένα Προϊόντα</span>
+            <ShoppingCart size={15} />
           </div>
-          <div className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {stats.productsCount} <span className="text-sm font-normal text-neutral-500 dark:text-neutral-400">μοντέλα</span>
+          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+            {stats.productsCount} <span className="text-xs sm:text-sm font-normal text-neutral-500 dark:text-neutral-400">μοντέλα</span>
           </div>
-          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
+          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
             Με μάρκα, τιμή & επίσημο σύνδεσμο
           </div>
         </div>
@@ -182,30 +182,30 @@ export default function ProcurementView({
         {/* Tasks for user */}
         <div 
           onClick={() => { setSelectedCategory('Εργασίες Έρευνας (Tasks to Find)'); setFilterMode('all'); }}
-          className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 hover:border-amber-400 dark:hover:border-amber-500 cursor-pointer rounded-xl p-3 shadow-sm dark:shadow-lg transition-all"
+          className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 hover:border-amber-400 dark:hover:border-amber-500 cursor-pointer rounded-xl p-2.5 sm:p-3 shadow-sm dark:shadow-lg transition-all"
           title="Φιλτράρισμα εργασιών έρευνας"
         >
           <div className="flex items-center justify-between text-amber-600 dark:text-amber-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Εργασίες Έρευνας</span>
-            <AlertCircle size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Εργασίες Έρευνας</span>
+            <AlertCircle size={15} />
           </div>
-          <div className="text-2xl font-black text-amber-900 dark:text-amber-200 tracking-tight">
-            {stats.tasksCount} <span className="text-sm font-normal text-amber-600 dark:text-amber-400/70">προς επιλογή</span>
+          <div className="text-lg sm:text-2xl font-black text-amber-900 dark:text-amber-200 tracking-tight">
+            {stats.tasksCount} <span className="text-xs sm:text-sm font-normal text-amber-600 dark:text-amber-400/70">προς επιλογή</span>
           </div>
-          <div className="text-[11px] text-amber-700/80 dark:text-amber-300/80 mt-1">
+          <div className="text-[10px] sm:text-[11px] text-amber-700/80 dark:text-amber-300/80 mt-1">
             Απαιτούν επιλογή / συνεννόηση
           </div>
         </div>
 
         {/* Progress */}
-        <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3 shadow-sm dark:shadow-lg">
+        <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Πρόοδος Αγορών</span>
-            <CheckCircle2 size={16} />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Πρόοδος Αγορών</span>
+            <CheckCircle2 size={15} />
           </div>
-          <div className="text-2xl font-black text-emerald-600 dark:text-emerald-300 tracking-tight">
+          <div className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-300 tracking-tight">
             {stats.purchasedCount} / {stats.totalItems}
-            <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400 ml-2">({stats.progressPercent}%)</span>
+            <span className="text-[10px] sm:text-xs font-normal text-neutral-500 dark:text-neutral-400 ml-1.5">({stats.progressPercent}%)</span>
           </div>
           <div className="w-full bg-neutral-100 dark:bg-neutral-800 h-1.5 rounded-full mt-2 overflow-hidden">
             <div 
