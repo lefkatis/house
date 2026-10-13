@@ -21,12 +21,13 @@ import {
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
 import { getAssetUrl } from './utils/assets';
 
-const STORAGE_KEY = 'pronies_vendor_offers_v7';
+const STORAGE_KEY = 'house_vendor_offers_v1';
+const LEGACY_STORAGE_KEY = 'pronies_vendor_offers_v7';
 
 export default function OffersView() {
   const [offers, setOffers] = useState<VendorOffer[]>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         const parsed: VendorOffer[] = JSON.parse(saved);
         // Ensure all initial vendors exist and have their default documents if empty
@@ -293,6 +294,7 @@ export default function OffersView() {
             if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 3 προσφορών με όλα τα τεύχη PDF;')) {
               setOffers(INITIAL_VENDOR_OFFERS);
               localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_VENDOR_OFFERS));
+              localStorage.removeItem(LEGACY_STORAGE_KEY);
             }
           }}
           className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium transition-all border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"

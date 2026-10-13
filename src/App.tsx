@@ -65,7 +65,9 @@ export default function App() {
 
   // Theme state: dark | light | system
   const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
-    return (localStorage.getItem('pronies_theme') as 'dark' | 'light' | 'system') || 'dark';
+    return (localStorage.getItem('house_theme') as 'dark' | 'light' | 'system') ||
+           (localStorage.getItem('pronies_theme') as 'dark' | 'light' | 'system') ||
+           'dark';
   });
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function App() {
     };
 
     applyTheme();
-    localStorage.setItem('pronies_theme', theme);
+    localStorage.setItem('house_theme', theme);
 
     const listener = () => {
       if (theme === 'system') applyTheme();
@@ -134,7 +136,7 @@ export default function App() {
               </motion.div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-cyan-500 dark:to-cyan-400 leading-tight">
-                  LefkPronies
+                  House
                 </h1>
                 <p className="text-neutral-500 dark:text-neutral-400 text-[11px] sm:text-xs tracking-wide">Έξυπνο Σύστημα Διαχείρισης</p>
               </div>

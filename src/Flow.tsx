@@ -91,7 +91,7 @@ export default function Flow({ provisions, rooms }: FlowProps) {
     nodes.push({
       id: 'hq',
       position: { x: 0, y: 0 },
-      data: { label: '🏢 Pronies HQ' },
+      data: { label: '🏡 House HQ' },
       style: { 
         backgroundColor: '#4f46e5', 
         color: '#fff', 

@@ -5,7 +5,8 @@ import { PROCUREMENT_ITEMS, ProcurementItem } from '../data/procurementItems';
 import { GENERAL_RULES, GeneralRule } from '../data/generalRules';
 import { INITIAL_VENDOR_OFFERS, VendorOffer } from '../data/offersData';
 
-const STORAGE_KEY = 'lefkpronies_sqlite_db_v2';
+const STORAGE_KEY = 'house_sqlite_db_v1';
+const LEGACY_STORAGE_KEY = 'lefkpronies_sqlite_db_v2';
 const MAX_UNDO_STACK = 100;
 
 export interface UndoAction {
@@ -50,7 +51,7 @@ class SQLiteService {
         locateFile: (file) => (file === 'sql-wasm.wasm' ? wasmPath : file)
       });
 
-      const savedDbBase64 = localStorage.getItem(STORAGE_KEY);
+      const savedDbBase64 = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (savedDbBase64) {
         try {
           const binaryString = atob(savedDbBase64);
@@ -685,7 +686,7 @@ class SQLiteService {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `lefkpronies_${new Date().toISOString().slice(0, 10)}.sqlite`;
+    a.download = `house_${new Date().toISOString().slice(0, 10)}.sqlite`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -707,6 +708,7 @@ class SQLiteService {
 
   public resetToDefaults() {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
     this.undoStack = [];
     this.redoStack = [];
     this.lastActionDescription = 'Επαναφορά αρχικών δεδομένων';

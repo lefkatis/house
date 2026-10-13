@@ -59,7 +59,8 @@ const SCHEMATIC_ROOMS = [
   { id: '🏠 Βοηθητικό Σπίτι', name: '🏠 Βοηθητικό Σπίτι', x: 20, y: 720, w: 960, h: 90, color: 'sky' }
 ];
 
-const PINS_STORAGE_KEY = 'pronies_architectural_pins_v1';
+const PINS_STORAGE_KEY = 'house_architectural_pins_v1';
+const LEGACY_PINS_STORAGE_KEY = 'pronies_architectural_pins_v1';
 
 export interface HousePlanViewProps {
   provisions?: Provision[];
@@ -86,7 +87,7 @@ export default function HousePlanView({
   // Placed pins state (initialized with default architectural mapped coordinates)
   const [pins, setPins] = useState<DefaultProvisionPin[]>(() => {
     try {
-      const saved = localStorage.getItem(PINS_STORAGE_KEY);
+      const saved = localStorage.getItem(PINS_STORAGE_KEY) || localStorage.getItem(LEGACY_PINS_STORAGE_KEY);
       if (saved) {
         return JSON.parse(saved);
       }
@@ -113,6 +114,7 @@ export default function HousePlanView({
     if (confirm('Επαναφορά όλων των καρφιτσών στις προκαθορισμένες αρχιτεκτονικές θέσεις;')) {
       setPins(DEFAULT_PROVISION_PINS);
       localStorage.removeItem(PINS_STORAGE_KEY);
+      localStorage.removeItem(LEGACY_PINS_STORAGE_KEY);
     }
   };
 
