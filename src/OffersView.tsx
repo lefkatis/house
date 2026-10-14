@@ -16,7 +16,12 @@ import {
   Phone,
   Mail,
   MapPin,
-  RotateCcw
+  RotateCcw,
+  ShieldCheck,
+  AlertTriangle,
+  TrendingUp,
+  XCircle,
+  Award
 } from 'lucide-react';
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
 import { getAssetUrl } from './utils/assets';
@@ -30,15 +35,28 @@ export default function OffersView() {
       const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         const parsed: VendorOffer[] = JSON.parse(saved);
-        // Ensure all initial vendors exist and have their default documents if empty
+        // Ensure all initial vendors exist and have local hosted documents
         return INITIAL_VENDOR_OFFERS.map(initial => {
           const match = parsed.find(p => p.id === initial.id);
           if (!match) return initial;
           return {
             ...initial,
             ...match,
-            // Keep initial documents if saved documents are missing or empty
-            documents: (match.documents && match.documents.length > 0) ? match.documents : initial.documents,
+            // Sanitize documents to ensure local hosted files are used rather than Google Drive
+            documents: (match.documents && match.documents.length > 0)
+              ? match.documents.map(d => {
+                  const initDoc = initial.documents.find(idoc => idoc.id === d.id);
+                  if ((d.driveViewUrl && d.driveViewUrl.includes('drive.google.com')) && initDoc) {
+                    return {
+                      ...d,
+                      driveViewUrl: initDoc.driveViewUrl,
+                      drivePreviewUrl: initDoc.drivePreviewUrl,
+                      localFileUrl: initDoc.localFileUrl,
+                    };
+                  }
+                  return d;
+                })
+              : initial.documents,
             vendorName: initial.vendorName,
             contactPerson: initial.contactPerson || match.contactPerson,
             pricingBreakdown: match.pricingBreakdown || initial.pricingBreakdown,
@@ -319,165 +337,379 @@ export default function OffersView() {
 
       {/* View Content: Details with PDF vs Compare Table */}
       {viewMode === 'compare' ? (
-        /* COMPARISON TABLE */
-        <div className="bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 shadow-lg backdrop-blur-md">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <Scale size={18} className="text-purple-500" />
-                Συγκριτικός Πίνακας Προσφορών Μελετών
-              </h2>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                Σύγκριση παραδοτέων, κόστους και τεχνικών προδιαγραφών μεταξύ των 3 γραφείων μελετών.
+        /* IN-DEPTH COMPARISON TABLE & EXECUTIVE ANALYSIS */
+        <div className="space-y-4">
+          {/* Executive Verdict Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Vacanas Card */}
+            <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-2 border-emerald-500/40 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white shadow-sm">
+                  <Award size={12} />
+                  Κορυφαίο Value & Ασφάλεια
+                </span>
+                <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">€4.100 + ΦΠΑ</span>
+              </div>
+              <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white leading-tight">
+                Louis Vacanas MEP Engineers
+              </h3>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-snug">
+                Η πιο ολοκληρωμένη και οικονομική πρόταση. Περιλαμβάνει Μελέτη, Προσφορές, Επίβλεψη και ΠΕΑ σε ενιαία τιμή.
               </p>
+              <div className="mt-3 pt-2.5 border-t border-emerald-500/20 space-y-1 text-[11px]">
+                <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 font-semibold">
+                  <ShieldCheck size={13} className="flex-shrink-0" />
+                  <span>Ασφάλεια Επαγγελματικής Ευθύνης €1.000.000</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <TrendingUp size={13} className="text-emerald-500 flex-shrink-0" />
+                  <span>Ευνοϊκό cash flow: Επιβλέψεις σε 2 δόσεις κατά την κατασκευή</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <Check size={13} className="text-emerald-500 flex-shrink-0" />
+                  <span>Τελική παραλαβή 1 χρόνο μετά & έλεγχος σχεδίων εργολάβων</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Charalambous Card */}
+            <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300 dark:border-amber-800/60 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-sm">
+                  <Scale size={12} />
+                  Διαχωρισμένο ανά Ειδικότητα
+                </span>
+                <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400">€4.500 + ΦΠΑ</span>
+              </div>
+              <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white leading-tight">
+                Ανδρέας & Γιάννος Χαραλάμπους
+              </h3>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-snug">
+                Δύο εξειδικευμένα τεύχη (Μηχανολογικά CA/2660 & Ηλεκτρολογικά CY/2693). Δυνατότητα αφαίρεσης Μέρους Β (€4.050).
+              </p>
+              <div className="mt-3 pt-2.5 border-t border-amber-500/20 space-y-1 text-[11px]">
+                <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-bold">
+                  <AlertTriangle size={13} className="flex-shrink-0" />
+                  <span>Απαιτεί 100% προεξόφληση πριν την κατάθεση της Άδειας</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
+                  <span>Εξαιρούνται τεύχη ΑΗΚ (ευθύνη ηλεκτρολόγου εγκαταστάτη)</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <Check size={13} className="text-emerald-500 flex-shrink-0" />
+                  <span>10 επισκέψεις εργοταξίου (6 Μηχ. + 4 Ηλεκτρ. - €100/έξτρα)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* MEP Studio Card */}
+            <div className="bg-gradient-to-br from-indigo-500/10 via-indigo-500/5 to-transparent border border-indigo-200 dark:border-indigo-800/60 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-600 text-white shadow-sm">
+                  <FileText size={12} />
+                  Αναλυτικότερα Στάδια
+                </span>
+                <span className="text-xs font-mono font-bold text-indigo-700 dark:text-indigo-400">€6.100 + ΦΠΑ</span>
+              </div>
+              <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white leading-tight">
+                THE E&E MEP STUDIO LLC
+              </h3>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-snug">
+                Σαφής διαχωρισμός σε 3 ανεξάρτητα στάδια: Στάδιο Ι Άδειας (€3.900), Στάδιο ΙΙ BoQ (€1.200) και Στάδιο ΙΙΙ Επίβλεψης (€1.000).
+              </p>
+              <div className="mt-3 pt-2.5 border-t border-indigo-500/20 space-y-1 text-[11px]">
+                <div className="flex items-center gap-1.5 text-rose-700 dark:text-rose-400 font-bold">
+                  <AlertTriangle size={13} className="flex-shrink-0" />
+                  <span>Υψηλότερο κόστος: +€2.000 διαφορά από Vacanas</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <Check size={13} className="text-emerald-500 flex-shrink-0" />
+                  <span>Δυνατότητα επιλογής μόνο του Σταδίου Ι Άδειας (€3.900)</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
+                  <span>Έξτρα χρεώσεις: Φωτιστικά (€1.000) & Smart Home (€500)</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 uppercase text-[10px] tracking-wider">
-                  <th className="py-3 px-3">Κριτήριο / Πεδίο</th>
-                  {offers.map(v => (
-                    <th key={v.id} className="py-3 px-4 min-w-[220px]">
-                      <div className="font-bold text-neutral-900 dark:text-neutral-100 text-xs">{v.vendorName}</div>
-                      <div className="text-[10px] text-neutral-500 dark:text-neutral-400 normal-case">{v.referenceCode || '-'}</div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
-                {/* Status */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Κατάσταση Προσφοράς</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        v.status === 'received' || v.documents.length > 0
-                          ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800/40'
-                          : 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800/40'
-                      }`}>
-                        {v.status === 'received' || v.documents.length > 0 ? <CheckCircle2 size={12} /> : <Clock size={12} />}
-                        {v.statusLabel}
-                      </span>
-                    </td>
-                  ))}
-                </tr>
+          {/* Detailed Tabular Matrix */}
+          <div className="bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 shadow-lg backdrop-blur-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+              <div>
+                <h2 className="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                  <Scale size={18} className="text-purple-500" />
+                  Αναλυτικός Συγκριτικός Πίνακας Μελετών Η/Μ
+                </h2>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                  Πλήρης παράθεση οικονομικών στοιχείων, τεχνικής κάλυψης και εγγυήσεων μεταξύ των 3 προσφορών.
+                </p>
+              </div>
+              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                Όλες οι τιμές είναι χωρίς Φ.Π.Α.
+              </div>
+            </div>
 
-                {/* Electrical Cost */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ηλεκτρολογική Μελέτη (€)</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4 font-semibold text-neutral-800 dark:text-neutral-200">
-                      {v.electricalCostEur ? `€${v.electricalCostEur.toLocaleString()}` : <span className="text-neutral-400 italic">Εκκρεμεί</span>}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-neutral-300 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 uppercase text-[10px] tracking-wider">
+                    <th className="py-3 px-3 min-w-[200px]">Κριτήριο / Πεδίο Σύγκρισης</th>
+                    {offers.map(v => (
+                      <th key={v.id} className="py-3 px-4 min-w-[230px]">
+                        <div className="font-extrabold text-neutral-900 dark:text-white text-xs">{v.vendorName}</div>
+                        <div className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold normal-case">{v.referenceCode || '-'}</div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
+                  
+                  {/* --- CATEGORY 1: FINANCIAL BREAKDOWN --- */}
+                  <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
+                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                      <Receipt size={14} />
+                      <span>1. Οικονομικά Στοιχεία & Ανάλυση Κόστους</span>
                     </td>
-                  ))}
-                </tr>
+                  </tr>
 
-                {/* Mechanical Cost */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Μηχανολογική Μελέτη (€)</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4 font-semibold text-neutral-800 dark:text-neutral-200">
-                      {v.mechanicalCostEur ? `€${v.mechanicalCostEur.toLocaleString()}` : <span className="text-neutral-400 italic">Εκκρεμεί</span>}
+                  {/* Total Cost Row */}
+                  <tr className="bg-indigo-50/50 dark:bg-indigo-950/20 font-bold">
+                    <td className="py-3.5 px-3 text-neutral-900 dark:text-white font-extrabold">
+                      Συνολικό Κόστος (Μελέτες + Επιβλέψεις)
                     </td>
-                  ))}
-                </tr>
-
-                {/* Energy Performance Certificate */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Πιστοποιητικό Ενέργειας (ΠΕΑ)</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4 font-semibold text-neutral-800 dark:text-neutral-200">
-                      {v.energyCertCostEur ? `€${v.energyCertCostEur.toLocaleString()}` : <span className="text-neutral-400 italic">Εκκρεμεί</span>}
+                    <td className="py-3.5 px-4 font-black text-sm text-neutral-900 dark:text-neutral-100">
+                      €4.500 <span className="text-[10px] font-normal text-neutral-500">(ή €4.050 χωρίς Μέρος Β)</span>
                     </td>
-                  ))}
-                </tr>
-
-                {/* Total Cost */}
-                <tr className="bg-neutral-50 dark:bg-neutral-950/60">
-                  <td className="py-3.5 px-3 font-bold text-neutral-900 dark:text-white">Συνολικό Κόστος (χωρίς ΦΠΑ)</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3.5 px-4 font-black text-sm text-emerald-600 dark:text-emerald-400">
-                      {v.totalCostEur ? `€${v.totalCostEur.toLocaleString()}` : <span className="text-xs text-neutral-400 font-normal italic">Υπό διαμόρφωση</span>}
+                    <td className="py-3.5 px-4 font-black text-sm text-emerald-600 dark:text-emerald-400">
+                      €4.100 <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded ml-1">Χαμηλότερη Τιμή</span>
                     </td>
-                  ))}
-                </tr>
-
-                {/* Scope */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Αντικείμενο Μελετών</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4">
-                      <div className="flex flex-wrap gap-1">
-                        {v.scope.map(s => (
-                          <span key={s} className="px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-[10px]">
-                            {s}
-                          </span>
-                        ))}
-                      </div>
+                    <td className="py-3.5 px-4 font-black text-sm text-neutral-900 dark:text-neutral-100">
+                      €6.100 <span className="text-[10px] font-normal text-neutral-500">(Στάδια Ι + ΙΙ + ΙΙΙ)</span>
                     </td>
-                  ))}
-                </tr>
+                  </tr>
 
-                {/* PDFs count & links */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Έγγραφα & PDFs</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4">
-                      {v.documents.length > 0 ? (
-                        <div className="space-y-1">
+                  {/* Electrical AO */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ηλεκτρολογική Μελέτη Άδειας (Α.Ο.)</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€850</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€975 <span className="text-[10px] text-neutral-400 font-normal">(65% του €1.500)</span></td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.500</td>
+                  </tr>
+
+                  {/* Mechanical AO */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Μηχανολογική Μελέτη Άδειας (Α.Ο.)</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.800</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.170 <span className="text-[10px] text-neutral-400 font-normal">(65% του €1.800)</span></td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€2.000</td>
+                  </tr>
+
+                  {/* Energy Certificate */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Πιστοποιητικό Ενεργειακής Απόδοσης (ΠΕΑ)</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€400</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€800</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€400</td>
+                  </tr>
+
+                  {/* Contractor Tender & BoQ */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Στάδιο Προσφορών Εργολάβων (BoQ)</td>
+                    <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">Περιλαμβάνεται στο βασικό πακέτο</td>
+                    <td className="py-2.5 px-4 text-emerald-700 dark:text-emerald-400 font-semibold">Περιλαμβάνεται (Όροι, BoQ & Αξιολόγηση)</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.200 <span className="text-[10px] text-neutral-400 font-normal">(Ηλ. €500 + Μηχ. €700)</span></td>
+                  </tr>
+
+                  {/* Supervision Fees */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Επιβλέψεις Εργοταξίου & Αριθμός Επισκέψεων</td>
+                    <td className="py-2.5 px-4 text-neutral-800 dark:text-neutral-200">
+                      <span className="font-bold">€1.000</span> (10 επισκέψεις: 6 Μηχ. + 4 Ηλ.)
+                    </td>
+                    <td className="py-2.5 px-4 text-emerald-700 dark:text-emerald-400 font-bold">
+                      Περιλαμβάνονται <span className="font-normal text-[11px] text-neutral-600 dark:text-neutral-300">(35% αμοιβών = €1.155) - Συνεδριάσεις & περιοδικές επιβλέψεις</span>
+                    </td>
+                    <td className="py-2.5 px-4 text-neutral-800 dark:text-neutral-200">
+                      <span className="font-bold">€1.000</span> (10 επισκέψεις: 5 Μηχ. + 5 Ηλ.)
+                    </td>
+                  </tr>
+
+                  {/* Extra inspection fee */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Κόστος ανά επιπλέον επίσκεψη εργοταξίου</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">€100 / επίσκεψη</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400 font-semibold text-emerald-600 dark:text-emerald-400">Κατά την κρίση του συμβούλου</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">€100 / επίσκεψη (επαρχία Λάρνακας)</td>
+                  </tr>
+
+                  {/* Optional add-ons */}
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Προαιρετικές Επιπλέον Υπηρεσίες</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">
+                      Μέρος Β: Συστήματα ασφάλειας, CCTV, ήχος (+€450)
+                    </td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">
+                      Όλα ενσωματωμένα στην αρχική προσφορά
+                    </td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">
+                      Φωτιστικά (+€1.000), Smart Home (+€500)
+                    </td>
+                  </tr>
+
+                  {/* --- CATEGORY 2: TECHNICAL DELIVERABLES --- */}
+                  <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
+                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
+                      <ShieldCheck size={14} />
+                      <span>2. Τεχνικό Αντικείμενο & Κάλυψη Παραδοτέων</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Φωτοβολταϊκά (Σχεδιασμός & Πρόνοιες)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><Check size={12}/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Κολυμβητική Δεξαμενή (Μελέτη Πισίνας)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ενδοδαπέδια Θέρμανση & Κλιματισμός</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ασθενή Ρεύματα (CCTV, Συναγερμός, Ήχος)</td>
+                    <td className="py-2.5 px-4 text-amber-700 dark:text-amber-400 font-medium">Προαιρετικό Μέρος Β (+€450)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται πλήρως</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Αυτοματισμοί / Έξυπνο Σπίτι</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">Βασικές πρόνοιες διακοπτών/ρολών</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Συστήματα ελέγχου & αυτοματισμών</td>
+                    <td className="py-2.5 px-4 text-amber-700 dark:text-amber-400 font-medium">Επιπλέον χρέωση €500</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Υπολογισμοί & Τεύχη για ΑΗΚ</td>
+                    <td className="py-2.5 px-4 text-rose-600 dark:text-rose-400 font-semibold">
+                      <XCircle size={12} className="inline mr-1 text-rose-500" />
+                      ΔΕΝ περιλαμβάνεται (ευθύνη εργολάβου)
+                    </td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Έλεγχος Κατασκευαστικών Σχεδίων Εργολάβων (Shop Drawings)</td>
+                    <td className="py-2.5 px-4 text-neutral-500">Βασική επίβλεψη</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Ρητή υποχρέωση (Στάδιο Β.2)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Προσωρινή & Τελική Παραλαβή Έργου</td>
+                    <td className="py-2.5 px-4 text-neutral-500">Προσωρινή παραλαβή</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Προσωρινή & Τελική 1 χρόνο μετά (Β.7)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                  </tr>
+
+                  {/* --- CATEGORY 3: TERMS & RISK ASSESSMENT --- */}
+                  <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
+                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
+                      <Clock size={14} />
+                      <span>3. Όροι Πληρωμής, Ασφάλεια & Ρίσκο Cash Flow</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Χρονοδιάγραμμα Πληρωμών (Cash Flow)</td>
+                    <td className="py-3 px-4 text-rose-700 dark:text-rose-400 font-semibold">
+                      ⚠️ 100% εξόφληση πριν την κατάθεση της Άδειας Οικοδομής (πληρώνεις τις επιβλέψεις προκαταβολικά)
+                    </td>
+                    <td className="py-3 px-4 text-emerald-700 dark:text-emerald-400 font-semibold">
+                      ✅ 15 ημέρες μετά το τιμολόγιο. Επιβλέψεις σε 2 δόσεις (στο μέσο & τέλος κατασκευής)
+                    </td>
+                    <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 font-semibold">
+                      ✅ Τμηματικά ανά στάδιο (Στάδιο Ι, ΙΙ και ΙΙΙ ξεχωριστά)
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ασφάλεια Επαγγελματικής Ευθύνης</td>
+                    <td className="py-2.5 px-4 text-neutral-400 italic">Δεν προσκομίστηκε ασφαλιστήριο</td>
+                    <td className="py-2.5 px-4 text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                      <ShieldCheck size={14} />
+                      €1.000.000 (Κεντρική Ασφαλιστική)
+                    </td>
+                    <td className="py-2.5 px-4 text-neutral-500">Πρότυποι όροι ΕΤΕΚ</td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Χρόνος Παράδοσης Μελέτης</td>
+                    <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">3-4 εβδομάδες</td>
+                    <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">3-4 εβδομάδες</td>
+                    <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">Κατόπιν συνεννόησης</td>
+                  </tr>
+
+                  {/* Documents & Download */}
+                  <tr>
+                    <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Επίσημα Έγγραφα Προσφορών</td>
+                    {offers.map(v => (
+                      <td key={v.id} className="py-3 px-4">
+                        <div className="space-y-1.5">
                           {v.documents.map(d => (
                             <a
                               key={d.id}
-                              href={d.driveViewUrl}
+                              href={getAssetUrl(d.driveViewUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                              className="flex items-center gap-1 text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
                             >
-                              <FileText size={12} />
-                              <span className="truncate max-w-[180px]">{d.title}</span>
-                              <ExternalLink size={10} />
+                              <FileText size={12} className="flex-shrink-0" />
+                              <span className="truncate max-w-[170px]">{d.title}</span>
+                              <ExternalLink size={10} className="flex-shrink-0" />
                             </a>
                           ))}
                         </div>
-                      ) : (
-                        <span className="text-neutral-400 italic">Δεν έχουν επισυναφθεί</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
+                      </td>
+                    ))}
+                  </tr>
 
-                {/* Delivery Time */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Χρόνος Παράδοσης</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4 text-neutral-600 dark:text-neutral-300">
-                      {v.deliveryTimeWeeks || 'Εκκρεμεί'}
-                    </td>
-                  ))}
-                </tr>
+                  {/* Quick Action Button */}
+                  <tr className="bg-neutral-50 dark:bg-neutral-950/40">
+                    <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ενέργειες</td>
+                    {offers.map(v => (
+                      <td key={v.id} className="py-3 px-4">
+                        <button
+                          onClick={() => {
+                            setSelectedVendorId(v.id);
+                            setSubViewMode('details');
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-all inline-flex items-center gap-1.5 shadow-sm text-xs"
+                        >
+                          <Eye size={12} />
+                          <span>Προβολή Τεύχους & PDF</span>
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
 
-                {/* Action */}
-                <tr>
-                  <td className="py-3 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Ενέργειες</td>
-                  {offers.map(v => (
-                    <td key={v.id} className="py-3 px-4">
-                      <button
-                        onClick={() => {
-                          setSelectedVendorId(v.id);
-                          setSubViewMode('details');
-                        }}
-                        className="px-3 py-1.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600 text-indigo-700 dark:text-indigo-300 hover:text-white font-semibold transition-all inline-flex items-center gap-1.5 border border-indigo-500/30"
-                      >
-                        <Eye size={12} />
-                        <span>Προβολή Προσφοράς</span>
-                      </button>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       ) : (
@@ -650,7 +882,7 @@ export default function OffersView() {
 
                         <div className="flex items-center justify-between pt-2 mt-2 border-t border-neutral-200 dark:border-neutral-800/60 text-[10px]">
                           <a
-                            href={doc.driveViewUrl}
+                            href={getAssetUrl(doc.driveViewUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
