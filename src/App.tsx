@@ -26,8 +26,17 @@ import ProvisionsView from './ProvisionsView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
+import { 
+  useAuth, 
+  LockScreen, 
+  MagicLinkModal, 
+  AuthToolbarControls, 
+  AuthToast 
+} from './components/AuthGate';
 
 export default function App() {
+  const { isUnlocked, unlock, lock, toastMessage } = useAuth();
+  const [showMagicModal, setShowMagicModal] = useState<boolean>(false);
   const {
     provisions,
     procurementItems,
@@ -112,6 +121,15 @@ export default function App() {
 
   const filteredProvisions = provisions.filter(p => selectedRooms.has(p.room) && selectedTypes.has(p.type));
 
+  if (!isUnlocked) {
+    return (
+      <>
+        <LockScreen onUnlock={unlock} />
+        <AuthToast message={toastMessage} />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-3 md:p-4 overflow-x-hidden flex flex-col transition-colors duration-200">
       <div className="max-w-[1600px] w-full mx-auto flex flex-col flex-1 gap-3 sm:gap-4">
@@ -175,6 +193,11 @@ export default function App() {
                   <Monitor size={14} />
                 </button>
               </div>
+
+              <AuthToolbarControls
+                onOpenMagicModal={() => setShowMagicModal(true)}
+                onLock={lock}
+              />
             </div>
           </div>
 
@@ -264,6 +287,11 @@ export default function App() {
                   <Monitor size={15} />
                 </button>
               </div>
+
+              <AuthToolbarControls
+                onOpenMagicModal={() => setShowMagicModal(true)}
+                onLock={lock}
+              />
             </div>
 
           </div>
@@ -394,6 +422,15 @@ export default function App() {
           onSaveProcurement={updateProcurementItem}
           onSaveRule={updateGeneralRule}
         />
+
+        {/* Magic Link Share Modal */}
+        <MagicLinkModal
+          isOpen={showMagicModal}
+          onClose={() => setShowMagicModal(false)}
+        />
+
+        {/* Floating Toast Notification */}
+        <AuthToast message={toastMessage} />
       </div>
     </div>
   );
