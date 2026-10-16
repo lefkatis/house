@@ -8,13 +8,11 @@ import {
   FileText, 
   Sun, 
   Moon, 
-  Monitor, 
   Home, 
   Briefcase, 
   Filter, 
   ChevronDown, 
-  ChevronUp,
-  ShieldCheck
+  ChevronUp
 } from 'lucide-react';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
@@ -28,17 +26,10 @@ import AdminConsoleView from './AdminConsoleView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
-import { 
-  useAuth, 
-  LockScreen, 
-  MagicLinkModal, 
-  AuthToolbarControls, 
-  AuthToast 
-} from './components/AuthGate';
+import { useAuth, AuthToast } from './components/AuthGate';
 
 export default function App() {
-  const { isUnlocked, currentUser, unlock, lock, toastMessage } = useAuth();
-  const [showMagicModal, setShowMagicModal] = useState<boolean>(false);
+  const { currentUser, toastMessage } = useAuth();
   const {
     provisions,
     procurementItems,
@@ -94,10 +85,10 @@ export default function App() {
     }
   }, [viewMode]);
 
-  // Theme state: light (default) | dark | system
-  const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
+  // Theme state: light (default) | dark
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('house_theme');
-    if (saved === 'dark' || saved === 'light' || saved === 'system') {
+    if (saved === 'dark' || saved === 'light') {
       return saved;
     }
     return 'light';
@@ -105,25 +96,12 @@ export default function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const applyTheme = () => {
-      const isDark = theme === 'dark' || (theme === 'system' && mediaQuery.matches);
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    applyTheme();
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
     localStorage.setItem('house_theme', theme);
-
-    const listener = () => {
-      if (theme === 'system') applyTheme();
-    };
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
   }, [theme]);
 
   const toggleRoom = (room: string) => {
@@ -150,24 +128,15 @@ export default function App() {
 
   const filteredProvisions = provisions.filter(p => selectedRooms.has(p.room) && selectedTypes.has(p.type));
 
-  if (!isUnlocked) {
-    return (
-      <>
-        <LockScreen onUnlock={unlock} />
-        <AuthToast message={toastMessage} />
-      </>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-3 md:p-4 overflow-x-hidden flex flex-col transition-colors duration-200">
       <div className="max-w-[1600px] w-full mx-auto flex flex-col flex-1 gap-3 sm:gap-4">
         
         {/* Header */}
-        <header className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center gap-2.5 pb-3 border-b border-neutral-300 dark:border-neutral-800">
+        <header className="flex flex-col gap-3 pb-3 border-b border-neutral-300 dark:border-neutral-800">
           
-          {/* Top Row on mobile/Fold: Logo + Quick Toolbars */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          {/* Top Row: Logo & Title (Left) + Undo/Redo & Single Theme Toggle (Right) */}
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center space-x-2.5 sm:space-x-3">
               <motion.div 
                 whileHover={{ rotate: 180 }}
@@ -180,12 +149,14 @@ export default function App() {
                 <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 dark:from-indigo-400 to-cyan-500 dark:to-cyan-400 leading-tight">
                   House
                 </h1>
-                <p className="text-neutral-500 dark:text-neutral-400 text-[11px] sm:text-xs tracking-wide">Έξυπνο Σύστημα Διαχείρισης</p>
+                <p className="text-neutral-500 dark:text-neutral-400 text-[11px] sm:text-xs tracking-wide">
+                  Έξυπνο Σύστημα Διαχείρισης
+                </p>
               </div>
             </div>
 
-            {/* Utility Controls visible on right side of top row on < xl */}
-            <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 xl:hidden">
+            {/* Utility Controls (Undo, Redo, Light/Dark Toggle) */}
+            <div className="flex items-center gap-2">
               <SqliteToolbar
                 canUndo={canUndo}
                 canRedo={canRedo}
@@ -196,140 +167,93 @@ export default function App() {
                 onRedo={redo}
               />
 
-              <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
-                <button
-                  onClick={() => setTheme('light')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'light' ? 'bg-white dark:bg-neutral-800 text-amber-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Φωτεινό Θέμα (Light)"
-                >
-                  <Sun size={14} />
-                </button>
-                <button
-                  onClick={() => setTheme('dark')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'bg-white dark:bg-neutral-800 text-indigo-400 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Σκοτεινό Θέμα (Dark)"
-                >
-                  <Moon size={14} />
-                </button>
-                <button
-                  onClick={() => setTheme('system')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'system' ? 'bg-white dark:bg-neutral-800 text-cyan-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Θέμα Συστήματος (System)"
-                >
-                  <Monitor size={14} />
-                </button>
-              </div>
-
-              <AuthToolbarControls
-                onOpenMagicModal={() => setShowMagicModal(true)}
-                onOpenAdmin={() => setViewMode('admin')}
-                onLock={lock}
-                currentUser={currentUser}
-              />
+              {/* Theme Single Toggle Button */}
+              <button
+                onClick={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+                className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-700/80 text-neutral-700 dark:text-neutral-200 transition-all shadow-xs flex items-center justify-center active:scale-95"
+                title={theme === 'light' ? 'Αλλαγή σε Σκοτεινό Θέμα (Dark)' : 'Αλλαγή σε Φωτεινό Θέμα (Light)'}
+                aria-label="Εναλλαγή θέματος"
+              >
+                {theme === 'light' ? (
+                  <Moon size={16} className="text-indigo-600" />
+                ) : (
+                  <Sun size={16} className="text-amber-400" />
+                )}
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center flex-wrap gap-2">
-            
-            {/* View Mode Navigation Tabs - Wraps cleanly with zero horizontal scroll on Fold 6 & phones */}
-            <div className="flex flex-wrap items-center gap-1 bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 w-full xl:w-auto">
+          {/* Full Width Navigation Menu */}
+          <nav className="w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 sm:gap-2 w-full p-1 sm:p-1.5 bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300/80 dark:border-neutral-800 rounded-2xl shadow-xs">
               <button 
                 onClick={() => setViewMode('grid')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'grid' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <Grid size={13} />
+                <Grid size={16} />
                 <span>Λίστα</span>
               </button>
               <button 
                 onClick={() => setViewMode('flow')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'flow' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'flow' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <Workflow size={13} />
+                <Workflow size={16} />
                 <span>Διάγραμμα</span>
               </button>
               <button 
                 onClick={() => setViewMode('plan')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'plan' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'plan' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <Home size={13} />
+                <Home size={16} />
                 <span>Κάτοψη</span>
               </button>
               <button 
                 onClick={() => setViewMode('buy')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'buy' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'buy' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <ShoppingCart size={13} />
-                <span>Αγορές & Εξοπλισμός</span>
+                <ShoppingCart size={16} />
+                <span>Αγορές</span>
               </button>
               <button 
                 onClick={() => setViewMode('rules')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'rules' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'rules' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <FileText size={13} />
+                <FileText size={16} />
                 <span>Γενικές Οδηγίες</span>
               </button>
               <button 
                 onClick={() => setViewMode('offers')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'offers' ? 'bg-indigo-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  viewMode === 'offers' 
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                }`}
               >
-                <Briefcase size={13} />
-                <span>Προσφορές Μελετών</span>
-              </button>
-              <button 
-                onClick={() => setViewMode('admin')}
-                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'admin' ? 'bg-rose-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
-                title="Κονσόλα Διαχείρισης Κωδικών & Magic Links"
-              >
-                <ShieldCheck size={13} className={viewMode === 'admin' ? 'text-white' : 'text-rose-500'} />
-                <span>Διαχείριση</span>
+                <Briefcase size={16} />
+                <span>Μελέτες</span>
               </button>
             </div>
-
-            {/* Desktop xl+ Utility Controls */}
-            <div className="hidden xl:flex items-center gap-2">
-              <SqliteToolbar
-                canUndo={canUndo}
-                canRedo={canRedo}
-                undoCount={undoCount}
-                redoCount={redoCount}
-                lastAction={lastAction}
-                onUndo={undo}
-                onRedo={redo}
-              />
-
-              <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
-                <button
-                  onClick={() => setTheme('light')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'light' ? 'bg-white dark:bg-neutral-800 text-amber-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Φωτεινό Θέμα (Light)"
-                >
-                  <Sun size={15} />
-                </button>
-                <button
-                  onClick={() => setTheme('dark')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'bg-white dark:bg-neutral-800 text-indigo-400 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Σκοτεινό Θέμα (Dark)"
-                >
-                  <Moon size={15} />
-                </button>
-                <button
-                  onClick={() => setTheme('system')}
-                  className={`p-1.5 rounded-lg transition-colors ${theme === 'system' ? 'bg-white dark:bg-neutral-800 text-cyan-500 shadow-sm' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'}`}
-                  title="Θέμα Συστήματος (System)"
-                >
-                  <Monitor size={15} />
-                </button>
-              </div>
-
-              <AuthToolbarControls
-                onOpenMagicModal={() => setShowMagicModal(true)}
-                onOpenAdmin={() => setViewMode('admin')}
-                onLock={lock}
-                currentUser={currentUser}
-              />
-            </div>
-
-          </div>
+          </nav>
         </header>
 
         {viewMode === 'admin' ? (
@@ -467,14 +391,6 @@ export default function App() {
           onSaveProvision={updateProvision}
           onSaveProcurement={updateProcurementItem}
           onSaveRule={updateGeneralRule}
-        />
-
-        {/* Magic Link Share Modal */}
-        <MagicLinkModal
-          isOpen={showMagicModal}
-          onClose={() => setShowMagicModal(false)}
-          onOpenAdmin={() => setViewMode('admin')}
-          currentUser={currentUser}
         />
 
         {/* Floating Toast Notification */}
