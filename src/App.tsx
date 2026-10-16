@@ -194,9 +194,6 @@ export default function App() {
                 lastAction={lastAction}
                 onUndo={undo}
                 onRedo={redo}
-                onDownload={downloadDatabase}
-                onImport={importDatabase}
-                onReset={resetToDefaults}
               />
 
               <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
@@ -298,9 +295,6 @@ export default function App() {
                 lastAction={lastAction}
                 onUndo={undo}
                 onRedo={redo}
-                onDownload={downloadDatabase}
-                onImport={importDatabase}
-                onReset={resetToDefaults}
               />
 
               <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs">
@@ -342,6 +336,12 @@ export default function App() {
           <AdminConsoleView 
             onBackToApp={() => setViewMode('grid')}
             currentUser={currentUser}
+            onDownloadDatabase={downloadDatabase}
+            onImportDatabase={importDatabase}
+            onResetDatabase={resetToDefaults}
+            totalProvisions={provisions.length}
+            totalProcurement={procurementItems.length}
+            totalRules={generalRules.length}
           />
         ) : viewMode === 'plan' ? (
           <HousePlanView 

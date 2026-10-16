@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldCheck, 
@@ -21,7 +21,11 @@ import {
   Users,
   Wrench,
   Compass,
-  Home
+  Home,
+  Database,
+  Download,
+  Upload,
+  RotateCcw
 } from 'lucide-react';
 import { 
   PasscodeEntry, 
@@ -37,11 +41,23 @@ interface AdminConsoleViewProps {
   onBackToApp: () => void;
   currentUser?: PasscodeEntry | null;
   onSelectPasscode?: (code: string) => void;
+  onDownloadDatabase?: () => void;
+  onImportDatabase?: (buffer: ArrayBuffer) => void;
+  onResetDatabase?: () => void;
+  totalProvisions?: number;
+  totalProcurement?: number;
+  totalRules?: number;
 }
 
 export default function AdminConsoleView({
   onBackToApp,
-  currentUser
+  currentUser,
+  onDownloadDatabase,
+  onImportDatabase,
+  onResetDatabase,
+  totalProvisions,
+  totalProcurement,
+  totalRules
 }: AdminConsoleViewProps) {
   // Master auth check state
   const [isMasterVerified, setIsMasterVerified] = useState<boolean>(() => {
@@ -68,6 +84,34 @@ export default function AdminConsoleView({
   const [newDuration, setNewDuration] = useState<'never' | '7days' | '30days' | '90days'>('never');
   const [newNotes, setNewNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+
+  // SQLite Database Management state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dbToastMessage, setDbToastMessage] = useState<string | null>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onImportDatabase) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result instanceof ArrayBuffer) {
+        onImportDatabase(reader.result);
+        setDbToastMessage('Η βάση δεδομένων SQLite εισήχθη και φορτώθηκε επιτυχώς!');
+        setTimeout(() => setDbToastMessage(null), 3500);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = '';
+  };
+
+  const handleResetDatabase = () => {
+    if (!onResetDatabase) return;
+    if (window.confirm('ΠΡΟΣΟΧΗ: Είστε βέβαιοι ότι θέλετε πλήρη επαναφορά στα αρχικά εργοστασιακά δεδομένα; Όλες οι τοπικές τροποποιήσεις θα διαγραφούν οριστικά.')) {
+      onResetDatabase();
+      setDbToastMessage('Έγινε επιτυχής επαναφορά των αρχικών δεδομένων.');
+      setTimeout(() => setDbToastMessage(null), 3500);
+    }
+  };
 
   // Master passcode gate check
   const handleMasterSubmit = (e: React.FormEvent) => {
@@ -536,6 +580,132 @@ export default function AdminConsoleView({
             </motion.div>
           );
         })}
+      </div>
+
+      {/* Hidden file input for .sqlite import */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        accept=".sqlite,.db,.sqlite3"
+        className="hidden"
+      />
+
+      {/* SQLite WASM Database Management Section */}
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-200 dark:border-indigo-900/40">
+              <Database size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">
+                  Διαχείριση Βάσης Δεδομένων (SQLite WASM)
+                </h2>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800/60">
+                  Online &bull; Local WASM
+                </span>
+              </div>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                Τα δεδομένα της κατοικίας αποθηκεύονται τοπικά στον φυλλομετρητή (In-Browser SQLite WebAssembly). Δημιουργήστε αντίγραφο ασφαλείας ή επαναφέρετε δεδομένα.
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Database Stats */}
+          <div className="flex items-center gap-2 text-xs flex-wrap">
+            {typeof totalProvisions === 'number' && (
+              <span className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold border border-neutral-200 dark:border-neutral-700">
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">{totalProvisions}</span> Παροχές
+              </span>
+            )}
+            {typeof totalProcurement === 'number' && (
+              <span className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold border border-neutral-200 dark:border-neutral-700">
+                <span className="font-bold text-cyan-600 dark:text-cyan-400">{totalProcurement}</span> Αγορές
+              </span>
+            )}
+            {typeof totalRules === 'number' && (
+              <span className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold border border-neutral-200 dark:border-neutral-700">
+                <span className="font-bold text-amber-600 dark:text-amber-400">{totalRules}</span> Οδηγίες
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Action Controls */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Download Backup */}
+          <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-neutral-900 dark:text-white">
+                <Download size={16} className="text-indigo-600 dark:text-indigo-400" />
+                <span>Εξαγωγή (.sqlite)</span>
+              </div>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                Κατεβάστε πλήρες αντίγραφο ασφαλείας της τοπικής SQLite βάσης για αρχειοθέτηση ή μεταφορά σε άλλη συσκευή.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onDownloadDatabase}
+              className="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-indigo-600/20 transition-all active:scale-98"
+            >
+              <Download size={14} />
+              <span>Λήψη Αρχείου .sqlite</span>
+            </button>
+          </div>
+
+          {/* Import / Restore */}
+          <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-neutral-900 dark:text-white">
+                <Upload size={16} className="text-cyan-600 dark:text-cyan-400" />
+                <span>Εισαγωγή (.sqlite)</span>
+              </div>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                Φορτώστε προηγούμενο αρχείο .sqlite για άμεση ενημέρωση και συγχρονισμό των δεδομένων.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full py-2 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-cyan-600/20 transition-all active:scale-98"
+            >
+              <Upload size={14} />
+              <span>Φόρτωση από Αρχείο</span>
+            </button>
+          </div>
+
+          {/* Factory Reset */}
+          <div className="p-3.5 rounded-xl bg-rose-50/40 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-900/40 flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-rose-700 dark:text-rose-400">
+                <RotateCcw size={16} />
+                <span>Επαναφορά Αρχικών</span>
+              </div>
+              <p className="text-[11px] text-rose-600/80 dark:text-rose-400/80 leading-relaxed">
+                Επαναφέρει όλες τις παροχές, τις αγορές και τους κανόνες στα εργοστασιακά πρότυπα δεδομένα.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetDatabase}
+              className="w-full py-2 px-3 rounded-lg bg-white dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 hover:bg-rose-600 hover:text-white text-rose-700 dark:text-rose-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-98"
+            >
+              <RotateCcw size={14} />
+              <span>Επαναφορά Προτύπων</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Database Feedback Toast */}
+        {dbToastMessage && (
+          <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+            <Check size={15} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+            <span>{dbToastMessage}</span>
+          </div>
+        )}
       </div>
 
       {/* Modal: Create New Passcode */}
