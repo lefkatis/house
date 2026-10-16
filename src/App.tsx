@@ -6,14 +6,15 @@ import {
   Grid, 
   ShoppingCart, 
   FileText, 
-  Sun,
-  Moon,
-  Monitor,
-  Home,
-  Briefcase,
-  Filter,
-  ChevronDown,
-  ChevronUp
+  Sun, 
+  Moon, 
+  Monitor, 
+  Home, 
+  Briefcase, 
+  Filter, 
+  ChevronDown, 
+  ChevronUp,
+  ShieldCheck
 } from 'lucide-react';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
@@ -23,6 +24,7 @@ import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
 import OffersView from './OffersView';
 import ProvisionsView from './ProvisionsView';
+import AdminConsoleView from './AdminConsoleView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
@@ -35,7 +37,7 @@ import {
 } from './components/AuthGate';
 
 export default function App() {
-  const { isUnlocked, unlock, lock, toastMessage } = useAuth();
+  const { isUnlocked, currentUser, unlock, lock, toastMessage } = useAuth();
   const [showMagicModal, setShowMagicModal] = useState<boolean>(false);
   const {
     provisions,
@@ -62,8 +64,35 @@ export default function App() {
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
-  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin'>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+      if (path.includes('/admin') || params.get('view') === 'admin' || window.location.hash === '#/admin') {
+        return 'admin';
+      }
+    }
+    return 'grid';
+  });
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(true);
+
+  // Sync /admin URL query state
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const currentPath = window.location.pathname;
+    if (viewMode === 'admin') {
+      if (!currentPath.includes('/admin')) {
+        window.history.pushState({}, '', '?view=admin');
+      }
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'admin' || currentPath.includes('/admin')) {
+        params.delete('view');
+        const clean = params.toString() ? `?${params.toString()}` : '';
+        window.history.pushState({}, '', window.location.pathname.replace(/\/admin\/?$/, '/') + clean);
+      }
+    }
+  }, [viewMode]);
 
   // Theme state: light (default) | dark | system
   const [theme, setTheme] = useState<'dark' | 'light' | 'system'>(() => {
@@ -196,7 +225,9 @@ export default function App() {
 
               <AuthToolbarControls
                 onOpenMagicModal={() => setShowMagicModal(true)}
+                onOpenAdmin={() => setViewMode('admin')}
                 onLock={lock}
+                currentUser={currentUser}
               />
             </div>
           </div>
@@ -247,6 +278,14 @@ export default function App() {
                 <Briefcase size={13} />
                 <span>Προσφορές Μελετών</span>
               </button>
+              <button 
+                onClick={() => setViewMode('admin')}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition-all ${viewMode === 'admin' ? 'bg-rose-600 text-white shadow-md' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'}`}
+                title="Κονσόλα Διαχείρισης Κωδικών & Magic Links"
+              >
+                <ShieldCheck size={13} className={viewMode === 'admin' ? 'text-white' : 'text-rose-500'} />
+                <span>Διαχείριση</span>
+              </button>
             </div>
 
             {/* Desktop xl+ Utility Controls */}
@@ -290,14 +329,21 @@ export default function App() {
 
               <AuthToolbarControls
                 onOpenMagicModal={() => setShowMagicModal(true)}
+                onOpenAdmin={() => setViewMode('admin')}
                 onLock={lock}
+                currentUser={currentUser}
               />
             </div>
 
           </div>
         </header>
 
-        {viewMode === 'plan' ? (
+        {viewMode === 'admin' ? (
+          <AdminConsoleView 
+            onBackToApp={() => setViewMode('grid')}
+            currentUser={currentUser}
+          />
+        ) : viewMode === 'plan' ? (
           <HousePlanView 
             provisions={provisions}
             onToggleCompleted={toggleProvisionCompleted}
@@ -427,6 +473,8 @@ export default function App() {
         <MagicLinkModal
           isOpen={showMagicModal}
           onClose={() => setShowMagicModal(false)}
+          onOpenAdmin={() => setViewMode('admin')}
+          currentUser={currentUser}
         />
 
         {/* Floating Toast Notification */}

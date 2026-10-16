@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Admin Console</title>
+    <script>
+      // Seamless SPA redirect to the Admin Console
+      var search = window.location.search;
+      var hash = window.location.hash;
+      var redirectUrl = '/?view=admin' + (search ? '&' + search.replace(/^\?/, '') : '') + hash;
+      window.location.replace(redirectUrl);
+    </script>
+  </head>
+  <body style="font-family: system-ui, sans-serif; background: #0a0a0a; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <p>Μετάβαση στην Κονσόλα Διαχείρισης House Admin...</p>
+  </body>
+</html>

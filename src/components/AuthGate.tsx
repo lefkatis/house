@@ -11,50 +11,95 @@ import {
   X, 
   ShieldCheck, 
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Users
 } from 'lucide-react';
+import { 
+  PasscodeEntry, 
+  validatePasscode, 
+  verifySignedToken, 
+  buildMagicLink, 
+  MASTER_PASSCODE, 
+  getAllPasscodes 
+} from '../services/passcodeService';
 
-export const VALID_PASSCODE = 'andreas';
-
-export function getMagicLinkUrl(): string {
-  if (typeof window === 'undefined') return `https://house.lefk.dev/?auth=${VALID_PASSCODE}`;
-  return `${window.location.origin}${window.location.pathname}?auth=${VALID_PASSCODE}`;
+export function getMagicLinkUrl(code: string = MASTER_PASSCODE): string {
+  return buildMagicLink(code);
 }
 
 export function useAuth() {
+  const [currentUser, setCurrentUser] = useState<PasscodeEntry | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const saved = localStorage.getItem('house_auth_session');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // Fallback
+      }
+    }
+    if (localStorage.getItem('house_auth_unlocked') === 'true') {
+      return validatePasscode(MASTER_PASSCODE);
+    }
+    return null;
+  });
+
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     const params = new URLSearchParams(window.location.search);
     const code = params.get('auth') || params.get('pass') || params.get('code') || params.get('key');
-    if (code && code.trim().toLowerCase() === VALID_PASSCODE.toLowerCase()) {
-      return true;
+    if (code) {
+      const match = validatePasscode(code);
+      if (match) return true;
     }
+    const token = params.get('token');
+    if (token) return true; // Will resolve in useEffect
+
     return localStorage.getItem('house_auth_unlocked') === 'true';
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('auth') || params.get('pass') || params.get('code') || params.get('key');
+    const checkUrl = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('auth') || params.get('pass') || params.get('code') || params.get('key');
+      const token = params.get('token');
 
-    if (code && code.trim().toLowerCase() === VALID_PASSCODE.toLowerCase()) {
-      setIsUnlocked(true);
-      localStorage.setItem('house_auth_unlocked', 'true');
-      setToastMessage('Συνδεθήκατε αυτόματα μέσω Magic Link! ✨');
+      let userMatch: PasscodeEntry | null = null;
 
-      // Clean the query parameter from URL bar
-      params.delete('auth');
-      params.delete('pass');
-      params.delete('code');
-      params.delete('key');
-      const newQuery = params.toString() ? `?${params.toString()}` : '';
-      window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname + newQuery + window.location.hash
-      );
-    }
+      if (token) {
+        userMatch = await verifySignedToken(token);
+      } else if (code) {
+        userMatch = validatePasscode(code);
+      }
+
+      if (userMatch) {
+        setCurrentUser(userMatch);
+        setIsUnlocked(true);
+        localStorage.setItem('house_auth_unlocked', 'true');
+        localStorage.setItem('house_auth_session', JSON.stringify(userMatch));
+        if (userMatch.isMaster) {
+          localStorage.setItem('house_admin_verified', 'true');
+        }
+        setToastMessage(`Καλώς ήρθατε, ${userMatch.name}! ✨`);
+
+        // Clean query parameters from URL bar
+        params.delete('auth');
+        params.delete('pass');
+        params.delete('code');
+        params.delete('key');
+        params.delete('token');
+        const newQuery = params.toString() ? `?${params.toString()}` : '';
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname + newQuery + window.location.hash
+        );
+      }
+    };
+
+    checkUrl();
   }, []);
 
   // Auto-dismiss toast
@@ -65,10 +110,16 @@ export function useAuth() {
   }, [toastMessage]);
 
   const unlock = (code: string): boolean => {
-    if (code.trim().toLowerCase() === VALID_PASSCODE.toLowerCase()) {
+    const match = validatePasscode(code);
+    if (match) {
+      setCurrentUser(match);
       setIsUnlocked(true);
       localStorage.setItem('house_auth_unlocked', 'true');
-      setToastMessage('Επιτυχής είσοδος! Καλώς ήρθατε.');
+      localStorage.setItem('house_auth_session', JSON.stringify(match));
+      if (match.isMaster) {
+        localStorage.setItem('house_admin_verified', 'true');
+      }
+      setToastMessage(`Επιτυχής είσοδος! Καλώς ήρθατε, ${match.name}.`);
       return true;
     }
     return false;
@@ -76,12 +127,17 @@ export function useAuth() {
 
   const lock = () => {
     localStorage.removeItem('house_auth_unlocked');
+    localStorage.removeItem('house_auth_session');
+    localStorage.removeItem('house_admin_verified');
     setIsUnlocked(false);
+    setCurrentUser(null);
     setToastMessage('Η εφαρμογή κλειδώθηκε.');
   };
 
   return {
     isUnlocked,
+    currentUser,
+    isMaster: currentUser?.isMaster === true,
     unlock,
     lock,
     toastMessage,
@@ -108,7 +164,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
     }
   };
 
-  const magicUrl = getMagicLinkUrl();
+  const magicUrl = getMagicLinkUrl(MASTER_PASSCODE);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(magicUrl);
@@ -159,7 +215,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                   setPasscode(e.target.value);
                   if (error) setError(false);
                 }}
-                placeholder="π.χ. andreas"
+                placeholder="Εισάγετε τον κωδικό σας..."
                 autoFocus
                 className={`w-full px-3.5 py-2.5 rounded-xl text-sm bg-neutral-50 dark:bg-neutral-950/70 border ${
                   error 
@@ -183,7 +239,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-xs text-rose-600 dark:text-rose-400 font-semibold pt-0.5"
               >
-                Λανθασμένος κωδικός πρόσβασης. Δοκιμάστε ξανά.
+                Λανθασμένος ή ανενεργός κωδικός πρόσβασης.
               </motion.p>
             )}
           </div>
@@ -215,7 +271,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               </button>
             </div>
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
-              Μπορείτε να εισέλθετε αυτόματα χωρίς πληκτρολόγηση ανοίγοντας τον σύνδεσμο με <code className="px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 font-mono text-[10px]">?auth=andreas</code>.
+              Μπορείτε να εισέλθετε απευθείας χωρίς κωδικό ανοίγοντας το Magic Link με <code className="px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 font-mono text-[10px]">?auth=andreas</code>.
             </p>
           </div>
         </div>
@@ -228,16 +284,26 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
 interface MagicLinkModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenAdmin?: () => void;
+  currentUser?: PasscodeEntry | null;
 }
 
-export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose }) => {
-  const [copied, setCopied] = useState(false);
-  const magicUrl = getMagicLinkUrl();
+export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ 
+  isOpen, 
+  onClose,
+  onOpenAdmin,
+  currentUser
+}) => {
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [selectedPasscode, setSelectedPasscode] = useState<string>(currentUser?.code || MASTER_PASSCODE);
+  const passcodes = getAllPasscodes();
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(magicUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  const currentLink = buildMagicLink(selectedPasscode);
+
+  const handleCopy = (code: string) => {
+    navigator.clipboard.writeText(buildMagicLink(code));
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2500);
   };
 
   if (!isOpen) return null;
@@ -248,7 +314,7 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="max-w-md w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-3xl p-5 sm:p-6 shadow-2xl relative"
+        className="max-w-lg w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-3xl p-5 sm:p-6 shadow-2xl relative"
       >
         <button
           onClick={onClose}
@@ -263,15 +329,34 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
           </div>
           <div>
             <h3 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white">
-              Magic Link & Κωδικός
+              Magic Links & Διαμοιρασμός
             </h3>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Άμεση πρόσβαση χωρίς εισαγωγή κωδικού
+              Αντιγράψτε και στείλτε συνδέσμους άμεσης εισόδου
             </p>
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3.5">
+          {/* Target User Selector */}
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Επιλογή Παραλήπτη / Ρόλου
+            </label>
+            <select
+              value={selectedPasscode}
+              onChange={(e) => setSelectedPasscode(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl text-xs bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500"
+            >
+              {passcodes.map(p => (
+                <option key={p.id} value={p.code}>
+                  {p.name} ({p.code})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Magic Link URL Box */}
           <div className="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800">
             <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1">
               Σύνδεσμος Magic Link
@@ -280,15 +365,15 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
               <input
                 type="text"
                 readOnly
-                value={magicUrl}
+                value={currentLink}
                 className="w-full bg-transparent text-xs font-mono text-neutral-800 dark:text-neutral-200 outline-none truncate select-all"
               />
               <button
-                onClick={handleCopy}
+                onClick={() => handleCopy(selectedPasscode)}
                 className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors flex-shrink-0"
               >
-                {copied ? <Check size={13} /> : <Copy size={13} />}
-                <span>{copied ? 'Αντιγράφηκε' : 'Αντιγραφή'}</span>
+                {copiedCode === selectedPasscode ? <Check size={13} /> : <Copy size={13} />}
+                <span>{copiedCode === selectedPasscode ? 'Αντιγράφηκε' : 'Αντιγραφή'}</span>
               </button>
             </div>
           </div>
@@ -298,18 +383,29 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
               <Sparkles size={14} className="text-indigo-500" />
               Πώς λειτουργεί:
             </p>
-            <ul className="list-disc list-inside space-y-1 text-[11px] text-neutral-600 dark:text-neutral-400 pl-1">
-              <li>
-                Στείλτε αυτό το link σε συνεργάτες, μηχανικούς ή στην οικογένεια.
-              </li>
-              <li>
-                Όποιος ανοίξει το link συνδέεται <strong>άμεσα και αυτόματα</strong> με τον κωδικό <code className="bg-white dark:bg-neutral-900 px-1 py-0.5 rounded font-mono font-bold text-neutral-800 dark:text-neutral-200">andreas</code>.
-              </li>
-              <li>
-                Η συσκευή τους αποθηκεύει την εξουσιοδότηση ώστε να μην χρειάζεται να τον ξαναγράψουν.
-              </li>
-            </ul>
+            <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+              Όποιος ανοίξει τον σύνδεσμο συνδέεται <strong>αυτόματα</strong> χωρίς να ζητηθεί κωδικός. Η εξουσιοδότηση αποθηκεύεται στον browser του.
+            </p>
           </div>
+
+          {/* Admin shortcut if master */}
+          {onOpenAdmin && (
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+              <span className="text-[11px] text-neutral-500">
+                Χρειάζεστε νέους κωδικούς ή διαχείριση;
+              </span>
+              <button
+                onClick={() => {
+                  onClose();
+                  onOpenAdmin();
+                }}
+                className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1"
+              >
+                <ShieldCheck size={13} />
+                <span>Κονσόλα Διαχείρισης (/admin)</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex justify-end gap-2">
@@ -320,7 +416,7 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
             Κλείσιμο
           </button>
           <a
-            href={magicUrl}
+            href={currentLink}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-xl text-xs font-semibold bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-900 dark:text-white transition-colors flex items-center gap-1.5"
@@ -336,15 +432,43 @@ export const MagicLinkModal: React.FC<MagicLinkModalProps> = ({ isOpen, onClose 
 
 interface AuthToolbarControlsProps {
   onOpenMagicModal: () => void;
+  onOpenAdmin?: () => void;
   onLock: () => void;
+  currentUser?: PasscodeEntry | null;
 }
 
 export const AuthToolbarControls: React.FC<AuthToolbarControlsProps> = ({
   onOpenMagicModal,
-  onLock
+  onOpenAdmin,
+  onLock,
+  currentUser
 }) => {
   return (
     <div className="flex items-center bg-neutral-200/80 dark:bg-neutral-900 p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs gap-1">
+      {/* Current User Badge */}
+      {currentUser && (
+        <span 
+          className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shadow-2xs"
+          title={`Συνδεδεμένος ως: ${currentUser.name}`}
+        >
+          <Users size={11} className="text-indigo-500" />
+          <span>{currentUser.name.split(' ')[0]}</span>
+        </span>
+      )}
+
+      {/* Admin Button */}
+      {onOpenAdmin && (
+        <button
+          onClick={onOpenAdmin}
+          className="flex items-center gap-1 px-2 py-1 rounded-lg text-neutral-600 dark:text-neutral-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white/60 dark:hover:bg-neutral-800/80 transition-colors font-bold"
+          title="Κονσόλα Διαχείρισης Κωδικών (/admin)"
+        >
+          <ShieldCheck size={14} className="text-rose-500" />
+          <span className="hidden sm:inline text-[11px]">Admin</span>
+        </button>
+      )}
+
+      {/* Magic Link Button */}
       <button
         onClick={onOpenMagicModal}
         className="flex items-center gap-1 px-2 py-1 rounded-lg text-neutral-600 dark:text-neutral-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/60 dark:hover:bg-neutral-800/80 transition-colors font-medium"
@@ -354,10 +478,11 @@ export const AuthToolbarControls: React.FC<AuthToolbarControlsProps> = ({
         <span className="hidden sm:inline text-[11px]">Magic Link</span>
       </button>
 
+      {/* Lock Button */}
       <button
         onClick={onLock}
         className="p-1.5 rounded-lg text-neutral-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white/60 dark:hover:bg-neutral-800/80 transition-colors"
-        title="Κλείδωμα Εφαρμογής"
+        title="Κλείδωμα Εφαρμογής (Αποσύνδεση)"
       >
         <Lock size={14} />
       </button>
