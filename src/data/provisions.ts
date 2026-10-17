@@ -228,11 +228,13 @@ export const PROVISIONS: Provision[] = [
   { id: 'par_5', name: 'Φωτισμός', room: '🚗 Parking', wall: 'Οροφή Parking', type: '💡 Φώτα', completed: false },
   { id: 'par_6', name: 'Presense Sensor', room: '🚗 Parking', wall: 'Οροφή Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
 
+  // --- Server Cabinet ---
+  { id: 'mix_1', name: 'Server Rack (Mini PC, Switch, NVR, Modem, Firewall)', room: '🖥️ Server Cabinet', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },
+  { id: 'mix_2', name: '1U Fans για Εξαερισμό Rack', room: '🖥️ Server Cabinet', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },
+  { id: 'mix_3', name: 'Παροχή 16A/32A για Server Cabinet', room: '🖥️ Server Cabinet', wall: 'Τοίχος Rack', type: '🔌 Πρίζες', completed: false },
+  { id: 'mix_4', name: 'Ενεργός Εξαερισμός Δωματίου (Αποφυγή Υπερθέρμανσης)', room: '🖥️ Server Cabinet', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
+
   // --- Μηχανοστάσιο ---
-  { id: 'mix_1', name: 'Server Rack (Mini PC, Switch, NVR, Modem, Firewall)', room: '⚙️ Μηχανοστάσιο', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'mix_2', name: '1U Fans για Εξαερισμό Rack', room: '⚙️ Μηχανοστάσιο', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },
-  { id: 'mix_3', name: 'Παροχή 16A/32A για Server Cabinet', room: '⚙️ Μηχανοστάσιο', wall: 'Τοίχος Rack', type: '🔌 Πρίζες', completed: false },
-  { id: 'mix_4', name: 'Ενεργός Εξαερισμός Δωματίου (Αποφυγή Υπερθέρμανσης)', room: '⚙️ Μηχανοστάσιο', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'mix_5', name: 'Φίλτρο Στερεών & Water Softener (Αδιάβροχη Πρίζα & Drain)', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🚰 Υδραυλικά', completed: false },
   { id: 'mix_6', name: 'Ντεπόζιτο Νερού, Boiler & Heat Pump', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🚰 Υδραυλικά', completed: false },
   { id: 'mix_7', name: 'Smart Θερμοστάτης Νερού (Cat6 στο Ντεπόζιτο)', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '📡 Έξυπνο Σπίτι', completed: false },

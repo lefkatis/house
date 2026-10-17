@@ -3,10 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, 
   MapPin, 
-  FileText, 
-  Layers, 
   ExternalLink, 
-  Download, 
   RefreshCw, 
   Filter, 
   AlertTriangle,
@@ -27,7 +24,7 @@ import {
 } from './data/blueprintRoomMappings';
 import { getAssetUrl } from './utils/assets';
 
-type PlanTab = 'schematic' | 'ground' | 'site' | 'roof' | 'full_pdf';
+type PlanTab = 'schematic' | 'ground';
 
 const SCHEMATIC_ROOMS = [
   // Top Row: Outdoor / Parking / Veranda
@@ -46,7 +43,8 @@ const SCHEMATIC_ROOMS = [
   { id: '🖥️ Γραφείο', name: '🖥️ Γραφείο', x: 20, y: 330, w: 120, h: 170, color: 'blue' },
   { id: '🛤️ Διάδρομος', name: '🛤️ Διάδρομος', x: 160, y: 420, w: 420, h: 80, color: 'slate' },
   { id: '🚽 WC Ξένων', name: '🚽 WC Ξένων', x: 600, y: 420, w: 120, h: 80, color: 'rose' },
-  { id: '⚙️ Μηχανοστάσιο', name: '⚙️ Μηχανοστάσιο', x: 740, y: 420, w: 240, h: 80, color: 'orange' },
+  { id: '⚙️ Μηχανοστάσιο', name: '⚙️ Μηχανοστάσιο', x: 740, y: 420, w: 120, h: 80, color: 'orange' },
+  { id: '🖥️ Server Cabinet', name: '🖥️ Server Cabinet', x: 860, y: 420, w: 120, h: 80, color: 'cyan' },
 
   // Bottom Row: Bedrooms & Bathrooms
   { id: '🛏️ Bedroom 1', name: '🛏️ Bedroom 1', x: 20, y: 520, w: 200, h: 180, color: 'violet' },
@@ -80,7 +78,7 @@ export default function HousePlanView({
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [showOnlyPending, setShowOnlyPending] = useState<boolean>(false);
-  const [showMobilePlanFilters, setShowMobilePlanFilters] = useState<boolean>(false);
+  const [showMobilePlanFilters, setShowMobilePlanFilters] = useState<boolean>(true);
   const [hoveredProvisionId, setHoveredProvisionId] = useState<string | null>(null);
   const [hoveredRoomId, setHoveredRoomId] = useState<string | null>(null);
 
@@ -199,7 +197,7 @@ export default function HousePlanView({
             }`}
           >
             <LayoutDashboard size={13} />
-            <span>Σχηματική Κάτοψη (Χωρίς PDF)</span>
+            <span>Σχηματική Κάτοψη</span>
           </button>
 
           <button
@@ -212,41 +210,6 @@ export default function HousePlanView({
           >
             <Home size={13} />
             <span>Κάτοψη Ισογείου (A1.2)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('site')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'site'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-            }`}
-          >
-            <Layers size={13} />
-            <span>Χωροταξικό (A1.1)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('roof')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'roof'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-            }`}
-          >
-            <span>Οροφή (A1.3)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('full_pdf')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'full_pdf'
-                ? 'bg-purple-600 text-white shadow-md'
-                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-            }`}
-          >
-            <FileText size={13} />
-            <span>Πλήρες PDF (11 Σελίδες)</span>
           </button>
         </div>
 
@@ -675,75 +638,6 @@ export default function HousePlanView({
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      ) : activeTab === 'full_pdf' ? (
-        /* FULL ARCHITECTURAL PDF EMBED */
-        <div className="flex-shrink-0 lg:flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col min-h-[450px] lg:min-h-[600px]">
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-neutral-200 dark:border-neutral-800 mb-3 flex-shrink-0">
-            <div>
-              <h3 className="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <FileText size={16} className="text-purple-500" />
-                Αρχιτεκτονικά Σχέδια & Εμβαδογράμματα (Αναθεωρημένα 20.03.26)
-              </h3>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                Πλήρες επίσημο αρχείο πολεοδομικής άδειας 11 σελίδων (Χωροταξικό, Κατόψεις, Όψεις, Τομές, Περιτειχίσματα).
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <a
-                href={getAssetUrl('/house_plans.pdf')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all inline-flex items-center gap-1.5"
-              >
-                <span>Άνοιγμα σε Νέα Καρτέλα</span>
-                <ExternalLink size={13} />
-              </a>
-              <a
-                href={getAssetUrl('/house_plans.pdf')}
-                download="ΑΡΧΙΤΕΚΤΟΝΙΚΑ_ΣΧΕΔΙΑ_HOUSE_2021.pdf"
-                className="px-3 py-1.5 rounded-lg bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white text-xs font-semibold transition-all inline-flex items-center gap-1.5"
-              >
-                <Download size={13} />
-                <span>Λήψη PDF</span>
-              </a>
-            </div>
-          </div>
-
-          <div className="w-full h-[420px] sm:h-[520px] lg:flex-1 lg:h-auto bg-neutral-950 rounded-xl border border-neutral-800 overflow-hidden min-h-[400px] lg:min-h-[550px]">
-            <iframe
-              src={`${getAssetUrl('/house_plans.pdf')}#toolbar=1&navpanes=1`}
-              className="w-full h-full min-h-[400px] lg:min-h-[550px] border-0"
-              title="Αρχιτεκτονικά Σχέδια PDF"
-            />
-          </div>
-        </div>
-      ) : activeTab === 'site' || activeTab === 'roof' ? (
-        /* SITE OR ROOF PLAN PREVIEW */
-        <div className="flex-shrink-0 lg:flex-1 bg-white dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-xl flex flex-col items-center min-h-[300px] sm:min-h-[440px] lg:min-h-[550px]">
-          <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-neutral-200 dark:border-neutral-800 mb-3">
-            <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-              {activeTab === 'site' ? 'Χωροταξικό Σχέδιο Οικοπέδου (A1.1)' : 'Κάτοψη Οροφής & Ηλιακά (A1.3)'}
-            </span>
-            <a
-              href={getAssetUrl(activeTab === 'site' ? '/plan_site.pdf' : '/plan_roof.pdf')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-500 hover:text-indigo-400 text-xs font-semibold flex items-center gap-1"
-            >
-              <span>Άνοιγμα High-Res PDF</span>
-              <ExternalLink size={12} />
-            </a>
-          </div>
-
-          <div className="w-full lg:flex-1 flex items-center justify-center max-w-full min-h-[240px] sm:min-h-[360px] overflow-auto">
-            <img 
-              src={getAssetUrl(activeTab === 'site' ? '/plan_site.png' : '/plan_roof.png')} 
-              alt="Αρχιτεκτονικό Σχέδιο"
-              className="w-full lg:w-auto max-w-full h-auto lg:max-h-[640px] block rounded-xl shadow-lg border border-neutral-300 dark:border-neutral-800"
-            />
           </div>
         </div>
       ) : (

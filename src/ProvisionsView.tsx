@@ -70,7 +70,13 @@ export default function ProvisionsView({
   const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [onlyWithNotes, setOnlyWithNotes] = useState<boolean>(false);
-  const [showFiltersDrawer, setShowFiltersDrawer] = useState<boolean>(false);
+  const [showFiltersDrawer, setShowFiltersDrawer] = useState<boolean>(() => {
+    const saved = localStorage.getItem('house_provisions_show_filters');
+    if (saved !== null) {
+      return saved === 'true';
+    }
+    return true; // Enabled by default
+  });
 
   // Group Collapsing State
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
@@ -95,6 +101,10 @@ export default function ProvisionsView({
   useEffect(() => {
     localStorage.setItem('house_provisions_status_filter', statusFilter);
   }, [statusFilter]);
+
+  useEffect(() => {
+    localStorage.setItem('house_provisions_show_filters', String(showFiltersDrawer));
+  }, [showFiltersDrawer]);
 
   // Overall Statistics
   const totalCount = provisions.length;

@@ -12,7 +12,8 @@ import {
   Briefcase, 
   Filter, 
   ChevronDown, 
-  ChevronUp
+  ChevronUp,
+  ExternalLink
 } from 'lucide-react';
 import { ROOMS } from './data/rooms';
 import { CATEGORIES as TYPES } from './data/categories';
@@ -27,6 +28,7 @@ import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
 import { useAuth, AuthToast } from './components/AuthGate';
+import { getAssetUrl } from './utils/assets';
 
 export default function App() {
   const { currentUser, toastMessage } = useAuth();
@@ -155,8 +157,24 @@ export default function App() {
               </div>
             </div>
 
-            {/* Utility Controls (Undo, Redo, Light/Dark Toggle) */}
-            <div className="flex items-center gap-2">
+            {/* Utility Controls (Full PDF Button, Undo, Redo, Light/Dark Toggle) */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Full Architectural PDF (11 Pages) Button */}
+              <a
+                href={getAssetUrl('/house_plans.pdf')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-bold text-xs shadow-xs transition-all active:scale-95"
+                title="Άνοιγμα Πλήρους Αρχιτεκτονικού Σχεδίου (PDF 11 Σελίδων)"
+              >
+                <FileText size={14} className="text-purple-600 dark:text-purple-400" />
+                <span className="hidden xs:inline sm:inline">Πλήρες PDF</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-purple-200/80 dark:bg-purple-900 text-purple-800 dark:text-purple-200 font-black">
+                  11 Σελ.
+                </span>
+                <ExternalLink size={12} className="opacity-70 hidden md:inline" />
+              </a>
+
               <SqliteToolbar
                 canUndo={canUndo}
                 canRedo={canRedo}

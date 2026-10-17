@@ -139,6 +139,11 @@ class SQLiteService {
         vendor_name TEXT NOT NULL,
         data_json TEXT NOT NULL
       );
+
+      -- Data migration: move server cabinet provisions from mechanical room to dedicated server cabinet
+      UPDATE provisions 
+      SET room = '🖥️ Server Cabinet' 
+      WHERE id IN ('mix_1', 'mix_2', 'mix_3', 'mix_4') AND room = '⚙️ Μηχανοστάσιο';
     `);
   }
 

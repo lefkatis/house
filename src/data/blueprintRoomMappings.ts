@@ -162,6 +162,16 @@ export const BLUEPRINT_ROOMS: BlueprintRoomZone[] = [
     color: '#ea580c'
   },
   {
+    id: '🖥️ Server Cabinet',
+    name: 'Server Cabinet (Rack / Δίκτυο)',
+    x: 24,
+    y: 65,
+    w: 5,
+    h: 5,
+    center: { x: 26.5, y: 67.5 },
+    color: '#06b6d4'
+  },
+  {
     id: '🏠 Βοηθητικό Σπίτι',
     name: 'Βοηθητικό Σπίτι',
     x: 20,
