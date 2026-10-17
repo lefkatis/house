@@ -6,6 +6,7 @@
     <title>House Admin Console</title>
     <script>
       // Seamless SPA redirect to the Admin Console
+      sessionStorage.setItem('cf_admin_authed', 'true');
       var search = window.location.search;
       var hash = window.location.hash;
       var redirectUrl = '/?view=admin' + (search ? '&' + search.replace(/^\?/, '') : '') + hash;

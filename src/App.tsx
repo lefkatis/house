@@ -56,7 +56,14 @@ export default function App() {
       }
       const path = window.location.pathname;
       const params = new URLSearchParams(window.location.search);
-      if (path.includes('/admin') || params.get('view') === 'admin' || window.location.hash === '#/admin') {
+      if (path.includes('/admin')) {
+        return 'admin';
+      }
+      if (params.get('view') === 'admin' || window.location.hash === '#/admin') {
+        if (hostname === 'house.lefk.dev' && !sessionStorage.getItem('cf_admin_authed')) {
+          window.location.replace('/admin');
+          return 'grid';
+        }
         return 'admin';
       }
     }
