@@ -288,7 +288,15 @@ export const PROVISIONS: Provision[] = [
   // --- Μηχανοστάσιο ---
   { id: 'mix_5', name: 'Φίλτρο Στερεών & Water Softener (Αδιάβροχη Πρίζα & Drain)', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🚰 Υδραυλικά', completed: false },
   { id: 'mix_6', name: 'Ντεπόζιτο Νερού, Boiler & Heat Pump', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🚰 Υδραυλικά', completed: false },
-  { id: 'mix_7', name: 'Smart Θερμοστάτης Νερού (Cat6a στο Ντεπόζιτο)', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'mix_7', 
+    name: 'Smart Θερμοστάτης Ηλιακού & Boiler (Σωλήνα Πίνακα προς Solar, Boiler Pocket & Shelly στον Πίνακα)', 
+    room: '⚙️ Μηχανοστάσιο', 
+    wall: 'Υδραυλικά / Ηλεκτρολογικός Πίνακας', 
+    type: '📡 Έξυπνο Σπίτι', 
+    details: 'Απευθείας σωλήνωση από τον κεντρικό ηλεκτρολογικό πίνακα προς το ηλιακό σύστημα/boiler. Ο θερμολουτήρας (boiler) πρέπει υποχρεωτικά να διαθέτει βάραθρο (pocket) για τον αισθητήρα θερμοκρασίας (probe DS18B20). Το κόκκινο Shelly Plus 1 (ή Shelly Pro) μπαίνει ΣΤΟΝ ΠΙΝΑΚΑ και οπλίζει ρελέ ισχύος (contactor 20A/25A) για την αντίσταση 3000W.',
+    completed: false 
+  },
   { id: 'mix_8', name: 'Σύστημα Ανακυκλοφορίας Ζεστού Νερού', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🔧 Συντήρηση', completed: false },
   { id: 'mix_9', name: 'Inverter Φωτοβολταϊκών & Μπαταρία (Cat6a & Σωληνώσεις)', room: '⚙️ Μηχανοστάσιο', wall: 'Τοίχος Φωτοβολταϊκών', type: '🔌 Πρίζες', completed: false },
   

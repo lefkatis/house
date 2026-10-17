@@ -185,6 +185,13 @@ class SQLiteService {
       SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)',
           details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του Ensuite).'
       WHERE id = 'ens_1';
+
+      -- Data migration: update solar/boiler smart thermostat provision (mix_7)
+      UPDATE provisions 
+      SET name = 'Smart Θερμοστάτης Ηλιακού & Boiler (Σωλήνα Πίνακα προς Solar, Boiler Pocket & Shelly στον Πίνακα)',
+          wall = 'Υδραυλικά / Ηλεκτρολογικός Πίνακας',
+          details = 'Απευθείας σωλήνωση από τον κεντρικό ηλεκτρολογικό πίνακα προς το ηλιακό σύστημα/boiler. Ο θερμολουτήρας (boiler) πρέπει υποχρεωτικά να διαθέτει βάραθρο (pocket) για τον αισθητήρα θερμοκρασίας (probe DS18B20). Το κόκκινο Shelly Plus 1 (ή Shelly Pro) μπαίνει ΣΤΟΝ ΠΙΝΑΚΑ και οπλίζει ρελέ ισχύος (contactor 20A/25A) για την αντίσταση 3000W.'
+      WHERE id = 'mix_7';
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
