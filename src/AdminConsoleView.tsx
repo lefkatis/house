@@ -25,7 +25,9 @@ import {
   Database,
   Download,
   Upload,
-  RotateCcw
+  RotateCcw,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { 
   PasscodeEntry, 
@@ -47,6 +49,8 @@ interface AdminConsoleViewProps {
   totalProvisions?: number;
   totalProcurement?: number;
   totalRules?: number;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 export default function AdminConsoleView({
@@ -57,7 +61,9 @@ export default function AdminConsoleView({
   onResetDatabase,
   totalProvisions,
   totalProcurement,
-  totalRules
+  totalRules,
+  theme,
+  onToggleTheme
 }: AdminConsoleViewProps) {
   // Master auth check state
   const [isMasterVerified, setIsMasterVerified] = useState<boolean>(() => {
@@ -305,7 +311,7 @@ export default function AdminConsoleView({
                 onClick={onBackToApp}
                 className="flex-1 py-2.5 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Επιστροφή
+                Επιστροφή στην Κεντρική Σελίδα
               </button>
               <button
                 type="submit"
@@ -327,13 +333,14 @@ export default function AdminConsoleView({
       
       {/* Top Banner / Navigation */}
       <div className="bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={onBackToApp}
-            className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-indigo-600 hover:text-white text-neutral-600 dark:text-neutral-300 transition-colors shadow-xs"
-            title="Επιστροφή στην Εφαρμογή"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 font-bold text-xs sm:text-sm shadow-xs transition-all active:scale-95"
+            title="Επιστροφή στην Κεντρική Σελίδα"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
+            <span>Επιστροφή στην Κεντρική Σελίδα</span>
           </button>
           <div>
             <div className="flex items-center gap-2">
@@ -351,19 +358,27 @@ export default function AdminConsoleView({
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto">
+          {onToggleTheme && (
+            <button
+              onClick={onToggleTheme}
+              className="p-2 sm:p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-all shadow-xs flex items-center justify-center active:scale-95"
+              title={theme === 'light' ? 'Αλλαγή σε Σκοτεινό Θέμα (Dark)' : 'Αλλαγή σε Φωτεινό Θέμα (Light)'}
+              aria-label="Εναλλαγή θέματος"
+            >
+              {theme === 'light' ? (
+                <Moon size={16} className="text-indigo-600" />
+              ) : (
+                <Sun size={16} className="text-amber-400" />
+              )}
+            </button>
+          )}
+
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all active:scale-98"
           >
             <UserPlus size={15} />
             <span>+ Νέος Κωδικός</span>
-          </button>
-          <button
-            onClick={onBackToApp}
-            className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 text-xs font-semibold border border-neutral-300 dark:border-neutral-700 transition-colors"
-          >
-            <Home size={14} />
-            <span className="hidden sm:inline">Επιστροφή στις Παροχές</span>
           </button>
         </div>
       </div>
