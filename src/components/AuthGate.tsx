@@ -55,6 +55,13 @@ export function useAuth() {
     const token = params.get('token');
     if (token) return true; // Will resolve in useEffect
 
+    // Check client cookie if present
+    const cookieMatch = document.cookie.match(/house_client_auth=([^;]+)/);
+    if (cookieMatch && cookieMatch[1]) {
+      const match = validatePasscode(cookieMatch[1]);
+      if (match) return true;
+    }
+
     return localStorage.getItem('house_auth_unlocked') === 'true';
   });
 
@@ -74,6 +81,39 @@ export function useAuth() {
         userMatch = validatePasscode(code);
       }
 
+      // Check client cookie if not resolved yet
+      if (!userMatch) {
+        const cookieMatch = document.cookie.match(/house_client_auth=([^;]+)/);
+        if (cookieMatch && cookieMatch[1]) {
+          userMatch = validatePasscode(cookieMatch[1]);
+        }
+      }
+
+      // Fallback check against Edge Worker session API
+      if (!userMatch && localStorage.getItem('house_auth_unlocked') !== 'true') {
+        try {
+          const res = await fetch('/api/auth/session', { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.authenticated && data.user) {
+              userMatch = validatePasscode(data.user.code) || {
+                id: data.user.id || `pass-${data.user.code}`,
+                code: data.user.code,
+                name: data.user.name || data.user.code,
+                role: data.user.role || 'full',
+                isMaster: Boolean(data.user.isMaster || data.user.code === MASTER_PASSCODE),
+                category: 'owner',
+                createdAt: new Date().toISOString(),
+                expiresAt: null,
+                isActive: true
+              };
+            }
+          }
+        } catch (e) {
+          // ignore network failure
+        }
+      }
+
       if (userMatch) {
         setCurrentUser(userMatch);
         setIsUnlocked(true);
@@ -84,18 +124,20 @@ export function useAuth() {
         }
         setToastMessage(`Καλώς ήρθατε, ${userMatch.name}! ✨`);
 
-        // Clean query parameters from URL bar
-        params.delete('auth');
-        params.delete('pass');
-        params.delete('code');
-        params.delete('key');
-        params.delete('token');
-        const newQuery = params.toString() ? `?${params.toString()}` : '';
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname + newQuery + window.location.hash
-        );
+        // Clean query parameters from URL bar if present
+        if (code || token) {
+          params.delete('auth');
+          params.delete('pass');
+          params.delete('code');
+          params.delete('key');
+          params.delete('token');
+          const newQuery = params.toString() ? `?${params.toString()}` : '';
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname + newQuery + window.location.hash
+          );
+        }
       }
     };
 

@@ -27,12 +27,14 @@ import {
   Upload,
   RotateCcw,
   Sun,
-  Moon
+  Moon,
+  Pencil
 } from 'lucide-react';
 import { 
   PasscodeEntry, 
   getAllPasscodes, 
   addPasscode, 
+  updatePasscode,
   deletePasscode, 
   togglePasscodeActive, 
   buildMagicLink, 
@@ -100,6 +102,17 @@ export default function AdminConsoleView({
   const [newDuration, setNewDuration] = useState<'never' | '7days' | '30days' | '90days'>('never');
   const [newNotes, setNewNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Edit Passcode Modal state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<PasscodeEntry | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editCode, setEditCode] = useState('');
+  const [editRole, setEditRole] = useState<'admin' | 'full' | 'readonly'>('full');
+  const [editCategory, setEditCategory] = useState<'owner' | 'family' | 'engineers' | 'contractors' | 'guests'>('contractors');
+  const [editDuration, setEditDuration] = useState<'never' | 'keep' | '7days' | '30days' | '90days'>('never');
+  const [editNotes, setEditNotes] = useState('');
+  const [editError, setEditError] = useState<string | null>(null);
 
   // SQLite Database Management state
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -248,6 +261,66 @@ export default function AdminConsoleView({
     setNewDuration('never');
     setFormError(null);
     setIsModalOpen(false);
+    refreshPasscodes();
+  };
+
+  const openEditModal = (item: PasscodeEntry) => {
+    setEditingItem(item);
+    setEditName(item.name);
+    setEditCode(item.code);
+    setEditRole(item.role);
+    setEditCategory(item.category);
+    setEditNotes(item.notes || '');
+    setEditDuration(item.expiresAt ? 'keep' : 'never');
+    setEditError(null);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdatePasscode = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingItem) return;
+
+    if (!editName.trim()) {
+      setEditError('Παρακαλώ εισάγετε όνομα χρήστη / συνεργάτη.');
+      return;
+    }
+    if (!editCode.trim()) {
+      setEditError('Παρακαλώ εισάγετε κωδικό πρόσβασης.');
+      return;
+    }
+
+    const cleanCode = editCode.trim().toLowerCase();
+    const existing = passcodes.find(p => p.id !== editingItem.id && p.code.toLowerCase() === cleanCode);
+    if (existing) {
+      setEditError(`Ο κωδικός "${cleanCode}" χρησιμοποιείται ήδη από "${existing.name}".`);
+      return;
+    }
+
+    // Determine expiry date
+    let expiresAt = editingItem.expiresAt || null;
+    const now = Date.now();
+    if (editDuration === 'never') {
+      expiresAt = null;
+    } else if (editDuration === '7days') {
+      expiresAt = new Date(now + 7 * 24 * 60 * 60 * 1000).toISOString();
+    } else if (editDuration === '30days') {
+      expiresAt = new Date(now + 30 * 24 * 60 * 60 * 1000).toISOString();
+    } else if (editDuration === '90days') {
+      expiresAt = new Date(now + 90 * 24 * 60 * 60 * 1000).toISOString();
+    }
+
+    updatePasscode(editingItem.id, {
+      name: editName.trim(),
+      code: cleanCode,
+      role: editingItem.isMaster ? 'admin' : editRole,
+      category: editCategory,
+      notes: editNotes.trim() || undefined,
+      expiresAt
+    });
+
+    setIsEditModalOpen(false);
+    setEditingItem(null);
+    setEditError(null);
     refreshPasscodes();
   };
 
@@ -570,6 +643,14 @@ export default function AdminConsoleView({
                   >
                     {isCopied ? <Check size={12} className="text-emerald-300" /> : <Copy size={12} />}
                     <span>{isCopied ? 'Αντιγράφηκε!' : 'Magic Link'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => openEditModal(item)}
+                    className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 transition-colors"
+                    title="Επεξεργασία κωδικού & στοιχείων"
+                  >
+                    <Pencil size={13} />
                   </button>
 
                   <button
@@ -906,6 +987,183 @@ export default function AdminConsoleView({
                   >
                     <Check size={14} />
                     <span>Δημιουργία & Αποθήκευση</span>
+                  </button>
+                </div>
+              </form>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal: Edit Existing Passcode */}
+      <AnimatePresence>
+        {isEditModalOpen && editingItem && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="max-w-lg w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-3xl p-5 sm:p-6 shadow-2xl relative"
+            >
+              <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setEditingItem(null);
+                }}
+                className="absolute right-4 top-4 p-1.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                  <Pencil size={22} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white">
+                    Επεξεργασία Κωδικού & Στοιχείων
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Τροποποιήστε τον κωδικό, το όνομα, τον ρόλο ή τις σημειώσεις.
+                  </p>
+                </div>
+              </div>
+
+              {editError && (
+                <div className="mb-4 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-600 dark:text-rose-300 font-semibold flex items-center gap-2">
+                  <AlertTriangle size={14} />
+                  <span>{editError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleUpdatePasscode} className="space-y-3.5 text-xs">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Όνομα Συνεργάτη / Χρήστη *
+                  </label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => {
+                      setEditName(e.target.value);
+                      if (editError) setEditError(null);
+                    }}
+                    placeholder="π.χ. Κώστας Ηλεκτρολόγος"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Κωδικός Πρόσβασης *
+                  </label>
+                  <input
+                    type="text"
+                    value={editCode}
+                    onChange={(e) => {
+                      setEditCode(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''));
+                      if (editError) setEditError(null);
+                    }}
+                    placeholder="π.χ. arch2026, maria, meletitis"
+                    className="w-full px-3 py-2 rounded-xl font-mono bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                      Κατηγορία
+                    </label>
+                    <select
+                      value={editCategory}
+                      onChange={(e) => setEditCategory(e.target.value as any)}
+                      className="w-full px-2.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500 text-xs"
+                    >
+                      <option value="owner">Ιδιοκτήτης</option>
+                      <option value="family">Οικογένεια</option>
+                      <option value="engineers">Μηχανικός</option>
+                      <option value="contractors">Εργολάβος</option>
+                      <option value="guests">Επισκέπτης</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                      Δικαιώματα
+                    </label>
+                    <select
+                      value={editRole}
+                      disabled={editingItem.isMaster}
+                      onChange={(e) => setEditRole(e.target.value as any)}
+                      className="w-full px-2.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500 text-xs disabled:opacity-60"
+                    >
+                      {editingItem.isMaster && <option value="admin">Master Admin</option>}
+                      <option value="full">Πλήρης Πρόσβαση</option>
+                      <option value="readonly">Μόνο Προβολή</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                      Διάρκεια Ισχύος
+                    </label>
+                    <select
+                      value={editDuration}
+                      onChange={(e) => setEditDuration(e.target.value as any)}
+                      className="w-full px-2.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500 text-xs"
+                    >
+                      {editingItem.expiresAt && <option value="keep">Διατήρηση υπάρχουσας</option>}
+                      <option value="never">Μόνιμο (Χωρίς Λήξη)</option>
+                      <option value="7days">7 Ημέρες (από τώρα)</option>
+                      <option value="30days">30 Ημέρες (από τώρα)</option>
+                      <option value="90days">90 Ημέρες (από τώρα)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Σημειώσεις / Περιγραφή Ρόλου
+                  </label>
+                  <input
+                    type="text"
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    placeholder="π.χ. Υπεύθυνος για καλωδιώσεις και φωτισμό σαλονιού"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                {/* Live Preview Box */}
+                {editCode && (
+                  <div className="p-2.5 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40">
+                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5">
+                      Νέο Magic Link (μετά την αποθήκευση):
+                    </span>
+                    <span className="font-mono text-[11px] text-neutral-700 dark:text-neutral-300 break-all select-all">
+                      {buildMagicLink(editCode)}
+                    </span>
+                  </div>
+                )}
+
+                <div className="pt-3 flex justify-end gap-2 border-t border-neutral-200 dark:border-neutral-800">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditModalOpen(false);
+                      setEditingItem(null);
+                    }}
+                    className="px-4 py-2 rounded-xl font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  >
+                    Ακύρωση
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5"
+                  >
+                    <Check size={14} />
+                    <span>Αποθήκευση Αλλαγών</span>
                   </button>
                 </div>
               </form>

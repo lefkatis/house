@@ -106,21 +106,23 @@ export const DEFAULT_PASSCODES: PasscodeEntry[] = [
 const STORAGE_KEY = 'house_custom_passcodes_v1';
 const SECRET_SALT = 'house-lefk-dev-auth-secret-key-2026';
 
-// Get all passcodes (defaults + custom from localStorage)
+// Get all passcodes (defaults or saved list from localStorage)
 export function getAllPasscodes(): PasscodeEntry[] {
   if (typeof window === 'undefined') return DEFAULT_PASSCODES;
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_PASSCODES;
-    const customList: PasscodeEntry[] = JSON.parse(raw);
+    const list: PasscodeEntry[] = JSON.parse(raw);
 
-    // Merge: custom passcodes override or append to default ones
-    const map = new Map<string, PasscodeEntry>();
-    DEFAULT_PASSCODES.forEach(item => map.set(item.code.toLowerCase(), item));
-    customList.forEach(item => map.set(item.code.toLowerCase(), item));
-
-    return Array.from(map.values());
+    if (Array.isArray(list) && list.length > 0) {
+      // Ensure master admin always exists
+      if (!list.some(p => p.isMaster || p.code.toLowerCase() === MASTER_PASSCODE.toLowerCase())) {
+        list.unshift(DEFAULT_PASSCODES[0]);
+      }
+      return list;
+    }
+    return DEFAULT_PASSCODES;
   } catch (err) {
     console.error('Failed to load passcodes from localStorage:', err);
     return DEFAULT_PASSCODES;
@@ -133,7 +135,11 @@ export async function syncPasscodesToCloudflare(list: PasscodeEntry[]): Promise<
   try {
     const res = await fetch('/api/passcodes', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-admin-key': MASTER_PASSCODE
+      },
+      credentials: 'include',
       body: JSON.stringify(list)
     });
     return res.ok;
@@ -147,13 +153,14 @@ export async function syncPasscodesToCloudflare(list: PasscodeEntry[]): Promise<
 export async function fetchPasscodesFromCloudflare(): Promise<PasscodeEntry[] | null> {
   if (typeof window === 'undefined') return null;
   try {
-    const res = await fetch('/api/passcodes');
+    const res = await fetch('/api/passcodes', {
+      headers: { 'Cache-Control': 'no-cache' },
+      credentials: 'include'
+    });
     if (!res.ok) return null;
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      // Update local storage without re-triggering network sync
-      const toSave = data.filter(item => !item.isMaster);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       return data;
     }
     return null;
@@ -163,15 +170,17 @@ export async function fetchPasscodesFromCloudflare(): Promise<PasscodeEntry[] | 
   }
 }
 
-// Save custom passcodes list
+// Save passcodes list (persisted to localStorage and synced to Cloudflare Edge KV)
 export function saveCustomPasscodes(list: PasscodeEntry[]): void {
   if (typeof window === 'undefined') return;
-  // Keep only non-master or customized codes
-  const toSave = list.filter(item => !item.isMaster);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  // Ensure master admin is included
+  const hasMaster = list.some(p => p.isMaster || p.code.toLowerCase() === MASTER_PASSCODE.toLowerCase());
+  const final = hasMaster ? list : [DEFAULT_PASSCODES[0], ...list];
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(final));
 
   // Sync to Cloudflare Edge KV in background
-  syncPasscodesToCloudflare(list).catch(() => {});
+  syncPasscodesToCloudflare(final).catch(() => {});
 }
 
 // Add a new passcode
@@ -198,7 +207,15 @@ export function updatePasscode(id: string, updates: Partial<PasscodeEntry>): boo
   const index = current.findIndex(c => c.id === id);
   if (index === -1) return false;
 
-  current[index] = { ...current[index], ...updates };
+  const target = current[index];
+  const newCode = updates.code ? updates.code.trim().toLowerCase() : target.code;
+
+  current[index] = { 
+    ...target, 
+    ...updates,
+    code: newCode
+  };
+
   saveCustomPasscodes(current);
   return true;
 }
