@@ -49,6 +49,7 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
   const [prUnit, setPrUnit] = useState('τεμ.');
   const [prRooms, setPrRooms] = useState('');
   const [prIsTask, setPrIsTask] = useState(false);
+  const [prIsOptional, setPrIsOptional] = useState(false);
   const [prTaskDesc, setPrTaskDesc] = useState('');
   const [prNotes, setPrNotes] = useState('');
   const [prLink, setPrLink] = useState('');
@@ -82,6 +83,7 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
       setPrUnit(item.data.unit);
       setPrRooms(item.data.rooms.join(', '));
       setPrIsTask(item.data.isTask);
+      setPrIsOptional(Boolean(item.data.isOptional));
       setPrTaskDesc(item.data.taskDescription || '');
       setPrNotes(item.data.notes);
       setPrLink(item.data.link || '');
@@ -125,6 +127,7 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
         unit: prUnit.trim() || 'τεμ.',
         rooms: roomsArr,
         isTask: prIsTask,
+        isOptional: prIsOptional,
         taskDescription: prTaskDesc.trim() || undefined,
         notes: prNotes.trim(),
         link: prLink.trim() || undefined,
@@ -455,6 +458,26 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
                     />
                   </div>
                 )}
+              </div>
+
+              {/* Optional check */}
+              <div className="p-3 bg-neutral-50 dark:bg-neutral-950/60 rounded-xl border border-neutral-200 dark:border-neutral-800">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={prIsOptional}
+                    onChange={e => setPrIsOptional(e.target.checked)}
+                    className="w-4 h-4 rounded text-amber-500"
+                  />
+                  <div>
+                    <span className="font-bold text-amber-800 dark:text-amber-300 text-sm">
+                      🟡 Προαιρετική Αγορά (Optional)
+                    </span>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                      Επισημαίνει το είδος ως προαιρετικό / μη απολύτως κρίσιμο για τη βασική λειτουργία.
+                    </p>
+                  </div>
+                </label>
               </div>
 
               {/* Purchased checkbox */}

@@ -13,6 +13,7 @@ import {
   Check,
   LayoutGrid,
   List,
+  Table,
   ArrowUpDown,
   ChevronDown,
   ChevronUp,
@@ -36,8 +37,8 @@ export default function ProcurementView({
   const items = itemsProp || localItems;
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filterMode, setFilterMode] = useState<'all' | 'products' | 'tasks'>('all');
-  const [displayMode, setDisplayMode] = useState<'grid' | 'list'>('grid');
+  const [filterMode, setFilterMode] = useState<'all' | 'products' | 'tasks' | 'optional'>('all');
+  const [displayMode, setDisplayMode] = useState<'grid' | 'table' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'category' | 'name' | 'priceDesc' | 'priceAsc' | 'status'>('category');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
@@ -62,14 +63,16 @@ export default function ProcurementView({
           if (!item.isTask) return false;
         } else {
           if (item.category !== selectedCategory) return false;
-          // Mode filter (all / products / tasks) only applies within normal categories
+          // Mode filter (all / products / tasks / optional) only applies within normal categories
           if (filterMode === 'tasks' && !item.isTask) return false;
           if (filterMode === 'products' && item.isTask) return false;
+          if (filterMode === 'optional' && !item.isOptional) return false;
         }
       } else {
-        // Mode filter (all / products / tasks)
+        // Mode filter (all / products / tasks / optional)
         if (filterMode === 'tasks' && !item.isTask) return false;
         if (filterMode === 'products' && item.isTask) return false;
+        if (filterMode === 'optional' && !item.isOptional) return false;
       }
 
       // Search query
@@ -111,6 +114,7 @@ export default function ProcurementView({
     let totalEst = 0;
     let productsCount = 0;
     let tasksCount = 0;
+    let optionalCount = 0;
     let purchasedCount = 0;
 
     items.forEach(item => {
@@ -118,6 +122,9 @@ export default function ProcurementView({
         tasksCount += 1;
       } else {
         productsCount += 1;
+      }
+      if (item.isOptional) {
+        optionalCount += 1;
       }
       if (item.purchased) {
         purchasedCount += 1;
@@ -131,6 +138,7 @@ export default function ProcurementView({
       totalEst,
       productsCount,
       tasksCount,
+      optionalCount,
       totalItems: items.length,
       purchasedCount,
       progressPercent: Math.round((purchasedCount / items.length) * 100)
@@ -232,7 +240,7 @@ export default function ProcurementView({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Type Toggle: All vs Products vs Tasks */}
+          {/* Type Toggle: All vs Products vs Tasks vs Optional */}
           <div className="flex items-center space-x-1 bg-neutral-100 dark:bg-neutral-950/80 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800 text-xs">
             <button
               onClick={() => setFilterMode('all')}
@@ -258,6 +266,14 @@ export default function ProcurementView({
             >
               Εργασίες ({stats.tasksCount})
             </button>
+            <button
+              onClick={() => setFilterMode('optional')}
+              className={`px-2.5 py-1 rounded font-medium transition-all ${
+                filterMode === 'optional' ? 'bg-amber-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'
+              }`}
+            >
+              Προαιρετικά ({stats.optionalCount})
+            </button>
           </div>
 
           {/* Sort Selector */}
@@ -276,7 +292,7 @@ export default function ProcurementView({
             </select>
           </div>
 
-          {/* View Mode Switcher: Grid vs List */}
+          {/* View Mode Switcher: Grid vs Table vs List */}
           <div className="flex items-center space-x-1 bg-neutral-100 dark:bg-neutral-950/80 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800 text-xs">
             <button
               onClick={() => setDisplayMode('grid')}
@@ -291,13 +307,25 @@ export default function ProcurementView({
               <span className="hidden sm:inline">Πλέγμα</span>
             </button>
             <button
+              onClick={() => setDisplayMode('table')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-semibold transition-all ${
+                displayMode === 'table'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'
+              }`}
+              title="Προβολή Πίνακα (Table View)"
+            >
+              <Table size={13} />
+              <span className="hidden sm:inline">Πίνακας</span>
+            </button>
+            <button
               onClick={() => setDisplayMode('list')}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-semibold transition-all ${
                 displayMode === 'list'
                   ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200'
               }`}
-              title="Προβολή Λίστας / Πίνακα (Table View)"
+              title="Προβολή Λίστας / Checklist"
             >
               <List size={13} />
               <span className="hidden sm:inline">Λίστα</span>
@@ -358,8 +386,8 @@ export default function ProcurementView({
         })}
       </div>
 
-      {/* Items View: List or Grid */}
-      {displayMode === 'list' ? (
+      {/* Items View: Table, List or Grid */}
+      {displayMode === 'table' ? (
         <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden shadow-sm backdrop-blur-md pb-1 mb-6">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
@@ -417,6 +445,11 @@ export default function ProcurementView({
                               }`}>
                                 {item.name}
                               </span>
+                              {item.isOptional && (
+                                <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">
+                                  🟡 ΠΡΟΑΙΡΕΤΙΚΟ
+                                </span>
+                              )}
                               {item.isTask ? (
                                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50">
                                   ΕΡΓΑΣΙΑ
@@ -594,6 +627,216 @@ export default function ProcurementView({
             </div>
           )}
         </div>
+      ) : displayMode === 'list' ? (
+        /* Items Compact Checklist List View */
+        <div className="flex flex-col gap-2 pb-6">
+          <AnimatePresence>
+            {sortedAndFilteredItems.map(item => {
+              const totalPrice = item.estimatedPriceEur 
+                ? item.estimatedPriceEur * item.quantity 
+                : null;
+              const isExpanded = expandedItemId === item.id;
+
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                  className={`rounded-xl border p-3 backdrop-blur-md transition-all duration-200 ${
+                    item.purchased
+                      ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40 text-neutral-500 dark:text-neutral-400'
+                      : 'bg-white dark:bg-neutral-900/70 border-neutral-200 dark:border-neutral-800 hover:border-indigo-400 dark:hover:border-indigo-600/60 shadow-sm'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
+                    {/* Left: Checkbox + Name + Badges */}
+                    <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
+                      <button
+                        onClick={() => togglePurchased(item.id)}
+                        className={`p-1 rounded-full transition-colors flex-shrink-0 mt-0.5 sm:mt-0 ${
+                          item.purchased
+                            ? 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700'
+                            : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
+                        }`}
+                        title={item.purchased ? 'Ολοκληρώθηκε' : 'Εκκρεμεί'}
+                      >
+                        {item.purchased ? <CheckCircle2 size={19} /> : <Circle size={19} />}
+                      </button>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-xs sm:text-sm font-bold ${
+                            item.purchased 
+                              ? 'line-through text-neutral-400 dark:text-neutral-500' 
+                              : 'text-neutral-900 dark:text-neutral-100'
+                          }`}>
+                            {item.name}
+                          </span>
+
+                          {item.isOptional && (
+                            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">
+                              🟡 ΠΡΟΑΙΡΕΤΙΚΟ
+                            </span>
+                          )}
+
+                          {item.isTask ? (
+                            <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50">
+                              ΕΡΓΑΣΙΑ
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-100 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700/50">
+                              ΥΛΙΚΟ
+                            </span>
+                          )}
+
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/40 hidden md:inline-block">
+                            {item.category}
+                          </span>
+                        </div>
+
+                        {/* Subtitle with brand, model, rooms */}
+                        <div className="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 flex-wrap mt-0.5">
+                          {item.brand && (
+                            <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                              {item.brand}
+                            </span>
+                          )}
+                          {item.model && (
+                            <span className="truncate max-w-[200px] text-neutral-600 dark:text-neutral-300">
+                              {item.model}
+                            </span>
+                          )}
+                          {(item.brand || item.model) && item.rooms.length > 0 && <span>•</span>}
+                          {item.rooms.length > 0 && (
+                            <span className="truncate max-w-[250px]">
+                              📍 {item.rooms.join(', ')}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Quantity, Price & Actions */}
+                    <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 self-end sm:self-center ml-auto">
+                      <div className="text-right">
+                        <div className="text-xs font-bold text-neutral-600 dark:text-neutral-300">
+                          {item.quantity} {item.unit}
+                        </div>
+                        <div className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                          {totalPrice ? (
+                            `~€${totalPrice}`
+                          ) : item.priceRange ? (
+                            <span className="text-[10px] text-neutral-400 font-normal">{item.priceRange}</span>
+                          ) : (
+                            <span className="text-[10px] text-amber-500 font-normal italic">Εκκρεμεί</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        {onEditItem && (
+                          <button
+                            onClick={() => onEditItem(item)}
+                            className="p-1.5 rounded-lg text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            title="Επεξεργασία είδους"
+                          >
+                            <Pencil size={13} />
+                          </button>
+                        )}
+                        {item.link && (
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-colors"
+                            title="Άνοιγμα εξωτερικού συνδέσμου"
+                          >
+                            <ExternalLink size={13} />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => setExpandedItemId(isExpanded ? null : item.id)}
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            isExpanded
+                              ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white'
+                              : 'text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                          }`}
+                          title={isExpanded ? 'Σύμπτυξη λεπτομερειών' : 'Προβολή λεπτομερειών'}
+                        >
+                          {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded Accordion in List View */}
+                  {isExpanded && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs space-y-2"
+                    >
+                      {item.isTask && item.taskDescription && (
+                        <div className="bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-lg p-2.5 text-amber-900 dark:text-amber-200">
+                          <div className="font-semibold text-amber-800 dark:text-amber-300 mb-0.5 flex items-center gap-1">
+                            <HelpCircle size={12} />
+                            Οδηγίες Έρευνας & Επιλογής:
+                          </div>
+                          <div className="leading-relaxed">{item.taskDescription}</div>
+                        </div>
+                      )}
+                      
+                      <div className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                        <span className="font-semibold text-neutral-700 dark:text-neutral-200">Τεχνική Σημείωση: </span>
+                        {item.notes}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                        <div>
+                          <span className="font-semibold text-neutral-600 dark:text-neutral-300">Χώροι: </span>
+                          {item.rooms.join(', ')}
+                        </div>
+                        {item.priceRange && (
+                          <div>
+                            <span className="font-semibold text-neutral-600 dark:text-neutral-300">Εύρος Τιμής: </span>
+                            {item.priceRange}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+
+          {/* List summary footer */}
+          <div className="px-4 py-2.5 bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+            <div className="flex items-center gap-3">
+              <span>Εμφάνιση <strong>{sortedAndFilteredItems.length}</strong> ειδών</span>
+              <span>•</span>
+              <span className="text-emerald-600 dark:text-emerald-400">
+                <strong>{sortedAndFilteredItems.filter(i => i.purchased).length}</strong> ολοκληρωμένα
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>Συνολική Εκτίμηση:</span>
+              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                ~€{sortedAndFilteredItems.reduce((acc, i) => acc + (i.estimatedPriceEur ? i.estimatedPriceEur * i.quantity : 0), 0).toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {sortedAndFilteredItems.length === 0 && (
+            <div className="flex flex-col items-center justify-center p-12 text-neutral-400 dark:text-neutral-500 bg-white/60 dark:bg-neutral-900/40 rounded-xl border border-neutral-200 dark:border-neutral-800">
+              <Layers size={36} className="mb-2 opacity-30" />
+              <p className="text-sm font-medium">Δεν βρέθηκαν συσκευές ή εργασίες με αυτά τα κριτήρια.</p>
+            </div>
+          )}
+        </div>
       ) : (
         /* Items Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 pb-6">
@@ -625,6 +868,11 @@ export default function ProcurementView({
                         <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/50">
                           {item.category}
                         </span>
+                        {item.isOptional && (
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 flex items-center gap-1">
+                            🟡 ΠΡΟΑΙΡΕΤΙΚΟ
+                          </span>
+                        )}
                         {item.isTask ? (
                           <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50 flex items-center gap-1">
                             <AlertCircle size={10} />

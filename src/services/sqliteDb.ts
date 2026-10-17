@@ -118,6 +118,7 @@ class SQLiteService {
         unit TEXT NOT NULL,
         rooms TEXT NOT NULL,
         is_task INTEGER NOT NULL DEFAULT 0,
+        is_optional INTEGER NOT NULL DEFAULT 0,
         task_description TEXT,
         notes TEXT NOT NULL,
         purchased INTEGER NOT NULL DEFAULT 0
@@ -148,9 +149,84 @@ class SQLiteService {
       -- Data migration: update Cat6 to Cat6a across tables
       UPDATE provisions SET name = REPLACE(name, 'Cat6', 'Cat6a') WHERE name LIKE '%Cat6%';
       UPDATE provisions SET details = REPLACE(details, 'Cat6', 'Cat6a') WHERE details LIKE '%Cat6%';
-      UPDATE procurement SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
-      UPDATE rules SET title = REPLACE(title, 'Cat6', 'Cat6a'), rule = REPLACE(rule, 'Cat6', 'Cat6a'), critical_requirement = REPLACE(critical_requirement, 'Cat6', 'Cat6a') WHERE title LIKE '%Cat6%' OR rule LIKE '%Cat6%' OR critical_requirement LIKE '%Cat6%';
+      UPDATE procurement_items SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
+
+      -- Data migration: update garage switch provision name & power details if using old default name
+      UPDATE provisions 
+      SET name = 'Παροχή Ρεύματος & Εντολής για Μπουτόν/Switch Γκαράζ (Garage Wall Switch & Shelly ρελέ)', 
+          type = '🔌 Πρίζες',
+          details = 'Παροχή ρεύματος 230V και καλωδίωση εντολής (dry contacts / Shelly ρελέ) για το επίτοιχο μπουτόν ανοίγματος/κλεισίματος του γκαράζ.'
+      WHERE id = 'par_1' AND name = 'Garage Button';
     `);
+
+    // Migration: ensure is_optional column exists in procurement_items
+    try {
+      const checkCol = db.exec("PRAGMA table_info(procurement_items)");
+      if (checkCol.length > 0) {
+        const hasOptional = checkCol[0].values.some((col: any[]) => col[1] === 'is_optional');
+        if (!hasOptional) {
+          db.run("ALTER TABLE procurement_items ADD COLUMN is_optional INTEGER NOT NULL DEFAULT 0;");
+        }
+      }
+    } catch (e) {
+      console.warn("Could not alter procurement_items table:", e);
+    }
+
+    // Ensure all default provisions are seeded (for existing DB instances)
+    try {
+      const insertProvStmt = db.prepare(`
+        INSERT OR IGNORE INTO provisions (id, name, room, wall, type, completed, pending_review, details)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      for (const p of PROVISIONS) {
+        insertProvStmt.run([
+          p.id,
+          p.name,
+          p.room,
+          p.wall || '',
+          p.type,
+          p.completed ? 1 : 0,
+          p.pendingReview ? 1 : 0,
+          p.details || null
+        ]);
+      }
+      insertProvStmt.free();
+    } catch (e) {
+      console.warn("Could not seed default provisions:", e);
+    }
+
+    // Ensure all default procurement items are seeded (for existing DB instances)
+    try {
+      const insertProcStmt = db.prepare(`
+        INSERT OR IGNORE INTO procurement_items (
+          id, name, category, brand, model, link, estimated_price_eur, price_range,
+          quantity, unit, rooms, is_task, is_optional, task_description, notes, purchased
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      for (const item of PROCUREMENT_ITEMS) {
+        insertProcStmt.run([
+          item.id,
+          item.name,
+          item.category,
+          item.brand || null,
+          item.model || null,
+          item.link || null,
+          item.estimatedPriceEur ?? null,
+          item.priceRange || null,
+          item.quantity,
+          item.unit,
+          JSON.stringify(item.rooms),
+          item.isTask ? 1 : 0,
+          item.isOptional ? 1 : 0,
+          item.taskDescription || null,
+          item.notes,
+          item.purchased ? 1 : 0
+        ]);
+      }
+      insertProcStmt.free();
+    } catch (e) {
+      console.warn("Could not seed default procurement items:", e);
+    }
   }
 
   private seedInitialData(db: Database) {
@@ -186,8 +262,8 @@ class SQLiteService {
       const stmt = db.prepare(`
         INSERT INTO procurement_items (
           id, name, category, brand, model, link, estimated_price_eur, price_range,
-          quantity, unit, rooms, is_task, task_description, notes, purchased
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          quantity, unit, rooms, is_task, is_optional, task_description, notes, purchased
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       for (const item of PROCUREMENT_ITEMS) {
         stmt.run([
@@ -203,6 +279,7 @@ class SQLiteService {
           item.unit,
           JSON.stringify(item.rooms),
           item.isTask ? 1 : 0,
+          item.isOptional ? 1 : 0,
           item.taskDescription || null,
           item.notes,
           item.purchased ? 1 : 0
@@ -301,7 +378,7 @@ class SQLiteService {
     if (!this.db) return PROCUREMENT_ITEMS;
     const res = this.db.exec(`
       SELECT id, name, category, brand, model, link, estimated_price_eur, price_range,
-             quantity, unit, rooms, is_task, task_description, notes, purchased
+             quantity, unit, rooms, is_task, task_description, notes, purchased, is_optional
       FROM procurement_items
       ORDER BY id ASC
     `);
@@ -328,7 +405,8 @@ class SQLiteService {
         isTask: Boolean(row[11]),
         taskDescription: (row[12] as string) || undefined,
         notes: row[13] as string,
-        purchased: Boolean(row[14])
+        purchased: Boolean(row[14]),
+        isOptional: Boolean(row[15])
       };
     });
   }
@@ -493,7 +571,7 @@ class SQLiteService {
     if (!this.db) return;
     const currentRes = this.db.exec(`
       SELECT name, category, brand, model, link, estimated_price_eur, price_range,
-             quantity, unit, rooms, is_task, task_description, notes, purchased
+             quantity, unit, rooms, is_task, task_description, notes, purchased, is_optional
       FROM procurement_items WHERE id = '${id}'
     `);
     if (currentRes.length === 0 || currentRes[0].values.length === 0) return;
@@ -520,7 +598,8 @@ class SQLiteService {
       isTask: Boolean(row[10]),
       taskDescription: (row[11] as string) || undefined,
       notes: row[12] as string,
-      purchased: Boolean(row[13])
+      purchased: Boolean(row[13]),
+      isOptional: Boolean(row[14])
     };
 
     const next: ProcurementItem = { ...prev, ...updates };
@@ -541,6 +620,7 @@ class SQLiteService {
           unit = ${escape(next.unit)},
           rooms = ${escape(JSON.stringify(next.rooms))},
           is_task = ${next.isTask ? 1 : 0},
+          is_optional = ${next.isOptional ? 1 : 0},
           task_description = ${escape(next.taskDescription)},
           notes = ${escape(next.notes)},
           purchased = ${next.purchased ? 1 : 0}
@@ -560,6 +640,7 @@ class SQLiteService {
           unit = ${escape(prev.unit)},
           rooms = ${escape(JSON.stringify(prev.rooms))},
           is_task = ${prev.isTask ? 1 : 0},
+          is_optional = ${prev.isOptional ? 1 : 0},
           task_description = ${escape(prev.taskDescription)},
           notes = ${escape(prev.notes)},
           purchased = ${prev.purchased ? 1 : 0}

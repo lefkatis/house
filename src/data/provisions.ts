@@ -221,12 +221,47 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_10', name: 'Γεώτρηση (Πρόνοια, Αναμονές Ρεύματος & Αντλίας)', room: '🌳 Κήπος / Πισίνα', wall: 'Μηχανοστάσιο Γεώτρησης', type: '🚰 Υδραυλικά', completed: false },
 
   // --- Parking ---
-  { id: 'par_1', name: 'Garage Button', room: '🚗 Parking', wall: 'Τοίχος Εισόδου Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'par_1', 
+    name: 'Παροχή Ρεύματος & Εντολής για Μπουτόν/Switch Γκαράζ (Garage Wall Switch & Shelly ρελέ)', 
+    room: '🚗 Parking', 
+    wall: 'Τοίχος Εισόδου Parking', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Παροχή ρεύματος 230V και καλωδίωση εντολής (dry contacts / Shelly ρελέ) για το επίτοιχο μπουτόν ανοίγματος/κλεισίματος του γκαράζ.'
+  },
   { id: 'par_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
   { id: 'par_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
   { id: 'par_4', name: 'PoE Κάμερα Parking', room: '🚗 Parking', wall: 'Οροφή Parking', type: '🔒 Ασφάλεια', completed: false },
   { id: 'par_5', name: 'Φωτισμός', room: '🚗 Parking', wall: 'Οροφή Parking', type: '💡 Φώτα', completed: false },
   { id: 'par_6', name: 'Presense Sensor', room: '🚗 Parking', wall: 'Οροφή Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'par_7', 
+    name: 'Παροχή Ρεύματος για Μοτέρ Γκαραζόπορτας (3.5m από το άνοιγμα, στο μέσο)', 
+    room: '🚗 Parking', 
+    wall: 'Οροφή Parking', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Αναμονή ρεύματος στην οροφή, 3.5 μέτρα μακριά από το άνοιγμα της γκαραζόπορτας και στο κέντρο/μέσο του ανοίγματος για τον κινητήρα οροφής.'
+  },
+  { 
+    id: 'par_8', 
+    name: 'Παροχή Ρεύματος στη Γωνία Καγκέλου Μονού Parking (Έξω από τον τοίχο - Γωνία ανοίγματος)', 
+    room: '🚗 Parking', 
+    wall: 'Γωνία Καγκέλου Μονού Parking (Εξωτερικά)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Αναμονή ρεύματος εξωτερικά του τοίχου, στη γωνία του κάγκελου όπου ανοίγει το κάγκελο του μονού parking.'
+  },
+  { 
+    id: 'par_9', 
+    name: 'Παροχή Ρεύματος στη Γωνία Καγκέλου Μονού Parking (Μέσα από τον τοίχο - Γωνία ανοίγματος)', 
+    room: '🚗 Parking', 
+    wall: 'Γωνία Καγκέλου Μονού Parking (Εσωτερικά)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Αναμονή ρεύματος εσωτερικά του τοίχου, στη γωνία του κάγκελου όπου ανοίγει το κάγκελο του μονού parking.'
+  },
 
   // --- Server Cabinet ---
   { id: 'mix_1', name: 'Server Rack (Mini PC, Switch, NVR, Modem, Firewall)', room: '🖥️ Server Cabinet', wall: 'Rack (Εσωτερικά)', type: '🖥️ Server Cabinet', completed: false },

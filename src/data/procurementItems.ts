@@ -11,6 +11,7 @@ export type ProcurementItem = {
   unit: string;
   rooms: string[];
   isTask: boolean;
+  isOptional?: boolean;
   taskDescription?: string;
   notes: string;
   purchased: boolean;
@@ -424,7 +425,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   },
   {
     id: 'buy_garage_button',
-    name: 'Button',
+    name: 'Μπουτόν Γκαραζόπορτας (Momentary Push Button)',
     category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
     brand: 'Legrand / MK / Schneider',
     model: 'Εντοιχιζόμενο Μπουτόν Επαφής (Momentary Push Button)',
@@ -436,6 +437,80 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     rooms: ['🚗 Parking'],
     isTask: false,
     notes: 'Σύνδεση με το Shelly Plus 1 (Dry Contacts) και την πλακέτα του μοτέρ της γκαραζόπορτας για τοπικό άνοιγμα/κλείσιμο.',
+    purchased: false
+  },
+
+  // --- 🚪 Πόρτες & Επενδύσεις ---
+  {
+    id: 'buy_door_cladding',
+    name: 'Επένδυση Κύριας Πόρτας Εισόδου (Έρευνα & Επιλογή Υλικού)',
+    category: '🚪 Πόρτες & Επενδύσεις',
+    brand: 'Προς Επιλογή',
+    model: 'Επένδυση ασφαλείας / Ξύλο / Αλουμίνιο / Κεραμικό',
+    link: undefined,
+    estimatedPriceEur: null,
+    priceRange: 'Έρευνα Αγοράς',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🚪 Χώρος Εισόδου'],
+    isTask: true,
+    taskDescription: 'Έρευνα αγοράς και επιλογή υλικού επένδυσης για την κύρια εξώπορτα εισόδου (π.χ. φυσικό ξύλο thermo-wood, panel αλουμινίου, ceramic ή composite) σε συνδυασμό με την αρχιτεκτονική της πρόσοψης.',
+    notes: 'Συντονισμός με αρχιτέκτονα & κατασκευαστή κουφωμάτων για αντοχή στις καιρικές συνθήκες και αισθητική αρμονία.',
+    purchased: false
+  },
+
+  // --- 🌿 Κήπος, Deck & Εξωτερικοί Χώροι ---
+  {
+    id: 'buy_grass',
+    name: 'Γρασίδι Κήπου (Έρευνα: Φυσικός Χλοοτάπητας vs Συνθετικό Γρασίδι)',
+    category: '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
+    brand: 'Προς Επιλογή',
+    model: 'Φυσικός χλοοτάπητας (π.χ. Πασπάλουμ/Βερμούδα) ή Συνθετικός υψηλής ποιότητας (35-45mm)',
+    link: undefined,
+    estimatedPriceEur: null,
+    priceRange: 'Έρευνα Αγοράς',
+    quantity: 1,
+    unit: 'm²',
+    rooms: ['🌳 Κήπος / Πισίνα'],
+    isTask: true,
+    taskDescription: 'Απόφαση και επιλογή τύπου γρασιδιού: Φυσικός χλοοτάπητας (απαιτεί αυτόματο πότισμα και τακτική συντήρηση) vs Συνθετικό γρασίδι υψηλής πυκνότητας UV-resistant χωρίς ανάγκη ποτίσματος.',
+    notes: 'Συνδέεται με τις αναμονές αυτόματου ποτίσματος και τη γεώτρηση εάν επιλεγεί φυσικό.',
+    purchased: false
+  },
+  {
+    id: 'buy_pool_deck',
+    name: 'Deck Πισίνας (Έρευνα Υλικών: WPC Composite ή Φυσικό Ξύλο Ipe/Teak)',
+    category: '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
+    brand: 'Προς Επιλογή',
+    model: 'WPC Composite Decking ή Φυσικό Ξύλο (Ipe / Teak / Thermo-Ash)',
+    link: undefined,
+    estimatedPriceEur: null,
+    priceRange: 'Έρευνα Αγοράς',
+    quantity: 1,
+    unit: 'm²',
+    rooms: ['🌳 Κήπος / Πισίνα'],
+    isTask: true,
+    taskDescription: 'Έρευνα και επιλογή υλικού επένδυσης περιμετρικά της πισίνας (Deck): WPC Composite (μηδενική συντήρηση, αντοχή στο χλώριο/ήλιο, αντιολισθητικό) ή Φυσικό Σκληρό Ξύλο (Ipe/Teak με περιοδική συντήρηση/λάδωμα).',
+    notes: 'Συντονισμός με τον κατασκευαστή πισίνας για υπόβαση, απορροές υδάτων και φωτισμό overflow.',
+    purchased: false
+  },
+
+  // --- 🔒 Συναγερμός & Ασφάλεια (Προαιρετικό) ---
+  {
+    id: 'buy_safe_box',
+    name: 'Χρηματοκιβώτιο Εντοιχισμένο (Safe Box)',
+    category: '🔒 Συναγερμός & Ασφάλεια',
+    brand: 'Yale / Juwel / Mottura',
+    model: 'Εντοιχιζόμενο Χρηματοκιβώτιο Ασφαλείας (Ηλεκτρονικός Συνδυασμός & Κλειδί)',
+    link: undefined,
+    estimatedPriceEur: 180,
+    priceRange: '€120 - €350',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🛏️ Master Bedroom'],
+    isTask: false,
+    isOptional: true,
+    notes: 'Προαιρετική αγορά. Εντοίχιση σε προστατευμένο σημείο (π.χ. μέσα σε ντουλάπα Master Bedroom) με μηχανική πάκτωση σε τοιχίο.',
     purchased: false
   }
 ];

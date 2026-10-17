@@ -6,7 +6,10 @@ export const PROCUREMENT_CATEGORIES = [
   '🪟 Σκίαση & Αυτοματισμός',
   '🔧 HVAC & Μηχανοστάσιο',
   '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
+  '🚪 Πόρτες & Επενδύσεις',
+  '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
   'Εργασίες Έρευνας (Tasks to Find)'
 ] as const;
 
 export type ProcurementCategory = typeof PROCUREMENT_CATEGORIES[number];
+
