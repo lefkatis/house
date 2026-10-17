@@ -16,7 +16,7 @@ export default function GeneralRulesView({ rules: rulesProp, onEditRule }: Gener
   const rules = rulesProp || GENERAL_RULES;
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
-  const categories = ['ALL', '🔌 Πρίζες & Διακόπτες', '📡 Smart Home & Δίκτυο', '🔒 Ασφάλεια', '🚰 Υδραυλικά & HVAC'] as const;
+  const categories = ['ALL', '🔌 Πρίζες & Διακόπτες', '📡 Smart Home & Δίκτυο', '🔒 Ασφάλεια', '🚰 Υδραυλικά & HVAC', '🌿 Κήπος, Deck & Δάπεδα'] as const;
 
   const filteredRules = selectedCategory === 'ALL'
     ? rules
