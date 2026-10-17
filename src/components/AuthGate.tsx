@@ -153,8 +153,6 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   const [passcode, setPasscode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
-  const [copied, setCopied] = useState(false);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onUnlock(passcode)) {
@@ -162,14 +160,6 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
     } else {
       setError(true);
     }
-  };
-
-  const magicUrl = getMagicLinkUrl(MASTER_PASSCODE);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(magicUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
   };
 
   return (
@@ -253,25 +243,11 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
           </button>
         </form>
 
-        {/* Magic Link Hint Box */}
+        {/* Secure Info Box */}
         <div className="mt-6 pt-5 border-t border-neutral-200 dark:border-neutral-800 text-center">
-          <div className="bg-neutral-100/80 dark:bg-neutral-800/40 rounded-2xl p-3 border border-neutral-200 dark:border-neutral-800 text-left">
-            <div className="flex items-center justify-between gap-1 mb-1">
-              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                <Sparkles size={13} />
-                Magic Link (Άμεση Σύνδεση)
-              </span>
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="text-[10px] font-semibold text-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-xs"
-              >
-                {copied ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
-                <span>{copied ? 'Αντιγράφηκε' : 'Αντιγραφή'}</span>
-              </button>
-            </div>
+          <div className="bg-neutral-100/80 dark:bg-neutral-800/40 rounded-2xl p-3 border border-neutral-200 dark:border-neutral-800 text-center">
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
-              Μπορείτε να εισέλθετε απευθείας χωρίς κωδικό ανοίγοντας το Magic Link με <code className="px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 font-mono text-[10px]">?auth=andreas</code>.
+              🔒 Εισάγετε τον κωδικό πρόσβασης που σας έχει παραχωρηθεί ή συνδεθείτε μέσω του προσωπικού σας <strong>Magic Link</strong>.
             </p>
           </div>
         </div>

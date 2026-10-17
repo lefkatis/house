@@ -20,11 +20,12 @@ import AdminConsoleView from './AdminConsoleView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
-import { useAuth, AuthToast } from './components/AuthGate';
+import { useAuth, AuthToast, LockScreen, AuthToolbarControls, MagicLinkModal } from './components/AuthGate';
 import { getAssetUrl } from './utils/assets';
 
 export default function App() {
-  const { currentUser, toastMessage } = useAuth();
+  const { currentUser, isUnlocked, unlock, lock, toastMessage } = useAuth();
+  const [isMagicModalOpen, setIsMagicModalOpen] = useState(false);
   const {
     provisions,
     procurementItems,
@@ -121,7 +122,15 @@ export default function App() {
     }
     localStorage.setItem('house_theme', theme);
   }, [theme]);
-
+  // Lock screen protection for normal views (passcode or magic link required)
+  if (viewMode !== 'admin' && !isUnlocked) {
+    return (
+      <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans transition-colors duration-200">
+        <LockScreen onUnlock={unlock} />
+        <AuthToast message={toastMessage} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-3 md:p-4 overflow-x-hidden flex flex-col transition-colors duration-200">
@@ -177,6 +186,14 @@ export default function App() {
                   lastAction={lastAction}
                   onUndo={undo}
                   onRedo={redo}
+                />
+
+                {/* Auth Controls (Current User, Magic Link, Lock) */}
+                <AuthToolbarControls
+                  onOpenMagicModal={() => setIsMagicModalOpen(true)}
+                  onOpenAdmin={currentUser?.isMaster ? () => setViewMode('admin') : undefined}
+                  onLock={lock}
+                  currentUser={currentUser}
                 />
 
                 {/* Theme Single Toggle Button */}
@@ -307,6 +324,14 @@ export default function App() {
           onSaveProvision={updateProvision}
           onSaveProcurement={updateProcurementItem}
           onSaveRule={updateGeneralRule}
+        />
+
+        {/* Magic Link Share Modal */}
+        <MagicLinkModal
+          isOpen={isMagicModalOpen}
+          onClose={() => setIsMagicModalOpen(false)}
+          currentUser={currentUser}
+          onOpenAdmin={currentUser?.isMaster ? () => setViewMode('admin') : undefined}
         />
 
         {/* Floating Toast Notification */}
