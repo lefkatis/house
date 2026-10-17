@@ -268,7 +268,7 @@ export default function App() {
                   }`}
                 >
                   <Briefcase size={16} />
-                  <span>Μελέτες</span>
+                  <span>Μελετητές & Συνεργάτες</span>
                 </button>
               </div>
             </nav>

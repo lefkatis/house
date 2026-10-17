@@ -21,10 +21,15 @@ import {
   AlertTriangle,
   TrendingUp,
   XCircle,
-  Award
+  Award,
+  Building2,
+  Wrench,
+  Zap
 } from 'lucide-react';
 import { INITIAL_VENDOR_OFFERS, VendorOffer, OfferDocument } from './data/offersData';
 import { getAssetUrl } from './utils/assets';
+import { CivilEngineersSection } from './components/CivilEngineersSection';
+import { SubcontractorsSection } from './components/SubcontractorsSection';
 
 const STORAGE_KEY = 'house_vendor_offers_v1';
 const LEGACY_STORAGE_KEY = 'pronies_vendor_offers_v7';
@@ -74,6 +79,7 @@ export default function OffersView() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showAddDocModal, setShowAddDocModal] = useState<boolean>(false);
   const [viewMode, setSubViewMode] = useState<'details' | 'compare'>('details');
+  const [partnerCategory, setPartnerCategory] = useState<'mep' | 'civil' | 'subcontractors'>('mep');
 
   // Form state for adding document
   const [newDocTitle, setNewDocTitle] = useState('');
@@ -190,8 +196,68 @@ export default function OffersView() {
   return (
     <div className="flex-1 w-full flex flex-col gap-3 sm:gap-4 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
-      {/* Top Banner / Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0">
+      {/* Top Category Tabs: Ηλεκτρομηχανολόγοι vs Πολιτικοί Μηχανικοί vs Υπεργολάβοι */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-neutral-200/50 dark:bg-neutral-900/90 rounded-2xl border border-neutral-300/70 dark:border-neutral-800 shadow-xs flex-shrink-0">
+        <button
+          onClick={() => setPartnerCategory('mep')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            partnerCategory === 'mep'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-neutral-800/60'
+          }`}
+        >
+          <Zap size={16} className={partnerCategory === 'mep' ? 'text-amber-300' : 'text-indigo-500'} />
+          <span>Ηλεκτρομηχανολόγοι (MEP)</span>
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+            partnerCategory === 'mep' ? 'bg-white/20 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'
+          }`}>
+            3 Προσφορές
+          </span>
+        </button>
+
+        <button
+          onClick={() => setPartnerCategory('civil')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            partnerCategory === 'civil'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-neutral-800/60'
+          }`}
+        >
+          <Building2 size={16} className={partnerCategory === 'civil' ? 'text-blue-200' : 'text-blue-500'} />
+          <span>Πολιτικοί Μηχανικοί</span>
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+            partnerCategory === 'civil' ? 'bg-white/20 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'
+          }`}>
+            Πόλυς, D&K EPS
+          </span>
+        </button>
+
+        <button
+          onClick={() => setPartnerCategory('subcontractors')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+            partnerCategory === 'subcontractors'
+              ? 'bg-amber-600 text-white shadow-md'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-neutral-800/60'
+          }`}
+        >
+          <Wrench size={16} className={partnerCategory === 'subcontractors' ? 'text-amber-200' : 'text-amber-500'} />
+          <span>Υπεργολάβοι & Συνεργεία</span>
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+            partnerCategory === 'subcontractors' ? 'bg-white/20 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'
+          }`}>
+            Σιδεράς Parking κ.α.
+          </span>
+        </button>
+      </div>
+
+      {partnerCategory === 'civil' ? (
+        <CivilEngineersSection />
+      ) : partnerCategory === 'subcontractors' ? (
+        <SubcontractorsSection />
+      ) : (
+        <>
+          {/* Top Banner / Metrics */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0">
         
         {/* Total Vendors */}
         <div className="bg-white/80 dark:bg-gradient-to-br dark:from-indigo-950/60 dark:to-neutral-900/90 border border-neutral-200 dark:border-indigo-800/40 rounded-xl p-2.5 sm:p-3 shadow-md backdrop-blur-md">
@@ -1205,6 +1271,8 @@ export default function OffersView() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
 
     </div>
