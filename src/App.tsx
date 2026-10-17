@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, 
-  Workflow, 
   Grid, 
   ShoppingCart, 
   FileText, 
@@ -10,14 +9,8 @@ import {
   Moon, 
   Home, 
   Briefcase, 
-  Filter, 
-  ChevronDown, 
-  ChevronUp,
   ExternalLink
 } from 'lucide-react';
-import { ROOMS } from './data/rooms';
-import { CATEGORIES as TYPES } from './data/categories';
-import Flow from './Flow';
 import ProcurementView from './ProcurementView';
 import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
@@ -55,9 +48,7 @@ export default function App() {
   } = useSqlite();
 
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
-  const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
-  const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
-  const [viewMode, setViewMode] = useState<'grid' | 'flow' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin'>(() => {
+  const [viewMode, setViewMode] = useState<'grid' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin'>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const params = new URLSearchParams(window.location.search);
@@ -67,7 +58,6 @@ export default function App() {
     }
     return 'grid';
   });
-  const [showMobileFilters, setShowMobileFilters] = useState<boolean>(true);
 
   // Sync /admin URL query state
   useEffect(() => {
@@ -106,29 +96,6 @@ export default function App() {
     localStorage.setItem('house_theme', theme);
   }, [theme]);
 
-  const toggleRoom = (room: string) => {
-    if (selectedRooms.size === ROOMS.length) {
-      setSelectedRooms(new Set([room]));
-    } else {
-      const next = new Set(selectedRooms);
-      if (next.has(room)) next.delete(room);
-      else next.add(room);
-      setSelectedRooms(next);
-    }
-  };
-
-  const toggleType = (type: string) => {
-    if (selectedTypes.size === TYPES.length) {
-      setSelectedTypes(new Set([type]));
-    } else {
-      const next = new Set(selectedTypes);
-      if (next.has(type)) next.delete(type);
-      else next.add(type);
-      setSelectedTypes(next);
-    }
-  };
-
-  const filteredProvisions = provisions.filter(p => selectedRooms.has(p.room) && selectedTypes.has(p.type));
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-3 md:p-4 overflow-x-hidden flex flex-col transition-colors duration-200">
@@ -203,7 +170,7 @@ export default function App() {
 
           {/* Full Width Navigation Menu */}
           <nav className="w-full">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 sm:gap-2 w-full p-1 sm:p-1.5 bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300/80 dark:border-neutral-800 rounded-2xl shadow-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-2 w-full p-1 sm:p-1.5 bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300/80 dark:border-neutral-800 rounded-2xl shadow-xs">
               <button 
                 onClick={() => setViewMode('grid')}
                 className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
@@ -214,17 +181,6 @@ export default function App() {
               >
                 <Grid size={16} />
                 <span>Λίστα</span>
-              </button>
-              <button 
-                onClick={() => setViewMode('flow')}
-                className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  viewMode === 'flow' 
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
-                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                <Workflow size={16} />
-                <span>Διάγραμμα</span>
               </button>
               <button 
                 onClick={() => setViewMode('plan')}
@@ -305,94 +261,6 @@ export default function App() {
           />
         ) : viewMode === 'offers' ? (
           <OffersView />
-        ) : viewMode === 'flow' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
-            {/* Left Panel: Filters for Flow */}
-            <div className="lg:col-span-3 flex flex-col gap-2.5 sm:gap-3">
-              <button
-                onClick={() => setShowMobileFilters(!showMobileFilters)}
-                className="lg:hidden flex items-center justify-between w-full px-3.5 py-2 bg-white/90 dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-neutral-200 shadow-sm"
-              >
-                <span className="flex items-center gap-2">
-                  <Filter size={14} className="text-indigo-500" />
-                  <span>Φίλτρα Δωματίων & Κατηγοριών</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
-                    {selectedRooms.size}/{ROOMS.length} • {selectedTypes.size}/{TYPES.length}
-                  </span>
-                </span>
-                {showMobileFilters ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-              </button>
-
-              <div className={`${showMobileFilters ? 'grid' : 'hidden'} lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3`}>
-                {/* Rooms */}
-                <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
-                  <div className="flex justify-between items-center mb-2.5">
-                    <h2 className="text-xs sm:text-sm font-bold text-indigo-600 dark:text-indigo-300">Δωμάτια</h2>
-                    <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                      <button onClick={() => setSelectedRooms(new Set(ROOMS))} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Όλα</button>
-                      <button onClick={() => setSelectedRooms(new Set())} className="hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Κανένα</button>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {ROOMS.map(room => (
-                      <button
-                        key={room}
-                        onClick={() => toggleRoom(room)}
-                        className={`px-2 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors border ${
-                          selectedRooms.has(room) 
-                            ? 'bg-indigo-600/20 border-indigo-500 text-indigo-700 dark:text-indigo-200' 
-                            : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
-                        }`}
-                      >
-                        {room}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Types */}
-                <div className="bg-white/80 dark:bg-neutral-900/50 backdrop-blur-xl p-3 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-sm">
-                  <div className="flex justify-between items-center mb-2.5">
-                    <h2 className="text-xs sm:text-sm font-bold text-cyan-600 dark:text-cyan-300">Κατηγορίες</h2>
-                    <div className="space-x-2 text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                      <button onClick={() => setSelectedTypes(new Set(TYPES))} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Όλες</button>
-                      <button onClick={() => setSelectedTypes(new Set())} className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">Καμία</button>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {TYPES.map(type => (
-                      <button
-                        key={type}
-                        onClick={() => toggleType(type)}
-                        className={`px-2 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors border ${
-                          selectedTypes.has(type) 
-                            ? 'bg-cyan-600/20 border-cyan-500 text-cyan-700 dark:text-cyan-200' 
-                            : 'bg-neutral-100 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500'
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Panel: Flow */}
-            <div className="lg:col-span-9 bg-white/60 dark:bg-neutral-900/30 border border-neutral-300 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 relative overflow-hidden flex flex-col min-h-[500px] lg:h-[83vh]">
-              <div className="flex justify-between items-center mb-3 sm:mb-4 flex-shrink-0">
-                <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-200">
-                  Διάγραμμα Παροχών
-                </h2>
-                <div className="bg-indigo-100 dark:bg-indigo-900/50 border border-indigo-300 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  {filteredProvisions.length} Ενεργές
-                </div>
-              </div>
-              <div className="flex-1 w-full min-h-[480px] sm:min-h-[560px] lg:h-full relative -m-3 sm:-m-4 mt-0 border-t border-neutral-200 dark:border-neutral-800">
-                <Flow provisions={filteredProvisions} rooms={Array.from(selectedRooms)} />
-              </div>
-            </div>
-          </div>
         ) : (
           <ProvisionsView
             provisions={provisions}
