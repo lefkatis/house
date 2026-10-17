@@ -205,6 +205,13 @@ class SQLiteService {
           task_description = 'Επιλογή συνθετικού deck WPC (ξύλο & πλαστικό) για μηδενική συντήρηση. Εγκατάσταση: Τοποθετείται δοκάρι υποδομής (beam) στη βάση και οι σανίδες deck από πάνω, με συνολικό τελικό ύψος περίπου 6cm. ΚΡΙΣΙΜΟ: Ενημέρωση του εργολάβου εκ των προτέρων για τα ακριβή εκατοστά (cm) ώστε να ρίξει το μπετόν 6cm χαμηλότερα για flush τελείωμα με την πισίνα.',
           notes = 'Συνθετικό WPC (ξύλο & πλαστικό). Δοκάρι βάσης (beam) + deck = συνολικό ύψος ~6cm. Έγκαιρη συνεννόηση με τον εργολάβο για τη στάθμη του μπετόν.'
       WHERE id = 'buy_pool_deck';
+
+      -- Data migration: update auxiliary house lighting (aux_4) to room ceiling light
+      UPDATE provisions 
+      SET name = 'Κεντρικός Φωτισμός Δωματίου στο Ταβάνι',
+          wall = 'Ταβάνι (Οροφή)',
+          details = 'Αναμονή παροχής ρεύματος στο ταβάνι (οροφή) για τον κανονικό κεντρικό φωτισμό του δωματίου στο βοηθητικό σπίτι.'
+      WHERE id = 'aux_4';
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
