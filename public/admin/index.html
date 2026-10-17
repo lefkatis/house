@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>House Admin Console</title>
     <script>
-      // Seamless SPA redirect to the Admin Console or admin subdomain
+      // Seamless SPA redirect to the Admin Console
       var search = window.location.search;
       var hash = window.location.hash;
-      if (window.location.hostname === 'house.lefk.dev') {
-        window.location.replace('https://admin.house.lefk.dev' + search + hash);
-      } else {
-        var redirectUrl = '/?view=admin' + (search ? '&' + search.replace(/^\?/, '') : '') + hash;
-        window.location.replace(redirectUrl);
-      }
+      var redirectUrl = '/?view=admin' + (search ? '&' + search.replace(/^\?/, '') : '') + hash;
+      window.location.replace(redirectUrl);
     </script>
   </head>
   <body style="font-family: system-ui, sans-serif; background: #0a0a0a; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
