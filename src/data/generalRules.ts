@@ -38,11 +38,11 @@ export const GENERAL_RULES: GeneralRule[] = [
   },
   {
     id: 'rule_cat6_cabling',
-    title: 'Καλωδίωση Cat6 Παντού & Αναμονές PoE',
+    title: 'Καλωδίωση Cat6a Παντού & Αναμονές PoE',
     category: '📡 Smart Home & Δίκτυο',
     scope: 'Όλοι οι χώροι, οροφές και είσοδοι',
-    rule: 'Πλήρης ενσύρματη δικτύωση Cat6 με κεντρική συγκέντρωση στο Rack του Μηχανοστασίου.',
-    criticalRequirement: '1) Αναμονές Cat6 PoE στις οροφές για Access Points (Ethernet Port).\n2) Αναμονή Cat6 PoE στο ύψος του ματιού (150cm) στο σαλόνι για Touch Panel.\n3) Cat6 PoE στην κύρια είσοδο και στην εξωτερική καγκελόπορτα για Smart Doorbells.',
+    rule: 'Πλήρης ενσύρματη δικτύωση Cat6a με κεντρική συγκέντρωση στο Rack του Μηχανοστασίου.',
+    criticalRequirement: '1) Αναμονές Cat6a PoE στις οροφές για Access Points (Ethernet Port).\n2) Αναμονή Cat6a PoE στο ύψος του ματιού (150cm) στο σαλόνι για Touch Panel.\n3) Cat6a PoE στην κύρια είσοδο και στην εξωτερική καγκελόπορτα για Smart Doorbells.',
     notes: 'Αποφυγή συμφόρησης Wi-Fi για σταθερές κάμερες, doorbells και access points.'
   },
   {
@@ -50,9 +50,9 @@ export const GENERAL_RULES: GeneralRule[] = [
     title: 'Ethernet Port & Καλωδίωση Touch Panel',
     category: '📡 Smart Home & Δίκτυο',
     scope: 'Σαλόνι / Κεντρικός Ενιαίος Χώρος',
-    rule: 'Αποκλειστική αναμονή Ethernet Port (Cat6 PoE) στον τοίχο για το κεντρικό Touch Panel ελέγχου του Smart Home.',
-    criticalRequirement: 'Αναμονή καλωδίου Cat6 PoE χωνευτή στον κεντρικό τοίχο ακριβώς στο ύψος του ματιού (150cm από το δάπεδο). Δεν τοποθετούνται αντίστοιχα panels στα υπνοδωμάτια.',
-    notes: 'Παρέχει ταυτόχρονα gigabit σύνδεση δικτύου και τροφοδοσία ρεύματος Power-over-Ethernet (PoE) χωρίς εξωτερικά καλώδια.'
+    rule: 'Αποκλειστική αναμονή Ethernet Port (Cat6a PoE) στον τοίχο για το κεντρικό Touch Panel ελέγχου του Smart Home.',
+    criticalRequirement: 'Αναμονή καλωδίου Cat6a PoE χωνευτή στον κεντρικό τοίχο ακριβώς στο ύψος του ματιού (150cm από το δάπεδο). Δεν τοποθετούνται αντίστοιχα panels στα υπνοδωμάτια.',
+    notes: 'Παρέχει ταυτόχρονα 10-gigabit σύνδεση δικτύου και τροφοδοσία ρεύματος Power-over-Ethernet (PoE) χωρίς εξωτερικά καλώδια.'
   },
   {
     id: 'rule_mmwave_power',

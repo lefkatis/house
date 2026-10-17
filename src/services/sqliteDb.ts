@@ -144,6 +144,12 @@ class SQLiteService {
       UPDATE provisions 
       SET room = '🖥️ Server Cabinet' 
       WHERE id IN ('mix_1', 'mix_2', 'mix_3', 'mix_4') AND room = '⚙️ Μηχανοστάσιο';
+
+      -- Data migration: update Cat6 to Cat6a across tables
+      UPDATE provisions SET name = REPLACE(name, 'Cat6', 'Cat6a') WHERE name LIKE '%Cat6%';
+      UPDATE provisions SET details = REPLACE(details, 'Cat6', 'Cat6a') WHERE details LIKE '%Cat6%';
+      UPDATE procurement SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
+      UPDATE rules SET title = REPLACE(title, 'Cat6', 'Cat6a'), rule = REPLACE(rule, 'Cat6', 'Cat6a'), critical_requirement = REPLACE(critical_requirement, 'Cat6', 'Cat6a') WHERE title LIKE '%Cat6%' OR rule LIKE '%Cat6%' OR critical_requirement LIKE '%Cat6%';
     `);
   }
 

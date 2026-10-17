@@ -148,7 +148,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία'],
     isTask: true,
     taskDescription: 'Επιλογή μεγάλης οθόνης 10.1" τοίχου: Είτε αυτόνομη 10.1" Android PoE flush wall οθόνη (Waveshare / Geekland), είτε iPad 10.2" με χωνευτή μαγνητική βάση τοίχου (Smart Wall Mount) και PoE splitter, για πλήρη προβολή του Home Assistant dashboard.',
-    notes: 'Μεγάλη χωνευτή οθόνη αφής 10.1" τοίχου στο ύψος του ματιού (150cm) με Cat6 PoE για άνετη προβολή και έλεγχο ολόκληρου του Home Assistant dashboard (κάμερες, κλιματισμός, ενδοδαπέδια, φωτοβολταϊκά, φωτισμός).',
+    notes: 'Μεγάλη χωνευτή οθόνη αφής 10.1" τοίχου στο ύψος του ματιού (150cm) με Cat6a PoE για άνετη προβολή και έλεγχο ολόκληρου του Home Assistant dashboard (κάμερες, κλιματισμός, ενδοδαπέδια, φωτοβολταϊκά, φωτισμός).',
     purchased: false
   },
   {
@@ -164,7 +164,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🖥️ Γραφείο', '🛤️ Διάδρομος'],
     isTask: false,
-    notes: 'Τροφοδοσία μέσω Cat6 PoE από το κεντρικό switch του rack. Εγκατάσταση στις αναμονές ταβανιού για πλήρη κάλυψη.',
+    notes: 'Τροφοδοσία μέσω Cat6a PoE από το κεντρικό switch του rack. Εγκατάσταση στις αναμονές ταβανιού για πλήρη κάλυψη.',
     purchased: false
   },
   {
@@ -231,7 +231,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🚪 Χώρος Εισόδου', '🌳 Κήπος / Πισίνα'],
     isTask: false,
-    notes: 'Πλήρες ενιαίο οικοσύστημα UniFi Protect με ενσύρματη τροφοδοσία Cat6 PoE. Αμφίδρομος ήχος, δευτερεύουσα κάμερα πακέτων, οθόνη μηνυμάτων, τοπική εγγραφή στο NVR και απομακρυσμένο άνοιγμα της καγκελόπορτας.',
+    notes: 'Πλήρες ενιαίο οικοσύστημα UniFi Protect με ενσύρματη τροφοδοσία Cat6a PoE. Αμφίδρομος ήχος, δευτερεύουσα κάμερα πακέτων, οθόνη μηνυμάτων, τοπική εγγραφή στο NVR και απομακρυσμένο άνοιγμα της καγκελόπορτας.',
     purchased: false
   },
   {
@@ -247,7 +247,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🌳 Κήπος / Πισίνα', '🚗 Parking'],
     isTask: false,
-    notes: 'Περιμετρική κάλυψη (αυλή, πισίνα, είσοδος, parking). Σύνδεση με Cat6 PoE στο rack και συνεχής καταγραφή σε NVR/Mini PC.',
+    notes: 'Περιμετρική κάλυψη (αυλή, πισίνα, είσοδος, parking). Σύνδεση με Cat6a PoE στο rack και συνεχής καταγραφή σε NVR/Mini PC.',
     purchased: false
   },
   {
