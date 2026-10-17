@@ -62,6 +62,7 @@ const LEGACY_PINS_STORAGE_KEY = 'pronies_architectural_pins_v1';
 
 export interface HousePlanViewProps {
   provisions?: Provision[];
+  isAdmin?: boolean;
   onToggleCompleted?: (id: string, completed: boolean) => void;
   onTogglePending?: (id: string, pendingReview: boolean) => void;
   onEditProvision?: (provision: Provision) => void;
@@ -69,6 +70,7 @@ export interface HousePlanViewProps {
 
 export default function HousePlanView({
   provisions: provisionsProp,
+  isAdmin = false,
   onToggleCompleted,
   onTogglePending,
   onEditProvision
@@ -557,14 +559,18 @@ export default function HousePlanView({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onToggleCompleted?.(p.id, !p.completed);
+                          if (!isAdmin || !onToggleCompleted) return;
+                          onToggleCompleted(p.id, !p.completed);
                         }}
+                        disabled={!isAdmin}
                         className={`p-0.5 rounded transition-colors mt-0.5 ${
+                          !isAdmin ? 'cursor-default opacity-80' : ''
+                        } ${
                           p.completed
                             ? 'text-emerald-600 dark:text-emerald-400'
                             : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
                         }`}
-                        title={p.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                        title={!isAdmin ? (p.completed ? 'Ολοκληρωμένο (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)') : (p.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο')}
                       >
                         {p.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                       </button>
@@ -584,22 +590,32 @@ export default function HousePlanView({
                               </span>
                             )}
                             {p.pendingReview && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onTogglePending?.(p.id, false);
-                                }}
-                                className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1 hover:bg-amber-300 transition-colors"
-                                title="Κλικ για αφαίρεση TBD"
-                              >
-                                <AlertTriangle size={9} />
-                                TBD
-                              </button>
+                              isAdmin && onTogglePending ? (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onTogglePending(p.id, false);
+                                  }}
+                                  className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1 hover:bg-amber-300 transition-colors"
+                                  title="Κλικ για αφαίρεση TBD"
+                                >
+                                  <AlertTriangle size={9} />
+                                  TBD
+                                </button>
+                              ) : (
+                                <span
+                                  className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1"
+                                  title="Εκκρεμές (TBD) - Μόνο Προβολή"
+                                >
+                                  <AlertTriangle size={9} />
+                                  TBD
+                                </span>
+                              )
                             )}
                           </div>
 
                           {/* Edit button */}
-                          {onEditProvision && (
+                          {isAdmin && onEditProvision && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -661,14 +677,16 @@ export default function HousePlanView({
 
               <div className="flex items-center gap-2">
                 {/* Reset button */}
-                <button
-                  onClick={resetToDefaultPins}
-                  className="px-2 py-1 rounded-md text-[11px] font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1 transition-colors"
-                  title="Επαναφορά καρφιτσών στις εργοστασιακές θέσεις της μελέτης"
-                >
-                  <RefreshCw size={11} />
-                  <span>Επαναφορά Θέσεων</span>
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={resetToDefaultPins}
+                    className="px-2 py-1 rounded-md text-[11px] font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1 transition-colors"
+                    title="Επαναφορά καρφιτσών στις εργοστασιακές θέσεις της μελέτης"
+                  >
+                    <RefreshCw size={11} />
+                    <span>Επαναφορά Θέσεων</span>
+                  </button>
+                )}
 
                 {/* Direct High-Res PDF */}
                 <a
@@ -915,14 +933,18 @@ export default function HousePlanView({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onToggleCompleted?.(provision.id, !provision.completed);
+                            if (!isAdmin || !onToggleCompleted) return;
+                            onToggleCompleted(provision.id, !provision.completed);
                           }}
+                          disabled={!isAdmin}
                           className={`p-0.5 rounded transition-colors flex-shrink-0 ${
+                            !isAdmin ? 'cursor-default opacity-80' : ''
+                          } ${
                             provision.completed
                               ? 'text-emerald-600 dark:text-emerald-400'
                               : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
                           }`}
-                          title={provision.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                          title={!isAdmin ? (provision.completed ? 'Ολοκληρωμένο (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)') : (provision.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο')}
                         >
                           {provision.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                         </button>
@@ -942,7 +964,7 @@ export default function HousePlanView({
 
                       <div className="flex items-center gap-1 flex-shrink-0">
                         {/* Edit button */}
-                        {onEditProvision && (
+                        {isAdmin && onEditProvision && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -956,19 +978,21 @@ export default function HousePlanView({
                         )}
 
                         {/* Reposition / Pin button */}
-                        <button
-                          onClick={() => setSelectedProvisionToPlace(isPlacing ? null : provision.id)}
-                          className={`p-1 rounded transition-colors text-[10px] ${
-                            isPlacing
-                              ? 'bg-indigo-600 text-white'
-                              : hasPin
-                              ? 'text-neutral-400 hover:text-indigo-500'
-                              : 'text-amber-500 hover:bg-amber-500/10'
-                          }`}
-                          title={hasPin ? 'Αλλαγή θέσης καρφίτσας στο σχέδιο' : 'Τοποθέτηση καρφίτσας στο σχέδιο'}
-                        >
-                          <MapPin size={12} className={hasPin ? 'fill-current' : ''} />
-                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={() => setSelectedProvisionToPlace(isPlacing ? null : provision.id)}
+                            className={`p-1 rounded transition-colors text-[10px] ${
+                              isPlacing
+                                ? 'bg-indigo-600 text-white'
+                                : hasPin
+                                ? 'text-neutral-400 hover:text-indigo-500'
+                                : 'text-amber-500 hover:bg-amber-500/10'
+                            }`}
+                            title={hasPin ? 'Αλλαγή θέσης καρφίτσας στο σχέδιο' : 'Τοποθέτηση καρφίτσας στο σχέδιο'}
+                          >
+                            <MapPin size={12} className={hasPin ? 'fill-current' : ''} />
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -981,17 +1005,27 @@ export default function HousePlanView({
                         {provision.room}
                       </span>
                       {provision.pendingReview && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onTogglePending?.(provision.id, false);
-                          }}
-                          className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5 hover:underline"
-                          title="Κλικ για αφαίρεση TBD"
-                        >
-                          <AlertTriangle size={10} />
-                          TBD
-                        </button>
+                        isAdmin && onTogglePending ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTogglePending(provision.id, false);
+                            }}
+                            className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5 hover:underline"
+                            title="Κλικ για αφαίρεση TBD"
+                          >
+                            <AlertTriangle size={10} />
+                            TBD
+                          </button>
+                        ) : (
+                          <span
+                            className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5"
+                            title="Εκκρεμές (TBD) - Μόνο Προβολή"
+                          >
+                            <AlertTriangle size={10} />
+                            TBD
+                          </span>
+                        )
                       )}
                     </div>
                   </div>

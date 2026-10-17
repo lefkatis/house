@@ -71,20 +71,32 @@ function parseCookies(cookieHeader) {
 
 const DEFAULT_PASSCODES_LIST = [
   { id: "pass-andreas", code: "andreas", name: "Ανδρέας (Master Admin)", role: "admin", isMaster: true, category: "owner", isActive: true },
-  { id: "pass-maria", code: "maria", name: "Μαρία (Οικογένεια)", role: "full", isMaster: false, category: "family", isActive: true },
-  { id: "pass-arch", code: "architektonas", name: "Αρχιτέκτονας", role: "full", isMaster: false, category: "engineers", isActive: true },
-  { id: "pass-mep", code: "meletitis", name: "Μελετητής MEP (Μηχανολόγος / Ηλεκτρολόγος)", role: "full", isMaster: false, category: "engineers", isActive: true },
-  { id: "pass-electric", code: "ilektrologos", name: "Ηλεκτρολόγος Εγκαταστάτης", role: "full", isMaster: false, category: "contractors", isActive: true },
-  { id: "pass-plumber", code: "ydravlikos", name: "Υδραυλικός Εγκαταστάτης", role: "full", isMaster: false, category: "contractors", isActive: true },
+  { id: "pass-maria", code: "maria", name: "Μαρία (Οικογένεια)", role: "readonly", isMaster: false, category: "family", isActive: true },
+  { id: "pass-arch", code: "architektonas", name: "Αρχιτέκτονας", role: "readonly", isMaster: false, category: "engineers", isActive: true },
+  { id: "pass-mep", code: "meletitis", name: "Μελετητής MEP (Μηχανολόγος / Ηλεκτρολόγος)", role: "readonly", isMaster: false, category: "engineers", isActive: true },
+  { id: "pass-electric", code: "ilektrologos", name: "Ηλεκτρολόγος Εγκαταστάτης", role: "readonly", isMaster: false, category: "contractors", isActive: true },
+  { id: "pass-plumber", code: "ydravlikos", name: "Υδραυλικός Εγκαταστάτης", role: "readonly", isMaster: false, category: "contractors", isActive: true },
   { id: "pass-guest", code: "guest", name: "Επισκέπτης (Μόνο Προβολή)", role: "readonly", isMaster: false, category: "guests", isActive: true }
 ];
 
 async function getPasscodesList(env) {
   try {
     const raw = await env.PASSCODES_KV.get("passcodes");
-    if (!raw) return DEFAULT_PASSCODES_LIST;
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_PASSCODES_LIST;
+    let list = DEFAULT_PASSCODES_LIST;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        list = parsed;
+      }
+    }
+    return list.map(item => {
+      const isMaster = Boolean(item.isMaster || item.code.toLowerCase() === "andreas" || item.code.toLowerCase() === "lefkatis12");
+      return {
+        ...item,
+        role: isMaster ? "admin" : "readonly",
+        isMaster
+      };
+    });
   } catch (e) {
     return DEFAULT_PASSCODES_LIST;
   }
@@ -313,8 +325,16 @@ export default {
             }
           });
         }
-        await env.PASSCODES_KV.put("passcodes", JSON.stringify(updated));
-        return new Response(JSON.stringify({ success: true, count: updated.length }), {
+        const normalized = updated.map(item => {
+          const isMaster = Boolean(item.isMaster || item.code.toLowerCase() === "andreas" || item.code.toLowerCase() === "lefkatis12");
+          return {
+            ...item,
+            role: isMaster ? "admin" : "readonly",
+            isMaster
+          };
+        });
+        await env.PASSCODES_KV.put("passcodes", JSON.stringify(normalized));
+        return new Response(JSON.stringify({ success: true, count: normalized.length }), {
           headers: { 
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"

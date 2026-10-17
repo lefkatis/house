@@ -115,7 +115,6 @@ export default function AdminConsoleView({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [newCode, setNewCode] = useState('');
-  const [newRole, setNewRole] = useState<'full' | 'readonly'>('full');
   const [newCategory, setNewCategory] = useState<'family' | 'engineers' | 'contractors' | 'guests'>('contractors');
   const [newDuration, setNewDuration] = useState<'never' | '7days' | '30days' | '90days'>('never');
   const [newNotes, setNewNotes] = useState('');
@@ -126,7 +125,6 @@ export default function AdminConsoleView({
   const [editingItem, setEditingItem] = useState<PasscodeEntry | null>(null);
   const [editName, setEditName] = useState('');
   const [editCode, setEditCode] = useState('');
-  const [editRole, setEditRole] = useState<'admin' | 'full' | 'readonly'>('full');
   const [editCategory, setEditCategory] = useState<'owner' | 'family' | 'engineers' | 'contractors' | 'guests'>('contractors');
   const [editDuration, setEditDuration] = useState<'never' | 'keep' | '7days' | '30days' | '90days'>('never');
   const [editNotes, setEditNotes] = useState('');
@@ -265,7 +263,7 @@ export default function AdminConsoleView({
     addPasscode({
       code: cleanCode,
       name: newName.trim(),
-      role: newRole,
+      role: 'readonly',
       category: newCategory,
       expiresAt,
       isActive: true,
@@ -286,7 +284,6 @@ export default function AdminConsoleView({
     setEditingItem(item);
     setEditName(item.name);
     setEditCode(item.code);
-    setEditRole(item.role);
     setEditCategory(item.category);
     setEditNotes(item.notes || '');
     setEditDuration(item.expiresAt ? 'keep' : 'never');
@@ -330,7 +327,7 @@ export default function AdminConsoleView({
     updatePasscode(editingItem.id, {
       name: editName.trim(),
       code: cleanCode,
-      role: editingItem.isMaster ? 'admin' : editRole,
+      role: editingItem.isMaster ? 'admin' : 'readonly',
       category: editCategory,
       notes: editNotes.trim() || undefined,
       expiresAt
@@ -610,9 +607,13 @@ export default function AdminConsoleView({
                       <h3 className="font-bold text-sm text-neutral-900 dark:text-white truncate">
                         {item.name}
                       </h3>
-                      {item.isMaster && (
-                        <span className="text-[9px] font-black uppercase tracking-wider bg-rose-600 text-white px-1.5 py-0.2 rounded-full">
-                          MASTER
+                      {item.isMaster ? (
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-rose-600 text-white px-2 py-0.5 rounded-full shadow-2xs">
+                          MASTER ADMIN
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60 px-1.5 py-0.2 rounded-full">
+                          ΜΟΝΟ ΠΡΟΒΟΛΗ
                         </span>
                       )}
                     </div>
@@ -960,14 +961,10 @@ export default function AdminConsoleView({
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
                       Δικαιώματα
                     </label>
-                    <select
-                      value={newRole}
-                      onChange={(e) => setNewRole(e.target.value as any)}
-                      className="w-full px-2.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500 text-xs"
-                    >
-                      <option value="full">Πλήρης Πρόσβαση</option>
-                      <option value="readonly">Μόνο Προβολή</option>
-                    </select>
+                    <div className="w-full px-2.5 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs flex items-center justify-between">
+                      <span className="font-semibold text-amber-700 dark:text-amber-400">Μόνο Προβολή (Read Only)</span>
+                      <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Μόνο ο Master Admin τροποποιεί</span>
+                    </div>
                   </div>
 
                   <div>
@@ -1131,16 +1128,13 @@ export default function AdminConsoleView({
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
                       Δικαιώματα
                     </label>
-                    <select
-                      value={editRole}
-                      disabled={editingItem.isMaster}
-                      onChange={(e) => setEditRole(e.target.value as any)}
-                      className="w-full px-2.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-indigo-500 text-xs disabled:opacity-60"
-                    >
-                      {editingItem.isMaster && <option value="admin">Master Admin</option>}
-                      <option value="full">Πλήρης Πρόσβαση</option>
-                      <option value="readonly">Μόνο Προβολή</option>
-                    </select>
+                    <div className="w-full px-2.5 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs flex items-center justify-between">
+                      {editingItem.isMaster ? (
+                        <span className="font-bold text-rose-600 dark:text-rose-400">Master Admin (Πλήρης Πρόσβαση)</span>
+                      ) : (
+                        <span className="font-semibold text-amber-700 dark:text-amber-400">Μόνο Προβολή (Read Only)</span>
+                      )}
+                    </div>
                   </div>
 
                   <div>

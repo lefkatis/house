@@ -20,7 +20,11 @@ import { CivilEngineer, INITIAL_CIVIL_ENGINEERS } from '../data/partnersData';
 
 const STORAGE_KEY = 'house_civil_engineers_v1';
 
-export const CivilEngineersSection: React.FC = () => {
+export interface CivilEngineersSectionProps {
+  isAdmin?: boolean;
+}
+
+export const CivilEngineersSection: React.FC<CivilEngineersSectionProps> = ({ isAdmin = false }) => {
   const [engineers, setEngineers] = useState<CivilEngineer[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -218,22 +222,24 @@ export const CivilEngineersSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            onClick={handleResetToDefaults}
-            className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            title="Επαναφορά αρχικών στοιχείων"
-          >
-            <RotateCcw size={15} />
-          </button>
-          <button
-            onClick={openCreateModal}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all active:scale-98"
-          >
-            <Plus size={15} />
-            <span>+ Νέος Πολιτικός Μηχανικός</span>
-          </button>
-        </div>
+        {isAdmin && (
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={handleResetToDefaults}
+              className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              title="Επαναφορά αρχικών στοιχείων"
+            >
+              <RotateCcw size={15} />
+            </button>
+            <button
+              onClick={openCreateModal}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all active:scale-98"
+            >
+              <Plus size={15} />
+              <span>+ Νέος Πολιτικός Μηχανικός</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Engineer Cards Grid */}
@@ -266,23 +272,43 @@ export const CivilEngineersSection: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Status Dropdown */}
-                  <select
-                    value={eng.status}
-                    onChange={(e) => handleStatusChange(eng.id, e.target.value as any)}
-                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border outline-none cursor-pointer ${
-                      eng.status === 'selected'
-                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                  {/* Status Dropdown / Badge */}
+                  {isAdmin ? (
+                    <select
+                      value={eng.status}
+                      onChange={(e) => handleStatusChange(eng.id, e.target.value as any)}
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border outline-none cursor-pointer ${
+                        eng.status === 'selected'
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                          : eng.status === 'reviewing'
+                          ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                      }`}
+                    >
+                      <option value="pending_offer">Υπό Επικοινωνία / Προσφορά</option>
+                      <option value="contacted">Σε Επικοινωνία</option>
+                      <option value="reviewing">Υπό Αξιολόγηση</option>
+                      <option value="selected">Επιλεγμένος Μελετητής</option>
+                    </select>
+                  ) : (
+                    <span
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                        eng.status === 'selected'
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                          : eng.status === 'reviewing'
+                          ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                      }`}
+                    >
+                      {eng.status === 'selected'
+                        ? 'Επιλεγμένος Μελετητής'
                         : eng.status === 'reviewing'
-                        ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-                        : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-                    }`}
-                  >
-                    <option value="pending_offer">Υπό Επικοινωνία / Προσφορά</option>
-                    <option value="contacted">Σε Επικοινωνία</option>
-                    <option value="reviewing">Υπό Αξιολόγηση</option>
-                    <option value="selected">Επιλεγμένος Μελετητής</option>
-                  </select>
+                        ? 'Υπό Αξιολόγηση'
+                        : eng.status === 'contacted'
+                        ? 'Σε Επικοινωνία'
+                        : 'Υπό Επικοινωνία / Προσφορά'}
+                    </span>
+                  )}
                 </div>
 
                 {/* Key Principals / Directors if available */}
@@ -423,22 +449,24 @@ export const CivilEngineersSection: React.FC = () => {
                 <span className="text-[10px] text-neutral-400">
                   ID: <code className="font-mono">{eng.id}</code>
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => openEditModal(eng)}
-                    className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-indigo-600 dark:text-indigo-400 transition-colors"
-                    title="Επεξεργασία στοιχείων"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(eng.id, eng.name)}
-                    className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-                    title="Διαγραφή εγγραφής"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
+                {isAdmin && (
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => openEditModal(eng)}
+                      className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-indigo-600 dark:text-indigo-400 transition-colors"
+                      title="Επεξεργασία στοιχείων"
+                    >
+                      <Pencil size={13} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(eng.id, eng.name)}
+                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      title="Διαγραφή εγγραφής"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );

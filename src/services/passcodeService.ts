@@ -33,61 +33,61 @@ export const DEFAULT_PASSCODES: PasscodeEntry[] = [
     id: 'pass-maria',
     code: 'maria',
     name: 'Μαρία (Οικογένεια)',
-    role: 'full',
+    role: 'readonly',
     isMaster: false,
     category: 'family',
     createdAt: '2026-10-14T00:00:00Z',
     expiresAt: null,
     isActive: true,
-    notes: 'Πλήρης πρόσβαση σε όλες τις παροχές, σχέδια και αγορές.'
+    notes: 'Προβολή σε όλες τις παροχές, σχέδια και αγορές (Μόνο Προβολή).'
   },
   {
     id: 'pass-arch',
     code: 'architektonas',
     name: 'Αρχιτέκτονας',
-    role: 'full',
+    role: 'readonly',
     isMaster: false,
     category: 'engineers',
     createdAt: '2026-10-14T00:00:00Z',
     expiresAt: null,
     isActive: true,
-    notes: 'Πρόσβαση στις κατόψεις, χωροθέτηση και σημειώσεις παροχών.'
+    notes: 'Προβολή στις κατόψεις, χωροθέτηση και σημειώσεις παροχών (Μόνο Προβολή).'
   },
   {
     id: 'pass-mep',
     code: 'meletitis',
     name: 'Μελετητής MEP (Μηχανολόγος / Ηλεκτρολόγος)',
-    role: 'full',
+    role: 'readonly',
     isMaster: false,
     category: 'engineers',
     createdAt: '2026-10-14T00:00:00Z',
     expiresAt: null,
     isActive: true,
-    notes: 'Πρόσβαση στις μελέτες MEP, διαγράμματα, φορτία και προσφορές.'
+    notes: 'Προβολή στις μελέτες MEP, διαγράμματα, φορτία και προσφορές (Μόνο Προβολή).'
   },
   {
     id: 'pass-electric',
     code: 'ilektrologos',
     name: 'Ηλεκτρολόγος Εγκαταστάτης',
-    role: 'full',
+    role: 'readonly',
     isMaster: false,
     category: 'contractors',
     createdAt: '2026-10-14T00:00:00Z',
     expiresAt: null,
     isActive: true,
-    notes: 'Πρόσβαση στη λίστα ηλεκτρολογικών παροχών, ύψη τοίχων και κατόψεις.'
+    notes: 'Προβολή στη λίστα ηλεκτρολογικών παροχών, ύψη τοίχων και κατόψεις (Μόνο Προβολή).'
   },
   {
     id: 'pass-plumber',
     code: 'ydravlikos',
     name: 'Υδραυλικός Εγκαταστάτης',
-    role: 'full',
+    role: 'readonly',
     isMaster: false,
     category: 'contractors',
     createdAt: '2026-10-14T00:00:00Z',
     expiresAt: null,
     isActive: true,
-    notes: 'Πρόσβαση σε μηχανολογικές παροχές νερού, αποχετεύσεων και ενδοδαπέδιας.'
+    notes: 'Προβολή σε μηχανολογικές παροχές νερού, αποχετεύσεων και ενδοδαπέδιας (Μόνο Προβολή).'
   },
   {
     id: 'pass-guest',
@@ -106,26 +106,42 @@ export const DEFAULT_PASSCODES: PasscodeEntry[] = [
 const STORAGE_KEY = 'house_custom_passcodes_v1';
 const SECRET_SALT = 'house-lefk-dev-auth-secret-key-2026';
 
+// Helper to enforce that only Master Admin has admin role and can edit
+function normalizePasscodeRoles(list: PasscodeEntry[]): PasscodeEntry[] {
+  return list.map(item => {
+    const isMaster = Boolean(
+      item.isMaster ||
+      item.code.toLowerCase() === MASTER_PASSCODE.toLowerCase() ||
+      item.code.toLowerCase() === 'lefkatis12'
+    );
+    return {
+      ...item,
+      role: isMaster ? 'admin' : 'readonly',
+      isMaster
+    };
+  });
+}
+
 // Get all passcodes (defaults or saved list from localStorage)
 export function getAllPasscodes(): PasscodeEntry[] {
-  if (typeof window === 'undefined') return DEFAULT_PASSCODES;
+  if (typeof window === 'undefined') return normalizePasscodeRoles(DEFAULT_PASSCODES);
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_PASSCODES;
+    if (!raw) return normalizePasscodeRoles(DEFAULT_PASSCODES);
     const list: PasscodeEntry[] = JSON.parse(raw);
 
     if (Array.isArray(list) && list.length > 0) {
       // Ensure master admin always exists
-      if (!list.some(p => p.isMaster || p.code.toLowerCase() === MASTER_PASSCODE.toLowerCase())) {
+      if (!list.some(p => p.isMaster || p.code.toLowerCase() === MASTER_PASSCODE.toLowerCase() || p.code.toLowerCase() === 'lefkatis12')) {
         list.unshift(DEFAULT_PASSCODES[0]);
       }
-      return list;
+      return normalizePasscodeRoles(list);
     }
-    return DEFAULT_PASSCODES;
+    return normalizePasscodeRoles(DEFAULT_PASSCODES);
   } catch (err) {
     console.error('Failed to load passcodes from localStorage:', err);
-    return DEFAULT_PASSCODES;
+    return normalizePasscodeRoles(DEFAULT_PASSCODES);
   }
 }
 
@@ -187,11 +203,14 @@ export function saveCustomPasscodes(list: PasscodeEntry[]): void {
 export function addPasscode(entry: Omit<PasscodeEntry, 'id' | 'createdAt'>): PasscodeEntry {
   const current = getAllPasscodes();
   const normalizedCode = entry.code.trim().toLowerCase();
+  const isMaster = normalizedCode === MASTER_PASSCODE.toLowerCase() || normalizedCode === 'lefkatis12';
 
   const newEntry: PasscodeEntry = {
     ...entry,
     id: `pass-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     code: normalizedCode,
+    role: isMaster ? 'admin' : 'readonly',
+    isMaster,
     createdAt: new Date().toISOString()
   };
 
@@ -209,11 +228,14 @@ export function updatePasscode(id: string, updates: Partial<PasscodeEntry>): boo
 
   const target = current[index];
   const newCode = updates.code ? updates.code.trim().toLowerCase() : target.code;
+  const isMaster = Boolean(target.isMaster || newCode === MASTER_PASSCODE.toLowerCase() || newCode === 'lefkatis12');
 
   current[index] = { 
     ...target, 
     ...updates,
-    code: newCode
+    code: newCode,
+    role: isMaster ? 'admin' : 'readonly',
+    isMaster
   };
 
   saveCustomPasscodes(current);
@@ -259,7 +281,12 @@ export function validatePasscode(inputCode: string): PasscodeEntry | null {
     }
   }
 
-  return match;
+  const isMaster = Boolean(match.isMaster || match.code.toLowerCase() === MASTER_PASSCODE.toLowerCase() || match.code.toLowerCase() === 'lefkatis12');
+  return {
+    ...match,
+    role: isMaster ? 'admin' : 'readonly',
+    isMaster
+  };
 }
 
 // Build standard Magic Link URL for any passcode
@@ -364,13 +391,14 @@ export async function verifySignedToken(token: string): Promise<PasscodeEntry | 
       return null;
     }
 
+    const isMaster = Boolean(data.c === MASTER_PASSCODE || data.c === 'lefkatis12');
     return {
       id: `token-${data.c}`,
       code: data.c,
       name: data.n || data.c,
-      role: data.r || 'full',
+      role: isMaster ? 'admin' : 'readonly',
       category: 'guests',
-      isMaster: data.c === MASTER_PASSCODE,
+      isMaster,
       createdAt: new Date(data.t || Date.now()).toISOString(),
       expiresAt: data.e ? new Date(data.e).toISOString() : null,
       isActive: true,

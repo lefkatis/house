@@ -17,7 +17,11 @@ import { Subcontractor, INITIAL_SUBCONTRACTORS } from '../data/partnersData';
 
 const STORAGE_KEY = 'house_subcontractors_v1';
 
-export const SubcontractorsSection: React.FC = () => {
+export interface SubcontractorsSectionProps {
+  isAdmin?: boolean;
+}
+
+export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ isAdmin = false }) => {
   const [subcontractors, setSubcontractors] = useState<Subcontractor[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -189,22 +193,24 @@ export const SubcontractorsSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            onClick={handleResetToDefaults}
-            className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            title="Επαναφορά αρχικών στοιχείων"
-          >
-            <RotateCcw size={15} />
-          </button>
-          <button
-            onClick={openCreateModal}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-md shadow-amber-600/20 transition-all active:scale-98"
-          >
-            <Plus size={15} />
-            <span>+ Νέος Υπεργολάβος</span>
-          </button>
-        </div>
+        {isAdmin && (
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={handleResetToDefaults}
+              className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              title="Επαναφορά αρχικών στοιχείων"
+            >
+              <RotateCcw size={15} />
+            </button>
+            <button
+              onClick={openCreateModal}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-md shadow-amber-600/20 transition-all active:scale-98"
+            >
+              <Plus size={15} />
+              <span>+ Νέος Υπεργολάβος</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Subcontractor Cards Grid */}
@@ -232,25 +238,47 @@ export const SubcontractorsSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Status Dropdown */}
-                  <select
-                    value={sub.status}
-                    onChange={(e) => handleStatusChange(sub.id, e.target.value as any)}
-                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border outline-none cursor-pointer ${
-                      sub.status === 'selected'
-                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                  {/* Status Dropdown / Badge */}
+                  {isAdmin ? (
+                    <select
+                      value={sub.status}
+                      onChange={(e) => handleStatusChange(sub.id, e.target.value as any)}
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border outline-none cursor-pointer ${
+                        sub.status === 'selected'
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                          : sub.status === 'completed'
+                          ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800'
+                          : sub.status === 'pending_quote'
+                          ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                      }`}
+                    >
+                      <option value="contacted">Σε Επικοινωνία</option>
+                      <option value="pending_quote">Αναμονή Προσφοράς</option>
+                      <option value="selected">Επιλεγμένος</option>
+                      <option value="completed">Ολοκληρώθηκε</option>
+                    </select>
+                  ) : (
+                    <span
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                        sub.status === 'selected'
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                          : sub.status === 'completed'
+                          ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800'
+                          : sub.status === 'pending_quote'
+                          ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                      }`}
+                    >
+                      {sub.status === 'selected'
+                        ? 'Επιλεγμένος'
                         : sub.status === 'completed'
-                        ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800'
+                        ? 'Ολοκληρώθηκε'
                         : sub.status === 'pending_quote'
-                        ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800'
-                        : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-                    }`}
-                  >
-                    <option value="contacted">Σε Επικοινωνία</option>
-                    <option value="pending_quote">Αναμονή Προσφοράς</option>
-                    <option value="selected">Επιλεγμένος</option>
-                    <option value="completed">Ολοκληρώθηκε</option>
-                  </select>
+                        ? 'Αναμονή Προσφοράς'
+                        : 'Σε Επικοινωνία'}
+                    </span>
+                  )}
                 </div>
 
                 {/* Scope of Work Highlight Box */}
@@ -312,22 +340,24 @@ export const SubcontractorsSection: React.FC = () => {
                 <span className="text-[10px] text-neutral-400">
                   ID: <code className="font-mono">{sub.id}</code>
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => openEditModal(sub)}
-                    className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-indigo-600 dark:text-indigo-400 transition-colors"
-                    title="Επεξεργασία στοιχείων"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(sub.id, sub.name)}
-                    className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-                    title="Διαγραφή υπεργολάβου"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
+                {isAdmin && (
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => openEditModal(sub)}
+                      className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-indigo-600 dark:text-indigo-400 transition-colors"
+                      title="Επεξεργασία στοιχείων"
+                    >
+                      <Pencil size={13} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(sub.id, sub.name)}
+                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      title="Διαγραφή υπεργολάβου"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );

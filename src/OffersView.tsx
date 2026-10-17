@@ -34,7 +34,11 @@ import { SubcontractorsSection } from './components/SubcontractorsSection';
 const STORAGE_KEY = 'house_vendor_offers_v1';
 const LEGACY_STORAGE_KEY = 'pronies_vendor_offers_v7';
 
-export default function OffersView() {
+export interface OffersViewProps {
+  isAdmin?: boolean;
+}
+
+export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
   const [offers, setOffers] = useState<VendorOffer[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
@@ -265,9 +269,9 @@ export default function OffersView() {
       </div>
 
       {partnerCategory === 'civil' ? (
-        <CivilEngineersSection />
+        <CivilEngineersSection isAdmin={isAdmin} />
       ) : partnerCategory === 'subcontractors' ? (
-        <SubcontractorsSection />
+        <SubcontractorsSection isAdmin={isAdmin} />
       ) : (
         <>
           {/* Top Banner / Metrics */}
@@ -387,20 +391,22 @@ export default function OffersView() {
           <ExternalLink size={11} />
         </a>
 
-        <button
-          onClick={() => {
-            if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 3 προσφορών με όλα τα τεύχη PDF;')) {
-              setOffers(INITIAL_VENDOR_OFFERS);
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_VENDOR_OFFERS));
-              localStorage.removeItem(LEGACY_STORAGE_KEY);
-            }
-          }}
-          className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium transition-all border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-          title="Επαναφορά αρχικών δεδομένων προσφορών"
-        >
-          <RotateCcw size={13} />
-          <span className="hidden sm:inline">Επαναφορά</span>
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => {
+              if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 3 προσφορών με όλα τα τεύχη PDF;')) {
+                setOffers(INITIAL_VENDOR_OFFERS);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_VENDOR_OFFERS));
+                localStorage.removeItem(LEGACY_STORAGE_KEY);
+              }
+            }}
+            className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium transition-all border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+            title="Επαναφορά αρχικών δεδομένων προσφορών"
+          >
+            <RotateCcw size={13} />
+            <span className="hidden sm:inline">Επαναφορά</span>
+          </button>
+        )}
 
         <button
           onClick={() => setSubViewMode('compare')}
@@ -812,17 +818,19 @@ export default function OffersView() {
                     </span>
                   )}
                 </div>
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className={`p-1.5 rounded-lg border text-xs transition-colors ${
-                    isEditing 
-                      ? 'bg-emerald-600 text-white border-emerald-500' 
-                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700 hover:text-neutral-900 dark:hover:text-white'
-                  }`}
-                  title={isEditing ? 'Αποθήκευση' : 'Επεξεργασία Στοιχείων'}
-                >
-                  {isEditing ? <Check size={14} /> : <Edit3 size={14} />}
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`p-1.5 rounded-lg border text-xs transition-colors ${
+                      isEditing 
+                        ? 'bg-emerald-600 text-white border-emerald-500' 
+                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700 hover:text-neutral-900 dark:hover:text-white'
+                    }`}
+                    title={isEditing ? 'Αποθήκευση' : 'Επεξεργασία Στοιχείων'}
+                  >
+                    {isEditing ? <Check size={14} /> : <Edit3 size={14} />}
+                  </button>
+                )}
               </div>
 
               {/* Editable or View Mode Details */}
@@ -917,13 +925,15 @@ export default function OffersView() {
                   <FileText size={14} className="text-indigo-600 dark:text-indigo-400" />
                   Τεύχη & Έγγραφα ({currentVendor.documents.length})
                 </span>
-                <button
-                  onClick={() => setShowAddDocModal(true)}
-                  className="px-2.5 py-1 rounded-lg bg-indigo-600/10 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-700 dark:text-indigo-200 hover:text-white text-[11px] font-semibold transition-all inline-flex items-center gap-1"
-                >
-                  <Plus size={12} />
-                  <span>Προσθήκη PDF</span>
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setShowAddDocModal(true)}
+                    className="px-2.5 py-1 rounded-lg bg-indigo-600/10 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-700 dark:text-indigo-200 hover:text-white text-[11px] font-semibold transition-all inline-flex items-center gap-1"
+                  >
+                    <Plus size={12} />
+                    <span>Προσθήκη PDF</span>
+                  </button>
+                )}
               </div>
 
               {currentVendor.documents.length > 0 ? (
@@ -972,16 +982,18 @@ export default function OffersView() {
                             <ExternalLink size={10} />
                           </a>
 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeDocument(doc.id);
-                            }}
-                            className="text-neutral-400 hover:text-red-500 transition-colors p-1"
-                            title="Διαγραφή εγγράφου"
-                          >
-                            <Trash2 size={12} />
-                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeDocument(doc.id);
+                              }}
+                              className="text-neutral-400 hover:text-red-500 transition-colors p-1"
+                              title="Διαγραφή εγγράφου"
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          )}
                         </div>
                       </div>
                     );
@@ -1185,13 +1197,15 @@ export default function OffersView() {
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-sm mt-1 mb-4 leading-relaxed">
                   Δεν υπάρχουν ακόμη συνημμένα αρχεία PDF για τον <strong>{currentVendor.vendorName}</strong>.
                 </p>
-                <button
-                  onClick={() => setShowAddDocModal(true)}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg transition-all inline-flex items-center gap-1.5"
-                >
-                  <Plus size={14} />
-                  <span>Προσθήκη Πρώτου Εγγράφου</span>
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setShowAddDocModal(true)}
+                    className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg transition-all inline-flex items-center gap-1.5"
+                  >
+                    <Plus size={14} />
+                    <span>Προσθήκη Πρώτου Εγγράφου</span>
+                  </button>
+                )}
               </div>
             )}
 

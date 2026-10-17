@@ -25,6 +25,7 @@ import { getAssetUrl } from './utils/assets';
 
 export default function App() {
   const { currentUser, isUnlocked, unlock, lock, toastMessage } = useAuth();
+  const isAdmin = Boolean(currentUser?.isMaster || currentUser?.role === 'admin');
   const [isMagicModalOpen, setIsMagicModalOpen] = useState(false);
   const {
     provisions,
@@ -192,15 +193,17 @@ export default function App() {
                   <ExternalLink size={12} className="opacity-70 hidden md:inline" />
                 </a>
 
-                <SqliteToolbar
-                  canUndo={canUndo}
-                  canRedo={canRedo}
-                  undoCount={undoCount}
-                  redoCount={redoCount}
-                  lastAction={lastAction}
-                  onUndo={undo}
-                  onRedo={redo}
-                />
+                {isAdmin && (
+                  <SqliteToolbar
+                    canUndo={canUndo}
+                    canRedo={canRedo}
+                    undoCount={undoCount}
+                    redoCount={redoCount}
+                    lastAction={lastAction}
+                    onUndo={undo}
+                    onRedo={redo}
+                  />
+                )}
 
                 {/* Auth Controls (Current User, Magic Link, Lock) */}
                 <AuthToolbarControls
@@ -305,29 +308,32 @@ export default function App() {
         ) : viewMode === 'plan' ? (
           <HousePlanView 
             provisions={provisions}
-            onToggleCompleted={toggleProvisionCompleted}
-            onTogglePending={toggleProvisionPending}
-            onEditProvision={(p) => setEditingItem({ type: 'provision', data: p })}
+            isAdmin={isAdmin}
+            onToggleCompleted={isAdmin ? toggleProvisionCompleted : undefined}
+            onTogglePending={isAdmin ? toggleProvisionPending : undefined}
+            onEditProvision={isAdmin ? (p) => setEditingItem({ type: 'provision', data: p }) : undefined}
           />
         ) : viewMode === 'buy' ? (
           <ProcurementView 
             items={procurementItems}
-            onTogglePurchased={toggleProcurementPurchased}
-            onEditItem={(item) => setEditingItem({ type: 'procurement', data: item })}
+            isAdmin={isAdmin}
+            onTogglePurchased={isAdmin ? toggleProcurementPurchased : undefined}
+            onEditItem={isAdmin ? (item) => setEditingItem({ type: 'procurement', data: item }) : undefined}
           />
         ) : viewMode === 'rules' ? (
           <GeneralRulesView 
             rules={generalRules}
-            onEditRule={(rule) => setEditingItem({ type: 'rule', data: rule })}
+            onEditRule={isAdmin ? (rule) => setEditingItem({ type: 'rule', data: rule }) : undefined}
           />
         ) : viewMode === 'offers' ? (
-          <OffersView />
+          <OffersView isAdmin={isAdmin} />
         ) : (
           <ProvisionsView
             provisions={provisions}
-            onToggleCompleted={toggleProvisionCompleted}
-            onTogglePending={toggleProvisionPending}
-            onEditProvision={(p) => setEditingItem({ type: 'provision', data: p })}
+            isAdmin={isAdmin}
+            onToggleCompleted={isAdmin ? toggleProvisionCompleted : undefined}
+            onTogglePending={isAdmin ? toggleProvisionPending : undefined}
+            onEditProvision={isAdmin ? (p) => setEditingItem({ type: 'provision', data: p }) : undefined}
           />
         )}
 

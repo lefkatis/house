@@ -33,7 +33,15 @@ export function useAuth() {
     const saved = localStorage.getItem('house_auth_session');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed) {
+          const isMaster = Boolean(parsed.isMaster || parsed.code?.toLowerCase() === MASTER_PASSCODE.toLowerCase() || parsed.code?.toLowerCase() === 'lefkatis12');
+          return {
+            ...parsed,
+            role: isMaster ? 'admin' : 'readonly',
+            isMaster
+          };
+        }
       } catch (e) {
         // Fallback
       }
@@ -96,12 +104,13 @@ export function useAuth() {
           if (res.ok) {
             const data = await res.json();
             if (data.authenticated && data.user) {
+              const isMaster = Boolean(data.user.isMaster || data.user.code?.toLowerCase() === MASTER_PASSCODE.toLowerCase() || data.user.code?.toLowerCase() === 'lefkatis12');
               userMatch = validatePasscode(data.user.code) || {
                 id: data.user.id || `pass-${data.user.code}`,
                 code: data.user.code,
                 name: data.user.name || data.user.code,
-                role: data.user.role || 'full',
-                isMaster: Boolean(data.user.isMaster || data.user.code === MASTER_PASSCODE),
+                role: isMaster ? 'admin' : 'readonly',
+                isMaster,
                 category: 'owner',
                 createdAt: new Date().toISOString(),
                 expiresAt: null,
@@ -461,11 +470,16 @@ export const AuthToolbarControls: React.FC<AuthToolbarControlsProps> = ({
       {/* Current User Badge */}
       {currentUser && (
         <span 
-          className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shadow-2xs"
-          title={`Συνδεδεμένος ως: ${currentUser.name}`}
+          className="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shadow-2xs"
+          title={`Συνδεδεμένος ως: ${currentUser.name} (${currentUser.role === 'admin' || currentUser.isMaster ? 'Διαχειριστής' : 'Μόνο Προβολή'})`}
         >
           <Users size={11} className="text-indigo-500" />
           <span>{currentUser.name.split(' ')[0]}</span>
+          {!(currentUser.isMaster || currentUser.role === 'admin') && (
+            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-extrabold border border-amber-300/60 dark:border-amber-800/60">
+              Μόνο Προβολή
+            </span>
+          )}
         </span>
       )}
 

@@ -26,12 +26,14 @@ export interface ProcurementViewProps {
   items?: ProcurementItem[];
   onTogglePurchased?: (id: string, purchased: boolean) => void;
   onEditItem?: (item: ProcurementItem) => void;
+  isAdmin?: boolean;
 }
 
 export default function ProcurementView({
   items: itemsProp,
   onTogglePurchased,
-  onEditItem
+  onEditItem,
+  isAdmin = false
 }: ProcurementViewProps = {}) {
   const [localItems, setLocalItems] = useState<ProcurementItem[]>(PROCUREMENT_ITEMS);
   const items = itemsProp || localItems;
@@ -57,6 +59,7 @@ export default function ProcurementView({
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   const togglePurchased = (id: string) => {
+    if (!isAdmin) return;
     if (onTogglePurchased) {
       const target = items.find(i => i.id === id);
       if (target) {
@@ -436,13 +439,20 @@ export default function ProcurementView({
                         {/* Status Checkbox */}
                         <td className="py-2.5 px-3 text-center">
                           <button
+                            disabled={!isAdmin}
                             onClick={() => togglePurchased(item.id)}
                             className={`p-1 rounded-full transition-colors inline-flex items-center justify-center ${
+                              !isAdmin ? 'cursor-default opacity-85' : 'cursor-pointer'
+                            } ${
                               item.purchased
                                 ? 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700'
                                 : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
-                            title={item.purchased ? 'Ολοκληρώθηκε' : 'Εκκρεμεί'}
+                            title={
+                              !isAdmin
+                                ? (item.purchased ? 'Ολοκληρώθηκε (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)')
+                                : (item.purchased ? 'Ολοκληρώθηκε' : 'Εκκρεμεί')
+                            }
                           >
                             {item.purchased ? <CheckCircle2 size={17} /> : <Circle size={17} />}
                           </button>
@@ -668,13 +678,20 @@ export default function ProcurementView({
                     {/* Left: Checkbox + Name + Badges */}
                     <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
                       <button
+                        disabled={!isAdmin}
                         onClick={() => togglePurchased(item.id)}
                         className={`p-1 rounded-full transition-colors flex-shrink-0 mt-0.5 sm:mt-0 ${
+                          !isAdmin ? 'cursor-default opacity-85' : 'cursor-pointer'
+                        } ${
                           item.purchased
                             ? 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700'
                             : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
                         }`}
-                        title={item.purchased ? 'Ολοκληρώθηκε' : 'Εκκρεμεί'}
+                        title={
+                          !isAdmin
+                            ? (item.purchased ? 'Ολοκληρώθηκε (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)')
+                            : (item.purchased ? 'Ολοκληρώθηκε' : 'Εκκρεμεί')
+                        }
                       >
                         {item.purchased ? <CheckCircle2 size={19} /> : <Circle size={19} />}
                       </button>
@@ -912,13 +929,20 @@ export default function ProcurementView({
                         )}
                         {/* Purchased Toggle */}
                         <button
+                          disabled={!isAdmin}
                           onClick={() => togglePurchased(item.id)}
                           className={`text-xs flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${
+                            !isAdmin ? 'cursor-default' : 'cursor-pointer'
+                          } ${
                             item.purchased
                               ? 'bg-emerald-100 dark:bg-emerald-600/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40'
                               : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300'
                           }`}
-                          title={item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί'}
+                          title={
+                            !isAdmin
+                              ? (item.purchased ? 'Αγοράστηκε (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)')
+                              : (item.purchased ? 'Αγοράστηκε' : 'Εκκρεμεί')
+                          }
                         >
                           {item.purchased ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                           <span className="text-[10px] font-medium hidden sm:inline">
