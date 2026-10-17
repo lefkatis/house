@@ -61,7 +61,7 @@ export default function App() {
         return 'admin';
       }
       if (params.get('view') === 'admin' || window.location.hash === '#/admin') {
-        if (hostname === 'house.lefk.dev' && !sessionStorage.getItem('cf_admin_authed')) {
+        if ((hostname === 'house.lefk.dev' || hostname.endsWith('.lefk.dev')) && !sessionStorage.getItem('cf_admin_authed')) {
           window.location.replace('/admin');
           return 'grid';
         }
@@ -71,8 +71,22 @@ export default function App() {
     return 'grid';
   });
 
+  const handleOpenAdmin = () => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname === 'house.lefk.dev' || hostname.endsWith('.lefk.dev')) {
+        // ALWAYS navigate via /admin to force Cloudflare Access to authenticate
+        window.location.href = '/admin';
+        return;
+      }
+    }
+    setViewMode('admin');
+  };
+
   const handleBackToMainApp = () => {
     if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('cf_admin_authed');
+      localStorage.removeItem('house_admin_verified');
       const hostname = window.location.hostname;
       if (hostname.startsWith('admin.') || hostname === 'admin.house.lefk.dev') {
         window.location.href = 'https://house.lefk.dev';
@@ -191,7 +205,7 @@ export default function App() {
                 {/* Auth Controls (Current User, Magic Link, Lock) */}
                 <AuthToolbarControls
                   onOpenMagicModal={() => setIsMagicModalOpen(true)}
-                  onOpenAdmin={currentUser?.isMaster ? () => setViewMode('admin') : undefined}
+                  onOpenAdmin={currentUser?.isMaster ? handleOpenAdmin : undefined}
                   onLock={lock}
                   currentUser={currentUser}
                 />
@@ -331,7 +345,7 @@ export default function App() {
           isOpen={isMagicModalOpen}
           onClose={() => setIsMagicModalOpen(false)}
           currentUser={currentUser}
-          onOpenAdmin={currentUser?.isMaster ? () => setViewMode('admin') : undefined}
+          onOpenAdmin={currentUser?.isMaster ? handleOpenAdmin : undefined}
         />
 
         {/* Floating Toast Notification */}

@@ -119,9 +119,6 @@ export function useAuth() {
         setIsUnlocked(true);
         localStorage.setItem('house_auth_unlocked', 'true');
         localStorage.setItem('house_auth_session', JSON.stringify(userMatch));
-        if (userMatch.isMaster) {
-          localStorage.setItem('house_admin_verified', 'true');
-        }
         setToastMessage(`Καλώς ήρθατε, ${userMatch.name}! ✨`);
 
         // Clean query parameters from URL bar if present
@@ -158,9 +155,6 @@ export function useAuth() {
       setIsUnlocked(true);
       localStorage.setItem('house_auth_unlocked', 'true');
       localStorage.setItem('house_auth_session', JSON.stringify(match));
-      if (match.isMaster) {
-        localStorage.setItem('house_admin_verified', 'true');
-      }
       setToastMessage(`Επιτυχής είσοδος! Καλώς ήρθατε, ${match.name}.`);
       return true;
     }
@@ -171,6 +165,7 @@ export function useAuth() {
     localStorage.removeItem('house_auth_unlocked');
     localStorage.removeItem('house_auth_session');
     localStorage.removeItem('house_admin_verified');
+    sessionStorage.removeItem('cf_admin_authed');
     setIsUnlocked(false);
     setCurrentUser(null);
     setToastMessage('Η εφαρμογή κλειδώθηκε.');

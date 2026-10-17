@@ -69,10 +69,28 @@ export default function AdminConsoleView({
   onToggleTheme
 }: AdminConsoleViewProps) {
   // Master auth check state
+  const isCloudflareHost = typeof window !== 'undefined' && (window.location.hostname === 'house.lefk.dev' || window.location.hostname.endsWith('.lefk.dev'));
+
   const [isMasterVerified, setIsMasterVerified] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && isCloudflareHost) {
+      const authed = sessionStorage.getItem('cf_admin_authed');
+      if (!authed) {
+        window.location.replace('/admin');
+        return false;
+      }
+      return true;
+    }
     if (currentUser?.isMaster) return true;
-    return localStorage.getItem('house_admin_verified') === 'true';
+    return false;
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isCloudflareHost) {
+      if (!sessionStorage.getItem('cf_admin_authed')) {
+        window.location.replace('/admin');
+      }
+    }
+  }, [isCloudflareHost]);
 
   const [masterInput, setMasterInput] = useState('');
   const [masterError, setMasterError] = useState(false);
@@ -362,49 +380,70 @@ export default function AdminConsoleView({
               Κονσόλα Διαχείρισης (/admin)
             </h2>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-xs mx-auto">
-              Απαιτείται ο κωδικός Master Admin (<code className="font-mono font-bold">andreas</code>) για πρόσβαση στη διαχείριση κωδικών και Magic Links.
+              {isCloudflareHost
+                ? <>Απαιτείται ταυτοποίηση μέσω Cloudflare Access (<code className="font-mono font-bold">lefkatis@gmail.com</code>) για πρόσβαση στην Κονσόλα Διαχείρισης.</>
+                : <>Απαιτείται ο κωδικός Master Admin (<code className="font-mono font-bold">andreas</code>) για πρόσβαση στη διαχείριση κωδικών.</>}
             </p>
           </div>
 
-          <form onSubmit={handleMasterSubmit} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={masterInput}
-                onChange={(e) => {
-                  setMasterInput(e.target.value);
-                  if (masterError) setMasterError(false);
-                }}
-                placeholder="Εισάγετε τον Master Κωδικό..."
-                autoFocus
-                className={`w-full px-4 py-2.5 rounded-xl text-sm bg-neutral-50 dark:bg-neutral-950 border ${
-                  masterError ? 'border-rose-500 ring-2 ring-rose-500/20' : 'border-neutral-300 dark:border-neutral-700'
-                } focus:outline-none focus:border-indigo-500 text-neutral-900 dark:text-white`}
-              />
-              {masterError && (
-                <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-1">
-                  Λανθασμένος κωδικός διαχειριστή.
-                </p>
-              )}
-            </div>
-
-            <div className="flex gap-2">
+          {isCloudflareHost ? (
+            <div className="space-y-3">
+              <a
+                href="/admin"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/20 active:scale-98"
+              >
+                <span>Σύνδεση μέσω Cloudflare Access</span>
+                <ExternalLink size={15} />
+              </a>
               <button
                 type="button"
                 onClick={onBackToApp}
-                className="flex-1 py-2.5 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                className="w-full py-2.5 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Επιστροφή στην Κεντρική Σελίδα
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center gap-1.5"
-              >
-                <Unlock size={14} />
-                <span>Είσοδος</span>
+                ← Επιστροφή στην Κεντρική Σελίδα
               </button>
             </div>
-          </form>
+          ) : (
+            <form onSubmit={handleMasterSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="password"
+                  value={masterInput}
+                  onChange={(e) => {
+                    setMasterInput(e.target.value);
+                    if (masterError) setMasterError(false);
+                  }}
+                  placeholder="Εισάγετε τον Master Κωδικό..."
+                  autoFocus
+                  className={`w-full px-4 py-2.5 rounded-xl text-sm bg-neutral-50 dark:bg-neutral-950 border ${
+                    masterError ? 'border-rose-500 ring-2 ring-rose-500/20' : 'border-neutral-300 dark:border-neutral-700'
+                  } focus:outline-none focus:border-indigo-500 text-neutral-900 dark:text-white`}
+                />
+                {masterError && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-1">
+                    Λανθασμένος κωδικός διαχειριστή.
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={onBackToApp}
+                  className="flex-1 py-2.5 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  Επιστροφή στην Κεντρική Σελίδα
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <Unlock size={14} />
+                  <span>Είσοδος</span>
+                </button>
+              </div>
+            </form>
+          )}
         </motion.div>
       </div>
     );

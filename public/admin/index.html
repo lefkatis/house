@@ -8,7 +8,7 @@
       // Seamless SPA redirect to the Admin Console
       sessionStorage.setItem('cf_admin_authed', 'true');
       localStorage.setItem('house_auth_unlocked', 'true');
-      localStorage.setItem('house_admin_verified', 'true');
+      localStorage.removeItem('house_admin_verified');
       var search = window.location.search;
       var hash = window.location.hash;
       var redirectUrl = '/?view=admin' + (search ? '&' + search.replace(/^\?/, '') : '') + hash;
