@@ -127,12 +127,51 @@ export function getAllPasscodes(): PasscodeEntry[] {
   }
 }
 
+// Sync passcodes to Cloudflare KV Edge API
+export async function syncPasscodesToCloudflare(list: PasscodeEntry[]): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
+  try {
+    const res = await fetch('/api/passcodes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(list)
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn('Could not sync passcodes to Cloudflare KV:', err);
+    return false;
+  }
+}
+
+// Fetch latest passcodes from Cloudflare KV Edge API
+export async function fetchPasscodesFromCloudflare(): Promise<PasscodeEntry[] | null> {
+  if (typeof window === 'undefined') return null;
+  try {
+    const res = await fetch('/api/passcodes');
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      // Update local storage without re-triggering network sync
+      const toSave = data.filter(item => !item.isMaster);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      return data;
+    }
+    return null;
+  } catch (err) {
+    console.warn('Could not fetch passcodes from Cloudflare KV:', err);
+    return null;
+  }
+}
+
 // Save custom passcodes list
 export function saveCustomPasscodes(list: PasscodeEntry[]): void {
   if (typeof window === 'undefined') return;
   // Keep only non-master or customized codes
   const toSave = list.filter(item => !item.isMaster);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+
+  // Sync to Cloudflare Edge KV in background
+  syncPasscodesToCloudflare(list).catch(() => {});
 }
 
 // Add a new passcode

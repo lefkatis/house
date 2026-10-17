@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldCheck, 
@@ -36,7 +36,8 @@ import {
   deletePasscode, 
   togglePasscodeActive, 
   buildMagicLink, 
-  MASTER_PASSCODE 
+  MASTER_PASSCODE,
+  fetchPasscodesFromCloudflare
 } from './services/passcodeService';
 
 interface AdminConsoleViewProps {
@@ -76,6 +77,15 @@ export default function AdminConsoleView({
 
   // Passcodes list state
   const [passcodes, setPasscodes] = useState<PasscodeEntry[]>(() => getAllPasscodes());
+
+  // Fetch latest passcodes from Cloudflare Edge KV on mount
+  useEffect(() => {
+    fetchPasscodesFromCloudflare().then(remote => {
+      if (remote && Array.isArray(remote) && remote.length > 0) {
+        setPasscodes(remote);
+      }
+    });
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [visibleCodes, setVisibleCodes] = useState<Set<string>>(new Set());
@@ -349,6 +359,10 @@ export default function AdminConsoleView({
               </h1>
               <span className="text-[10px] font-black uppercase tracking-wider bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-900/60">
                 /admin
+              </span>
+              <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-900/60 flex items-center gap-1 shadow-2xs">
+                <span>☁️</span>
+                <span>Edge KV Synced</span>
               </span>
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
