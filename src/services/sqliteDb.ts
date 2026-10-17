@@ -157,6 +157,12 @@ class SQLiteService {
           type = '🔌 Πρίζες',
           details = 'Παροχή ρεύματος 230V και καλωδίωση εντολής (dry contacts / Shelly ρελέ) για το επίτοιχο μπουτόν ανοίγματος/κλεισίματος του γκαράζ.'
       WHERE id = 'par_1' AND name = 'Garage Button';
+
+      -- Data migration: update towel rail provision names & details with ~60cm height
+      UPDATE provisions 
+      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)',
+          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
+      WHERE id IN ('wcm_1', 'ens_1');
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
@@ -226,6 +232,28 @@ class SQLiteService {
       insertProcStmt.free();
     } catch (e) {
       console.warn("Could not seed default procurement items:", e);
+    }
+
+    // Ensure all default general rules are seeded (for existing DB instances)
+    try {
+      const insertRuleStmt = db.prepare(`
+        INSERT OR IGNORE INTO general_rules (id, title, category, scope, rule, critical_requirement, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
+      for (const r of GENERAL_RULES) {
+        insertRuleStmt.run([
+          r.id,
+          r.title,
+          r.category,
+          r.scope,
+          r.rule,
+          r.criticalRequirement,
+          r.notes
+        ]);
+      }
+      insertRuleStmt.free();
+    } catch (e) {
+      console.warn("Could not seed default general rules:", e);
     }
   }
 

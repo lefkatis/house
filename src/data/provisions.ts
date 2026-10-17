@@ -158,16 +158,50 @@ export const PROVISIONS: Provision[] = [
 
   // --- Bathrooms & WC ---
   // WC - Main
-  { id: 'wcm_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 WC - Main', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
+  { 
+    id: 'wcm_1', 
+    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)', 
+    room: '🚽 WC - Main', 
+    wall: 'Τοίχος Μπάνιου', 
+    type: '🔧 Συντήρηση', 
+    completed: false,
+    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
+  },
   { id: 'wcm_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC - Main', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'wcm_5', 
+    name: 'Διακόπτης Πετσετοκρεμάστρας (Switched Fused Spur 13A / Smart Heater Switch)', 
+    room: '🚽 WC - Main', 
+    wall: 'Είσοδος WC (εκτός Zone 2)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Διπολικός διακόπτης ασφαλείας με ασφάλεια 13A (Switched Fused Spur) και neon φωτεινή ένδειξη, ή έξυπνος διακόπτης/Shelly ρελέ για χρονοπρογραμματισμό. Τοποθέτηση εκτός Zone 2 (π.χ. στην είσοδο του WC δίπλα στο διακόπτη φωτισμού).'
+  },
 
   // WC Ensuite
-  { id: 'ens_1', name: 'Πρόνοια Ηλεκτρικής Πετσετοκρεμάστρας / Θερμαντικού Σώματος (Towel Rail Heater 230V)', room: '🚽 WC Ensuite', wall: 'Τοίχος Μπάνιου', type: '🔧 Συντήρηση', completed: false },
+  { 
+    id: 'ens_1', 
+    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)', 
+    room: '🚽 WC Ensuite', 
+    wall: 'Τοίχος Μπάνιου', 
+    type: '🔧 Συντήρηση', 
+    completed: false,
+    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
+  },
   { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ensuite', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ensuite', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'ens_5', 
+    name: 'Διακόπτης Πετσετοκρεμάστρας (Switched Fused Spur 13A / Smart Heater Switch)', 
+    room: '🚽 WC Ensuite', 
+    wall: 'Είσοδος Ensuite (εκτός Zone 2)', 
+    type: '🔌 Πρίζες', 
+    completed: false,
+    details: 'Διπολικός διακόπτης ασφαλείας με ασφάλεια 13A (Switched Fused Spur) και neon φωτεινή ένδειξη, ή έξυπνος διακόπτης/Shelly ρελέ για χρονοπρογραμματισμό. Τοποθέτηση εκτός Zone 2.'
+  },
 
   // WC Ξένων (χωρίς πετσετοκρεμάστρα)
   { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },

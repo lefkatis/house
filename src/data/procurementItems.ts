@@ -341,7 +341,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   },
   {
     id: 'buy_towel_rails',
-    name: 'Ηλεκτρικές Πετσετοκρεμάστρες Μπάνιων 400W-600W',
+    name: 'Ηλεκτρικές Πετσετοκρεμάστρες Μπάνιων 400W-600W (Αναμονή ~60cm)',
     category: '🔧 HVAC & Μηχανοστάσιο',
     brand: 'Προς Επιλογή',
     model: 'Ηλεκτρική Πετσετοκρεμάστρα 230V Switched Fused Spur (Main & Ensuite)',
@@ -352,8 +352,8 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🚽 WC - Main', '🚽 WC Ensuite'],
     isTask: true,
-    taskDescription: 'Επιλογή διαστάσεων, ισχύος (400W-600W) και φινιρίσματος (Chrome/Matte Black) για το κυρίως μπάνιο και το ensuite. (Εξαιρείται το WC Ξένων).',
-    notes: 'Σύνδεση στην πρόνοια 230V με ασφαλειοδιακόπτη Switched Fused Spur εκτός Zone 2.',
+    taskDescription: 'Επιλογή διαστάσεων, ισχύος (400W-600W) και φινιρίσματος (Chrome/Matte Black) για το κυρίως μπάνιο και το ensuite. Η αναμονή παροχής ρεύματος τοποθετείται σε ύψος περίπου 60cm από το τελειωμένο δάπεδο (flex outlet).',
+    notes: 'Σύνδεση στην πρόνοια 230V (~60cm από το δάπεδο) με ξεχωριστό διακόπτη Switched Fused Spur / Heater Switch εκτός Zone 2.',
     purchased: false
   },
   {
@@ -388,6 +388,22 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     rooms: ['🚽 WC - Main', '🚽 WC Ensuite', '🚽 WC Ξένων'],
     isTask: false,
     notes: 'Υποχρεωτικό για πλήρη συμβατότητα με τους κανονισμούς ηλεκτροδότησης Κύπρου (British Standards BS 7671). Ενσωματώνει μετασχηματιστή απομόνωσης για ασφάλεια σε υγρούς χώρους.',
+    purchased: false
+  },
+  {
+    id: 'buy_towel_rail_switches',
+    name: 'Διακόπτες Πετσετοκρεμάστρας 13A Switched Fused Spur (Heater Switches με Neon)',
+    category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
+    brand: 'MK Electric / Schneider / Legrand',
+    model: '13A DP Switched Fused Connection Unit με Neon Indicator',
+    link: undefined,
+    estimatedPriceEur: 18,
+    priceRange: '€14 - €25',
+    quantity: 2,
+    unit: 'τεμ.',
+    rooms: ['🚽 WC - Main', '🚽 WC Ensuite'],
+    isTask: false,
+    notes: 'Διπολικοί διακόπτες ασφαλείας (Heater Switches) με neon φωτεινή ένδειξη για τις πετσετοκρεμάστρες (Main & Ensuite), τοποθετημένοι εκτός Zone 2 (π.χ. στην είσοδο). Συμβατοί με βαθιά κουτιά 6cm για προαιρετική ενσωμάτωση Shelly Plus 1PM.',
     purchased: false
   },
   {
