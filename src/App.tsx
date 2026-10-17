@@ -50,6 +50,10 @@ export default function App() {
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin'>(() => {
     if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname.startsWith('admin.') || hostname === 'admin.house.lefk.dev') {
+        return 'admin';
+      }
       const path = window.location.pathname;
       const params = new URLSearchParams(window.location.search);
       if (path.includes('/admin') || params.get('view') === 'admin' || window.location.hash === '#/admin') {
@@ -59,9 +63,24 @@ export default function App() {
     return 'grid';
   });
 
-  // Sync /admin URL query state
+  const handleBackToMainApp = () => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname.startsWith('admin.') || hostname === 'admin.house.lefk.dev') {
+        window.location.href = 'https://house.lefk.dev';
+        return;
+      }
+    }
+    setViewMode('grid');
+  };
+
+  // Sync /admin URL query state (when not on dedicated admin subdomain)
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    const hostname = window.location.hostname;
+    if (hostname.startsWith('admin.') || hostname === 'admin.house.lefk.dev') {
+      return; // URL path sync not needed on dedicated admin subdomain
+    }
     const currentPath = window.location.pathname;
     if (viewMode === 'admin') {
       if (!currentPath.includes('/admin')) {
@@ -234,7 +253,7 @@ export default function App() {
 
         {viewMode === 'admin' ? (
           <AdminConsoleView 
-            onBackToApp={() => setViewMode('grid')}
+            onBackToApp={handleBackToMainApp}
             currentUser={currentUser}
             onDownloadDatabase={downloadDatabase}
             onImportDatabase={importDatabase}
