@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from 'react';
+import { useState, useMemo, useEffect, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShoppingCart, 
@@ -38,7 +38,21 @@ export default function ProcurementView({
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filterMode, setFilterMode] = useState<'all' | 'products' | 'tasks' | 'optional'>('all');
-  const [displayMode, setDisplayMode] = useState<'grid' | 'table' | 'list'>('grid');
+  const [displayMode, setDisplayMode] = useState<'grid' | 'table' | 'list'>(() => {
+    const saved = localStorage.getItem('house_procurement_view_mode');
+    if (saved === 'grid' || saved === 'table' || saved === 'list') {
+      return saved;
+    }
+    return 'table';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('house_procurement_view_mode', displayMode);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [displayMode]);
   const [sortBy, setSortBy] = useState<'category' | 'name' | 'priceDesc' | 'priceAsc' | 'status'>('category');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 

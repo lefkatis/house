@@ -78,8 +78,22 @@ export default function OffersView() {
   const [activeDocId, setActiveDocId] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showAddDocModal, setShowAddDocModal] = useState<boolean>(false);
-  const [viewMode, setSubViewMode] = useState<'details' | 'compare'>('details');
+  const [viewMode, setSubViewMode] = useState<'details' | 'compare'>(() => {
+    const saved = localStorage.getItem('house_offers_view_mode');
+    if (saved === 'details' || saved === 'compare') {
+      return saved;
+    }
+    return 'compare';
+  });
   const [partnerCategory, setPartnerCategory] = useState<'mep' | 'civil' | 'subcontractors'>('mep');
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('house_offers_view_mode', viewMode);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [viewMode]);
 
   // Form state for adding document
   const [newDocTitle, setNewDocTitle] = useState('');

@@ -156,6 +156,9 @@ class SQLiteService {
       DELETE FROM general_rules WHERE id = 'rule_towel_rail';
       DELETE FROM provisions WHERE id IN ('wcm_5', 'ens_5');
 
+      -- Data migration: remove BMW Wallbox from procurement items (already owned)
+      DELETE FROM procurement_items WHERE id = 'buy_ev_charger';
+
       -- Data migration: update garage switch provision name to simple Switch για Πόρτα Garage
       UPDATE provisions 
       SET name = 'Switch για Πόρτα Garage', 

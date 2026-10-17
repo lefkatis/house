@@ -408,22 +408,6 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     purchased: false
   },
   {
-    id: 'buy_ev_charger',
-    name: 'BMW Wallbox Gen 3 EV Charger (Τριφασικός 11kW/22kW)',
-    category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
-    brand: 'BMW',
-    model: 'BMW Wallbox Gen 3 (Type 2, 22kW)',
-    link: 'https://www.bmw.com/',
-    estimatedPriceEur: 0,
-    priceRange: 'Υπάρχει ήδη (€0)',
-    quantity: 1,
-    unit: 'τεμ.',
-    rooms: ['🚗 Parking'],
-    isTask: false,
-    notes: 'Ο φορτιστής υπάρχει ήδη στην κατοχή σας (BMW Wallbox Gen 3). Απαιτείται μόνο η τριφασική γραμμή 32A και η ηλεκτρολογική σύνδεση στον πίνακα.',
-    purchased: true
-  },
-  {
     id: 'buy_garage_button',
     name: 'Μπουτόν Γκαραζόπορτας (Momentary Push Button)',
     category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',

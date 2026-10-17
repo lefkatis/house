@@ -44,9 +44,13 @@ export default function ProvisionsView({
   onTogglePending,
   onEditProvision
 }: ProvisionsViewProps) {
-  // Persistent View Settings
+  // Persistent View Settings - defaults to 'table'
   const [displayMode, setDisplayMode] = useState<DisplayMode>(() => {
-    return (localStorage.getItem('house_provisions_view_mode') as DisplayMode) || 'cards';
+    const saved = localStorage.getItem('house_provisions_view_mode_v2');
+    if (saved === 'table' || saved === 'cards' || saved === 'list') {
+      return saved as DisplayMode;
+    }
+    return 'table';
   });
 
   const [groupBy, setGroupBy] = useState<GroupByMode>(() => {
@@ -83,7 +87,7 @@ export default function ProvisionsView({
 
   // Sync to localStorage
   useEffect(() => {
-    localStorage.setItem('house_provisions_view_mode', displayMode);
+    localStorage.setItem('house_provisions_view_mode_v2', displayMode);
   }, [displayMode]);
 
   useEffect(() => {
