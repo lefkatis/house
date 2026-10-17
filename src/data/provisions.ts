@@ -160,48 +160,30 @@ export const PROVISIONS: Provision[] = [
   // WC - Main
   { 
     id: 'wcm_1', 
-    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)', 
+    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)', 
     room: '🚽 WC - Main', 
     wall: 'Τοίχος Μπάνιου', 
     type: '🔧 Συντήρηση', 
     completed: false,
-    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
+    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του WC).'
   },
   { id: 'wcm_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC - Main', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { 
-    id: 'wcm_5', 
-    name: 'Διακόπτης Πετσετοκρεμάστρας (Switched Fused Spur 13A / Smart Heater Switch)', 
-    room: '🚽 WC - Main', 
-    wall: 'Είσοδος WC (εκτός Zone 2)', 
-    type: '🔌 Πρίζες', 
-    completed: false,
-    details: 'Διπολικός διακόπτης ασφαλείας με ασφάλεια 13A (Switched Fused Spur) και neon φωτεινή ένδειξη, ή έξυπνος διακόπτης/Shelly ρελέ για χρονοπρογραμματισμό. Τοποθέτηση εκτός Zone 2 (π.χ. στην είσοδο του WC δίπλα στο διακόπτη φωτισμού).'
-  },
 
   // WC Ensuite
   { 
     id: 'ens_1', 
-    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)', 
+    name: 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)', 
     room: '🚽 WC Ensuite', 
     wall: 'Τοίχος Μπάνιου', 
     type: '🔧 Συντήρηση', 
     completed: false,
-    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
+    details: 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του Ensuite).'
   },
   { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ensuite', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ensuite', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { 
-    id: 'ens_5', 
-    name: 'Διακόπτης Πετσετοκρεμάστρας (Switched Fused Spur 13A / Smart Heater Switch)', 
-    room: '🚽 WC Ensuite', 
-    wall: 'Είσοδος Ensuite (εκτός Zone 2)', 
-    type: '🔌 Πρίζες', 
-    completed: false,
-    details: 'Διπολικός διακόπτης ασφαλείας με ασφάλεια 13A (Switched Fused Spur) και neon φωτεινή ένδειξη, ή έξυπνος διακόπτης/Shelly ρελέ για χρονοπρογραμματισμό. Τοποθέτηση εκτός Zone 2.'
-  },
 
   // WC Ξένων (χωρίς πετσετοκρεμάστρα)
   { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
@@ -257,12 +239,12 @@ export const PROVISIONS: Provision[] = [
   // --- Parking ---
   { 
     id: 'par_1', 
-    name: 'Παροχή Ρεύματος & Εντολής για Μπουτόν/Switch Γκαράζ (Garage Wall Switch & Shelly ρελέ)', 
+    name: 'Switch για Πόρτα Garage', 
     room: '🚗 Parking', 
     wall: 'Τοίχος Εισόδου Parking', 
     type: '🔌 Πρίζες', 
     completed: false,
-    details: 'Παροχή ρεύματος 230V και καλωδίωση εντολής (dry contacts / Shelly ρελέ) για το επίτοιχο μπουτόν ανοίγματος/κλεισίματος του γκαράζ.'
+    details: 'Επίτοιχος διακόπτης / switch για τοπικό άνοιγμα και κλείσιμο της πόρτας του γκαράζ.'
   },
   { id: 'par_2', name: 'Τριφασική Παροχή για EV Charger', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🔌 Πρίζες', completed: false },
   { id: 'par_3', name: 'Βρύση Πλυσίματος Αυτοκινήτου', room: '🚗 Parking', wall: 'Τοίχος Φόρτισης', type: '🚰 Υδραυλικά', completed: false },
@@ -271,12 +253,12 @@ export const PROVISIONS: Provision[] = [
   { id: 'par_6', name: 'Presense Sensor', room: '🚗 Parking', wall: 'Οροφή Parking', type: '📡 Έξυπνο Σπίτι', completed: false },
   { 
     id: 'par_7', 
-    name: 'Παροχή Ρεύματος για Μοτέρ Γκαραζόπορτας (3.5m από το άνοιγμα, στο μέσο)', 
+    name: 'Παροχή Ρεύματος για Μοτέρ Γκαραζόπορτας (Στο ταβάνι του garage)', 
     room: '🚗 Parking', 
-    wall: 'Οροφή Parking', 
+    wall: 'Ταβάνι Garage (Οροφή)', 
     type: '🔌 Πρίζες', 
     completed: false,
-    details: 'Αναμονή ρεύματος στην οροφή, 3.5 μέτρα μακριά από το άνοιγμα της γκαραζόπορτας και στο κέντρο/μέσο του ανοίγματος για τον κινητήρα οροφής.'
+    details: 'Παροχή ρεύματος στο ταβάνι του garage, τοποθετημένη 3.5 μέτρα μακριά από το άνοιγμα της γκαραζόπορτας και ακριβώς στη μέση του ανοίγματος για τον κινητήρα οροφής.'
   },
   { 
     id: 'par_8', 

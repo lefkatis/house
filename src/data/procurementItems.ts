@@ -391,22 +391,6 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     purchased: false
   },
   {
-    id: 'buy_towel_rail_switches',
-    name: 'Διακόπτες Πετσετοκρεμάστρας 13A Switched Fused Spur (Heater Switches με Neon)',
-    category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
-    brand: 'MK Electric / Schneider / Legrand',
-    model: '13A DP Switched Fused Connection Unit με Neon Indicator',
-    link: undefined,
-    estimatedPriceEur: 18,
-    priceRange: '€14 - €25',
-    quantity: 2,
-    unit: 'τεμ.',
-    rooms: ['🚽 WC - Main', '🚽 WC Ensuite'],
-    isTask: false,
-    notes: 'Διπολικοί διακόπτες ασφαλείας (Heater Switches) με neon φωτεινή ένδειξη για τις πετσετοκρεμάστρες (Main & Ensuite), τοποθετημένοι εκτός Zone 2 (π.χ. στην είσοδο). Συμβατοί με βαθιά κουτιά 6cm για προαιρετική ενσωμάτωση Shelly Plus 1PM.',
-    purchased: false
-  },
-  {
     id: 'buy_island_popup',
     name: 'Χωνευτό Πολύπριζο Νησίδας (Πάγκου Pop-Up ή Πλαϊνού Panel)',
     category: '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',

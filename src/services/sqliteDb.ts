@@ -151,18 +151,37 @@ class SQLiteService {
       UPDATE provisions SET details = REPLACE(details, 'Cat6', 'Cat6a') WHERE details LIKE '%Cat6%';
       UPDATE procurement_items SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
 
-      -- Data migration: update garage switch provision name & power details if using old default name
-      UPDATE provisions 
-      SET name = 'Παροχή Ρεύματος & Εντολής για Μπουτόν/Switch Γκαράζ (Garage Wall Switch & Shelly ρελέ)', 
-          type = '🔌 Πρίζες',
-          details = 'Παροχή ρεύματος 230V και καλωδίωση εντολής (dry contacts / Shelly ρελέ) για το επίτοιχο μπουτόν ανοίγματος/κλεισίματος του γκαράζ.'
-      WHERE id = 'par_1' AND name = 'Garage Button';
+      -- Data migration: remove separate towel rail switch rule, procurement item, and separate provisions
+      DELETE FROM procurement_items WHERE id = 'buy_towel_rail_switches';
+      DELETE FROM general_rules WHERE id = 'rule_towel_rail';
+      DELETE FROM provisions WHERE id IN ('wcm_5', 'ens_5');
 
-      -- Data migration: update towel rail provision names & details with ~60cm height
+      -- Data migration: update garage switch provision name to simple Switch για Πόρτα Garage
       UPDATE provisions 
-      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (Flex Outlet 230V, ~60cm από το δάπεδο)',
-          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας.'
-      WHERE id IN ('wcm_1', 'ens_1');
+      SET name = 'Switch για Πόρτα Garage', 
+          wall = 'Τοίχος Εισόδου Parking',
+          type = '🔌 Πρίζες',
+          details = 'Επίτοιχος διακόπτης / switch για τοπικό άνοιγμα και κλείσιμο της πόρτας του γκαράζ.'
+      WHERE id = 'par_1';
+
+      -- Data migration: update garage motor provision name & ceiling location
+      UPDATE provisions 
+      SET name = 'Παροχή Ρεύματος για Μοτέρ Γκαραζόπορτας (Στο ταβάνι του garage)',
+          wall = 'Ταβάνι Garage (Οροφή)',
+          type = '🔌 Πρίζες',
+          details = 'Παροχή ρεύματος στο ταβάνι του garage, τοποθετημένη 3.5 μέτρα μακριά από το άνοιγμα της γκαραζόπορτας και ακριβώς στη μέση του ανοίγματος για τον κινητήρα οροφής.'
+      WHERE id = 'par_7';
+
+      -- Data migration: update towel rail provision names & details with ~60cm height and heater switch
+      UPDATE provisions 
+      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)',
+          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του WC).'
+      WHERE id = 'wcm_1';
+
+      UPDATE provisions 
+      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)',
+          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του Ensuite).'
+      WHERE id = 'ens_1';
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
