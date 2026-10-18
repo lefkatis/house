@@ -224,6 +224,31 @@ class SQLiteService {
       SET name = '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Σύστημα Νερού Veluda/Blupura, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)',
           details = '1) Σύστημα Νερού & Mixer (Veluda / Ιταλικό Blupura - 1 πρίζα εν οκ, κόστος ~€2.5K), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
       WHERE id = 'kou_4';
+
+      -- Data migration: rename smart switches to Light switches
+      UPDATE provisions 
+      SET name = 'Light switches',
+          details = COALESCE(details, 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).')
+      WHERE id IN ('sal_3', 'kou_10');
+
+      -- Data migration: update wall Παράθυρα / Μπαλκονόπορτα to Μπαλκονόπορτα
+      UPDATE provisions 
+      SET wall = 'Μπαλκονόπορτα' 
+      WHERE wall = 'Παράθυρα / Μπαλκονόπορτα';
+
+      -- Data migration: update sal_10 to 6-8 Πρίζες TV
+      UPDATE provisions 
+      SET name = '6-8 Πρίζες TV',
+          details = 'Συνολικά 6 έως 8 πρίζες ρεύματος 13A στον τοίχο της τηλεόρασης για TV, soundbar, κονσόλες και συσκευές media.'
+      WHERE id = 'sal_10';
+
+      -- Data migration: update sal_12 to Θερμοστάτης Ενδοδαπέδιας below smart tablet
+      UPDATE provisions 
+      SET name = 'Θερμοστάτης Ενδοδαπέδιας',
+          wall = 'Κεντρικός Τοίχος',
+          pending_review = 0,
+          details = 'Τοποθέτηση στον κεντρικό τοίχο, ακριβώς κάτω από το smart tablet / touch panel.'
+      WHERE id = 'sal_12';
     `);
 
     // Migration: ensure is_optional column exists in procurement_items

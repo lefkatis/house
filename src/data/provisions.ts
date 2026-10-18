@@ -13,24 +13,24 @@ export const PROVISIONS: Provision[] = [
   // --- Σαλόνι / Τραπεζαρία ---
   { id: 'sal_1', name: 'Κεντρικό Touch Panel (Ύψος Ματιού) - Smart Home Tablet', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Αναμονή Cat6a PoE και τροφοδοσίας στο ύψος του ματιού (~150cm) για Smart Home Tablet / Touch Panel.' },
   { id: 'sal_2', name: 'Ethernet Port', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '🖥️ Server Cabinet', completed: false, details: 'Αναμονή Cat6a PoE για Touch Panel / Smart Home Tablet στο ύψος του ματιού' },
-  { id: 'sal_3', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'sal_4', name: 'Ηλεκτρικές Κουρτίνες (Παροχή Ρεύματος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'sal_3', name: 'Light switches', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
+  { id: 'sal_4', name: 'Ηλεκτρικές Κουρτίνες (Παροχή Ρεύματος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Μπαλκονόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_5', name: 'Presense Sensor (220V/12V)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_6', name: 'Access Point (Ethernet Port)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { id: 'sal_7', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 1', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'sal_8', name: 'Κρυφός Κλιματισμός (Έλεγχος Modbus/Dry Contact) Σημείο 2', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
-  { id: 'sal_9', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'sal_10', name: 'Πρίζα TV & Ηχοσυστήματος', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Τηλεόρασης', type: '🔌 Πρίζες', completed: false },
+  { id: 'sal_9', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'sal_10', name: '6-8 Πρίζες TV', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Τηλεόρασης', type: '🔌 Πρίζες', completed: false, details: 'Συνολικά 6 έως 8 πρίζες ρεύματος 13A στον τοίχο της τηλεόρασης για TV, soundbar, κονσόλες και συσκευές media.' },
   { id: 'sal_11', name: 'Κρυφός Φωτισμός', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '💡 Φώτα', completed: false },
   { 
     id: 'sal_12', 
-    name: 'Θερμοστάτης Ενδοδαπέδιας (Smart)', 
+    name: 'Θερμοστάτης Ενδοδαπέδιας', 
     room: '🛋️ Σαλόνι / Τραπεζαρία', 
-    wall: 'Κεντρικός Τοίχος (TBD)', 
+    wall: 'Κεντρικός Τοίχος', 
     type: '📡 Έξυπνο Σπίτι', 
     completed: false, 
-    pendingReview: true, 
-    details: 'Εκκρεμεί οριστικοποίηση της ακριβούς θέσης τοποθέτησης του θερμοστάτη.' 
+    pendingReview: false, 
+    details: 'Τοποθέτηση στον κεντρικό τοίχο, ακριβώς κάτω από το smart tablet / touch panel.' 
   },
 
   // --- Κουζίνα ---
@@ -80,7 +80,7 @@ export const PROVISIONS: Provision[] = [
     pendingReview: true,
     details: 'Εκκρεμεί οριστικοποίηση των ακριβών τοίχων/διαστάσεων βάσει των τελικών σχεδίων κουζίνας.'
   },
-  { id: 'kou_10', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'kou_10', name: 'Light switches', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
   { id: 'kou_11', name: 'Contact Sensors (Κούφωμα)', room: '🍳 Κουζίνα', wall: 'Παράθυρο', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kou_glass', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🍳 Κουζίνα', wall: 'Τζαμαρία', type: '🔒 Ασφάλεια', completed: false },
   
@@ -123,7 +123,7 @@ export const PROVISIONS: Provision[] = [
     details: 'Εκκρεμεί οριστικοποίηση θέσης A/C και θερμοστάτη ενδοδαπέδιας.'
   },
   { id: 'mb_5', name: 'Presense Sensor', room: '🛏️ Master Bedroom', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'mb_6', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'mb_6', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
   { id: 'mb_7', name: 'Έξυπνοι Διακόπτες / Ρελέ (Smart Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Bedroom 1 ---
