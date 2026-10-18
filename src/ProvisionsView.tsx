@@ -934,15 +934,15 @@ export default function ProvisionsView({
                           <table className="w-full text-left text-xs border-collapse">
                             <thead>
                               <tr className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-950/60 text-neutral-500 dark:text-neutral-400 uppercase text-[10px] tracking-wider">
-                                <th className="py-2.5 px-3 w-8 text-center">Κατάσταση</th>
-                                <th className="py-2.5 px-2 w-8 text-center">IEC</th>
-                                <th className="py-2.5 px-3">Όνομα Παροχής</th>
-                                <th className="py-2.5 px-3">Χώρος</th>
-                                <th className="py-2.5 px-3">Τοίχος</th>
-                                <th className="py-2.5 px-3">Κατηγορία</th>
-                                <th className="py-2.5 px-3 min-w-[200px]">Σημειώσεις / Ύψος</th>
-                                <th className="py-2.5 px-2 text-center">TBD</th>
-                                {isAdmin && onEditProvision && <th className="py-2.5 px-3 text-right">Ενέργειες</th>}
+                                <th className="py-2.5 px-3 w-8 text-center whitespace-nowrap">Κατάσταση</th>
+                                <th className="py-2.5 px-2 w-8 text-center whitespace-nowrap">IEC</th>
+                                <th className="py-2.5 px-3 min-w-[460px] lg:min-w-[560px] xl:min-w-[620px] whitespace-nowrap">Όνομα Παροχής</th>
+                                <th className="py-2.5 px-3 whitespace-nowrap">Χώρος</th>
+                                <th className="py-2.5 px-3 whitespace-nowrap">Τοίχος</th>
+                                <th className="py-2.5 px-3 whitespace-nowrap">Κατηγορία</th>
+                                <th className="py-2.5 px-3 min-w-[220px]">Σημειώσεις / Ύψος</th>
+                                <th className="py-2.5 px-2 text-center whitespace-nowrap">TBD</th>
+                                {isAdmin && onEditProvision && <th className="py-2.5 px-3 text-right whitespace-nowrap">Ενέργειες</th>}
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
@@ -995,9 +995,9 @@ export default function ProvisionsView({
                                   </td>
 
                                   {/* Name */}
-                                  <td className="py-2.5 px-3 font-bold text-neutral-900 dark:text-neutral-100">
-                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                      <span className={provision.completed ? 'line-through text-neutral-400' : ''}>
+                                  <td className="py-2.5 px-3 font-bold text-neutral-900 dark:text-neutral-100 whitespace-nowrap min-w-[460px] lg:min-w-[560px] xl:min-w-[620px]">
+                                    <div className="flex items-center gap-1.5 flex-nowrap whitespace-nowrap">
+                                      <span className={`whitespace-nowrap ${provision.completed ? 'line-through text-neutral-400' : ''}`}>
                                         {provision.name}
                                       </span>
                                       {isAdmin && onEditProvision && (
@@ -1007,7 +1007,7 @@ export default function ProvisionsView({
                                             e.stopPropagation();
                                             onEditProvision(provision);
                                           }}
-                                          className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors opacity-70 hover:opacity-100"
+                                          className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors opacity-70 hover:opacity-100 flex-shrink-0"
                                           title="Επεξεργασία πρόνοιας"
                                         >
                                           <Pencil size={11} />
