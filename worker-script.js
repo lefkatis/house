@@ -193,10 +193,24 @@ function renderLockScreenHtml(errorMsg = "") {
 
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
     const cookies = parseCookies(request.headers.get("Cookie"));
     const sessionToken = cookies[COOKIE_NAME];
-    const session = await verifySessionToken(sessionToken);
+    let session = await verifySessionToken(sessionToken);
+
+    // Fallback: If sessionToken missing or expired, check house_client_auth cookie
+    if (!session && cookies[CLIENT_COOKIE_NAME]) {
+      const passcodes = await getPasscodesList(env);
+      const match = passcodes.find(p => p.isActive && p.code.toLowerCase() === cookies[CLIENT_COOKIE_NAME].toLowerCase());
+      if (match) {
+        session = {
+          id: match.id,
+          name: match.name,
+          role: match.role,
+          code: match.code,
+          isMaster: match.isMaster || false
+        };
+      }
+    }
 
     // Preflight OPTIONS for any API routes
     if (url.pathname.startsWith("/api/")) {
@@ -410,6 +424,12 @@ export default {
 
     // 6. If verified session exists -> Proxy to origin (GitHub Pages)
     if (session) {
+      return fetch(request);
+    }
+
+    // 6b. If request comes from an internal link on house.lefk.dev, allow it
+    const referer = request.headers.get("referer") || "";
+    if (referer.includes("house.lefk.dev") && (url.pathname.endsWith(".pdf") || url.pathname.startsWith("/assets/"))) {
       return fetch(request);
     }
 

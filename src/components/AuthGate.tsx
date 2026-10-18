@@ -128,6 +128,14 @@ export function useAuth() {
         setIsUnlocked(true);
         localStorage.setItem('house_auth_unlocked', 'true');
         localStorage.setItem('house_auth_session', JSON.stringify(userMatch));
+        if (typeof window !== 'undefined') {
+          document.cookie = `house_client_auth=${encodeURIComponent(userMatch.code)}; Path=/; Max-Age=2592000; SameSite=Lax; Secure`;
+          fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ passcode: userMatch.code })
+          }).catch(() => {});
+        }
         setToastMessage(`Καλώς ήρθατε, ${userMatch.name}! ✨`);
 
         // Clean query parameters from URL bar if present
@@ -164,6 +172,14 @@ export function useAuth() {
       setIsUnlocked(true);
       localStorage.setItem('house_auth_unlocked', 'true');
       localStorage.setItem('house_auth_session', JSON.stringify(match));
+      if (typeof window !== 'undefined') {
+        document.cookie = `house_client_auth=${encodeURIComponent(match.code)}; Path=/; Max-Age=2592000; SameSite=Lax; Secure`;
+        fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ passcode: match.code })
+        }).catch(() => {});
+      }
       setToastMessage(`Επιτυχής είσοδος! Καλώς ήρθατε, ${match.name}.`);
       return true;
     }

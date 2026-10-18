@@ -9,7 +9,9 @@ import {
   Moon, 
   Home, 
   Briefcase, 
-  ExternalLink
+  ExternalLink,
+  Download,
+  X
 } from 'lucide-react';
 import ProcurementView from './ProcurementView';
 import GeneralRulesView from './GeneralRulesView';
@@ -27,6 +29,7 @@ export default function App() {
   const { currentUser, isUnlocked, unlock, lock, toastMessage } = useAuth();
   const isAdmin = Boolean(currentUser?.isMaster || currentUser?.role === 'admin');
   const [isMagicModalOpen, setIsMagicModalOpen] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const {
     provisions,
     procurementItems,
@@ -178,12 +181,10 @@ export default function App() {
               {/* Utility Controls (Full PDF Button, Undo, Redo, Light/Dark Toggle) */}
               <div className="flex items-center gap-1.5 sm:gap-2">
                 {/* Full Architectural PDF (11 Pages) Button */}
-                <a
-                  href={getAssetUrl('/house_plans.pdf')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-bold text-xs shadow-xs transition-all active:scale-95"
-                  title="Άνοιγμα Πλήρους Αρχιτεκτονικού Σχεδίου (PDF 11 Σελίδων)"
+                <button
+                  onClick={() => setIsPdfModalOpen(true)}
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-bold text-xs shadow-xs transition-all active:scale-95 cursor-pointer"
+                  title="Προβολή & Λήψη Πλήρους Αρχιτεκτονικού Σχεδίου (PDF 11 Σελίδων)"
                 >
                   <FileText size={14} className="text-purple-600 dark:text-purple-400" />
                   <span className="hidden xs:inline sm:inline">Πλήρες PDF</span>
@@ -191,7 +192,7 @@ export default function App() {
                     11 Σελ.
                   </span>
                   <ExternalLink size={12} className="opacity-70 hidden md:inline" />
-                </a>
+                </button>
 
                 {isAdmin && (
                   <SqliteToolbar
@@ -353,6 +354,106 @@ export default function App() {
           currentUser={currentUser}
           onOpenAdmin={currentUser?.isMaster ? handleOpenAdmin : undefined}
         />
+
+        {/* Full PDF Viewer Modal */}
+        {isPdfModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white dark:bg-neutral-900 w-full max-w-6xl h-[92vh] rounded-2xl shadow-2xl border border-neutral-300 dark:border-neutral-800 flex flex-col overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-3 sm:px-5 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/90 gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-2 bg-purple-100 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 rounded-xl flex-shrink-0">
+                    <FileText size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2 truncate">
+                      <span>Πλήρες Αρχιτεκτονικό Σχέδιο</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-extrabold flex-shrink-0">
+                        11 Σελίδες • 12.6 MB
+                      </span>
+                    </h3>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate hidden xs:block">
+                      Κατόψεις, τομές, όψεις και σχέδια χωροθέτησης οικοδομής
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                  <a
+                    href={getAssetUrl('/house_plans.pdf')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-sm transition-all active:scale-95"
+                    title="Άνοιγμα σε νέα καρτέλα του browser"
+                  >
+                    <span>Νέα Καρτέλα</span>
+                    <ExternalLink size={13} />
+                  </a>
+
+                  <a
+                    href={getAssetUrl('/house_plans.pdf')}
+                    download="house_plans.pdf"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white font-bold text-xs transition-all active:scale-95"
+                    title="Απευθείας λήψη του PDF στη συσκευή"
+                  >
+                    <Download size={13} />
+                    <span className="hidden sm:inline">Λήψη PDF</span>
+                  </a>
+
+                  <button
+                    onClick={() => setIsPdfModalOpen(false)}
+                    className="p-1.5 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors ml-1"
+                    title="Κλείσιμο"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body: Embedded PDF with fallback */}
+              <div className="flex-1 w-full bg-neutral-100 dark:bg-neutral-950 relative overflow-hidden flex flex-col">
+                <object
+                  data={getAssetUrl('/house_plans.pdf')}
+                  type="application/pdf"
+                  className="w-full h-full border-0"
+                >
+                  <iframe
+                    src={getAssetUrl('/house_plans.pdf')}
+                    className="w-full h-full border-0"
+                    title="Πλήρες Αρχιτεκτονικό Σχέδιο"
+                  >
+                    <div className="p-8 text-center flex flex-col items-center justify-center h-full">
+                      <FileText size={48} className="text-purple-500 mb-3" />
+                      <p className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-2">
+                        Πλήρες Αρχιτεκτονικό Σχέδιο (PDF 11 Σελίδων)
+                      </p>
+                      <p className="text-xs text-neutral-500 mb-4 max-w-md">
+                        Εάν το πρόγραμμα περιήγησής σας δεν υποστηρίζει ενσωματωμένη προβολή, πατήστε παρακάτω για άνοιγμα ή λήψη:
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={getAssetUrl('/house_plans.pdf')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs"
+                        >
+                          Άνοιγμα σε νέα καρτέλα
+                        </a>
+                        <a
+                          href={getAssetUrl('/house_plans.pdf')}
+                          download="house_plans.pdf"
+                          className="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-white font-bold text-xs"
+                        >
+                          Λήψη PDF
+                        </a>
+                      </div>
+                    </div>
+                  </iframe>
+                </object>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Floating Toast Notification */}
         <AuthToast message={toastMessage} />
