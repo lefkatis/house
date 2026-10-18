@@ -47,10 +47,19 @@ class SQLiteService {
       const base = import.meta.env.BASE_URL || '/';
       const wasmPath = `${base.endsWith('/') ? base : base + '/'}sql-wasm.wasm`;
 
-      const SQL = await initSqlJs({
-        locateFile: (file) => (file === 'sql-wasm.wasm' ? wasmPath : file)
-      });
+      let SQL: any;
+      try {
+        SQL = await initSqlJs({
+          locateFile: (file) => (file === 'sql-wasm.wasm' ? wasmPath : file)
+        });
+      } catch (primaryErr) {
+        console.warn('Primary SQLite WASM failed, attempting CDN fallback:', primaryErr);
+        SQL = await initSqlJs({
+          locateFile: (file) => (file === 'sql-wasm.wasm' ? 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/sql-wasm.wasm' : file)
+        });
+      }
 
+      let activeDb: Database;
       const savedDbBase64 = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (savedDbBase64) {
         try {
@@ -59,30 +68,41 @@ class SQLiteService {
           for (let i = 0; i < binaryString.length; i++) {
             bytes[i] = binaryString.charCodeAt(i);
           }
-          this.db = new SQL.Database(bytes);
+          activeDb = new SQL.Database(bytes);
         } catch (err) {
           console.warn('Failed to restore SQLite database from storage, initializing fresh:', err);
-          this.db = new SQL.Database();
-          this.seedInitialData(this.db);
+          activeDb = new SQL.Database();
+          this.seedInitialData(activeDb);
         }
       } else {
-        this.db = new SQL.Database();
-        this.seedInitialData(this.db);
+        activeDb = new SQL.Database();
+        this.seedInitialData(activeDb);
       }
 
-      this.ensureSchema(this.db);
+      this.ensureSchema(activeDb);
+      this.db = activeDb;
       this.saveToStorage();
       this.isReady = true;
       this.notify();
       return this.db;
     } catch (error) {
       console.error('Failed to initialize SQLite WASM:', error);
-      const SQL = await initSqlJs();
-      this.db = new SQL.Database();
-      this.seedInitialData(this.db);
-      this.isReady = true;
-      this.notify();
-      return this.db;
+      try {
+        const SQL = await initSqlJs({
+          locateFile: (file) => (file === 'sql-wasm.wasm' ? 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/sql-wasm.wasm' : file)
+        });
+        const fallbackDb = new SQL.Database();
+        this.seedInitialData(fallbackDb);
+        this.ensureSchema(fallbackDb);
+        this.db = fallbackDb;
+        this.saveToStorage();
+        this.isReady = true;
+        this.notify();
+        return this.db;
+      } catch (fallbackErr) {
+        console.error('All SQLite WASM initializations failed:', fallbackErr);
+        throw fallbackErr;
+      }
     } finally {
       this.isInitializing = false;
     }
@@ -139,121 +159,15 @@ class SQLiteService {
         vendor_id TEXT NOT NULL,
         vendor_name TEXT NOT NULL,
         data_json TEXT NOT NULL
+      CREATE TABLE IF NOT EXISTS _schema_migrations (
+        id TEXT PRIMARY KEY,
+        applied_at INTEGER NOT NULL
       );
+    `);
 
-      -- Data migration: move server cabinet provisions from mechanical room to dedicated server cabinet
-      UPDATE provisions 
-      SET room = '🖥️ Server Cabinet' 
-      WHERE id IN ('mix_1', 'mix_2', 'mix_3', 'mix_4') AND room = '⚙️ Μηχανοστάσιο';
+    this.applyMigrations(db);
 
-      -- Data migration: update Cat6 to Cat6a across tables
-      UPDATE provisions SET name = REPLACE(name, 'Cat6', 'Cat6a') WHERE name LIKE '%Cat6%';
-      UPDATE provisions SET details = REPLACE(details, 'Cat6', 'Cat6a') WHERE details LIKE '%Cat6%';
-      UPDATE procurement_items SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
-
-      -- Data migration: remove separate towel rail switch rule, procurement item, and separate provisions
-      DELETE FROM procurement_items WHERE id = 'buy_towel_rail_switches';
-      DELETE FROM general_rules WHERE id = 'rule_towel_rail';
-      DELETE FROM provisions WHERE id IN ('wcm_5', 'ens_5');
-
-      -- Data migration: remove BMW Wallbox from procurement items (already owned)
-      DELETE FROM procurement_items WHERE id = 'buy_ev_charger';
-
-      -- Data migration: update garage switch provision name to simple Switch για Πόρτα Garage
-      UPDATE provisions 
-      SET name = 'Switch για Πόρτα Garage', 
-          wall = 'Τοίχος Εισόδου Parking',
-          type = '🔌 Πρίζες',
-          details = 'Επίτοιχος διακόπτης / switch για τοπικό άνοιγμα και κλείσιμο της πόρτας του γκαράζ.'
-      WHERE id = 'par_1';
-
-      -- Data migration: update garage motor provision name & ceiling location
-      UPDATE provisions 
-      SET name = 'Παροχή Ρεύματος για Μοτέρ Γκαραζόπορτας (Στο ταβάνι του garage)',
-          wall = 'Ταβάνι Garage (Οροφή)',
-          type = '🔌 Πρίζες',
-          details = 'Παροχή ρεύματος στο ταβάνι του garage, τοποθετημένη 3.5 μέτρα μακριά από το άνοιγμα της γκαραζόπορτας και ακριβώς στη μέση του ανοίγματος για τον κινητήρα οροφής.'
-      WHERE id = 'par_7';
-
-      -- Data migration: update towel rail provision names & details with ~60cm height and heater switch
-      UPDATE provisions 
-      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)',
-          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του WC).'
-      WHERE id = 'wcm_1';
-
-      UPDATE provisions 
-      SET name = 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας (~60cm από το δάπεδο, με Heater Switch)',
-          details = 'Αναμονή παροχής ρεύματος 230V (χωνευτό κουτί / flex outlet) σε ύψος περίπου 60cm από το τελειωμένο δάπεδο, ακριβώς στο σημείο τοποθέτησης της πετσετοκρεμάστρας. Περιλαμβάνει διακόπτη λειτουργίας/απομόνωσης (heater switch) εκτός Zone 2 (π.χ. στην είσοδο του Ensuite).'
-      WHERE id = 'ens_1';
-
-      -- Data migration: update solar/boiler smart thermostat provision (mix_7)
-      UPDATE provisions 
-      SET name = 'Smart Θερμοστάτης Ηλιακού & Boiler (Σωλήνα Πίνακα προς Solar, Boiler Pocket & Shelly στον Πίνακα)',
-          wall = 'Υδραυλικά / Ηλεκτρολογικός Πίνακας',
-          details = 'Απευθείας σωλήνωση από τον κεντρικό ηλεκτρολογικό πίνακα προς το ηλιακό σύστημα/boiler. Ο θερμολουτήρας (boiler) πρέπει υποχρεωτικά να διαθέτει βάραθρο (pocket) για τον αισθητήρα θερμοκρασίας (probe DS18B20). Το κόκκινο Shelly Plus 1 (ή Shelly Pro) μπαίνει ΣΤΟΝ ΠΙΝΑΚΑ και οπλίζει ρελέ ισχύος (contactor 20A/25A) για την αντίσταση 3000W.'
-      WHERE id = 'mix_7';
-
-      -- Data migration: update grass & pool deck specifications
-      UPDATE procurement_items
-      SET task_description = 'Απόφαση και επιλογή τύπου γρασιδιού. ΥΠΟΧΡΕΩΤΙΚΟ ΥΠΟΣΤΡΩΜΑ: Σπαστή άμμος τουλάχιστον 5cm (≥5cm) πριν το γρασίδι για αποστράγγιση και τέλειο αλφάδιασμα. Γεωύφασμα τοποθετημένο είτε πάνω είτε κάτω από τη σπαστή άμμο για αποτροπή ζιζανίων/αγριόχορτων.',
-          notes = 'Σπαστή άμμος ≥5cm + γεωύφασμα (πάνω ή κάτω από την άμμο). Συνδέεται με τις αναμονές αυτόματου ποτίσματος και τη γεώτρηση εάν επιλεγεί φυσικό.'
-      WHERE id = 'buy_grass';
-
-      UPDATE procurement_items
-      SET name = 'Deck Πισίνας (Συνθετικό WPC: Ξύλο & Πλαστικό, Ύψος ~6cm με Δοκάρι)',
-          model = 'Συνθετικό Ξύλο WPC (Wood-Plastic Composite) - ~6cm με δοκάρι βάσης',
-          task_description = 'Επιλογή συνθετικού deck WPC (ξύλο & πλαστικό) για μηδενική συντήρηση. Εγκατάσταση: Τοποθετείται δοκάρι υποδομής (beam) στη βάση και οι σανίδες deck από πάνω, με συνολικό τελικό ύψος περίπου 6cm. ΚΡΙΣΙΜΟ: Ενημέρωση του εργολάβου εκ των προτέρων για τα ακριβή εκατοστά (cm) ώστε να ρίξει το μπετόν 6cm χαμηλότερα για flush τελείωμα με την πισίνα.',
-          notes = 'Συνθετικό WPC (ξύλο & πλαστικό). Δοκάρι βάσης (beam) + deck = συνολικό ύψος ~6cm. Έγκαιρη συνεννόηση με τον εργολάβο για τη στάθμη του μπετόν.'
-      WHERE id = 'buy_pool_deck';
-
-      -- Data migration: update auxiliary house lighting (aux_4) to room ceiling light
-      UPDATE provisions 
-      SET name = 'Κεντρικός Φωτισμός Δωματίου στο Ταβάνι',
-          wall = 'Ταβάνι (Οροφή)',
-          details = 'Αναμονή παροχής ρεύματος στο ταβάνι (οροφή) για τον κανονικό κεντρικό φωτισμό του δωματίου στο βοηθητικό σπίτι.'
-      WHERE id = 'aux_4';
-
-      -- Data migration: update sal_1 to Smart Home Tablet
-      UPDATE provisions 
-      SET name = 'Κεντρικό Touch Panel (Ύψος Ματιού) - Smart Home Tablet',
-          details = 'Αναμονή Cat6a PoE και τροφοδοσίας στο ύψος του ματιού (~150cm) για Smart Home Tablet / Touch Panel.'
-      WHERE id = 'sal_1';
-
-      -- Data migration: update kou_4 to mention Veluda Blupura water system & 1 socket requirement
-      UPDATE provisions 
-      SET name = '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Σύστημα Νερού Veluda/Blupura, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)',
-          details = '1) Σύστημα Νερού & Mixer (Veluda / Ιταλικό Blupura - 1 πρίζα εν οκ, κόστος ~€2.5K), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
-      WHERE id = 'kou_4';
-
-      -- Data migration: rename smart switches to Light switches
-      UPDATE provisions 
-      SET name = 'Light switches',
-          details = COALESCE(details, 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).')
-      WHERE id IN ('sal_3', 'kou_10');
-
-      -- Data migration: update wall Παράθυρα / Μπαλκονόπορτα to Μπαλκονόπορτα
-      UPDATE provisions 
-      SET wall = 'Μπαλκονόπορτα' 
-      WHERE wall = 'Παράθυρα / Μπαλκονόπορτα';
-
-      -- Data migration: update sal_10 to 6-8 Πρίζες TV
-      UPDATE provisions 
-      SET name = '6-8 Πρίζες TV',
-          details = 'Συνολικά 6 έως 8 πρίζες ρεύματος 13A στον τοίχο της τηλεόρασης για TV, soundbar, κονσόλες και συσκευές media.'
-      WHERE id = 'sal_10';
-
-      -- Data migration: update sal_12 to Θερμοστάτης Ενδοδαπέδιας below smart tablet
-      UPDATE provisions 
-      SET name = 'Θερμοστάτης Ενδοδαπέδιας',
-          wall = 'Κεντρικός Τοίχος',
-          pending_review = 0,
-          details = 'Τοποθέτηση στον κεντρικό τοίχο, ακριβώς κάτω από το smart tablet / touch panel.'
-      WHERE id = 'sal_12';
-
-      -- Data migration: update kou_7 details with Samsung RF65DG9H0EB1EF reference
-      UPDATE provisions 
-      SET details = 'Αναμονή σωληνίσκου 1/4" και διακόπτης/βανάκι παροχής φιλτραρισμένου νερού στον τοίχο του ψυγείου για το Beverage Center και Dual Auto Ice Maker του Samsung Bespoke Family Hub (RF65DG9H0EB1EF).'
-      WHERE id = 'kou_7';
+    db.run(`
 
       -- Data migration: insert Samsung Bespoke AI Refrigerator RF65DG9H0EB1EF
       INSERT OR IGNORE INTO procurement_items (
@@ -438,6 +352,43 @@ class SQLiteService {
       insertRuleStmt.free();
     } catch (e) {
       console.warn("Could not seed default general rules:", e);
+    }
+  }
+
+  private applyMigrations(db: Database) {
+    try {
+      const check = db.exec("SELECT 1 FROM _schema_migrations WHERE id = 'initial_sync_v1'");
+      if (check.length > 0 && check[0].values.length > 0) {
+        // Migration has already run. Do NOT overwrite user modifications!
+        return;
+      }
+
+      // 1. Move server cabinet provisions from mechanical room to dedicated server cabinet
+      db.run(`
+        UPDATE provisions 
+        SET room = '🖥️ Server Cabinet' 
+        WHERE id IN ('mix_1', 'mix_2', 'mix_3', 'mix_4') AND room = '⚙️ Μηχανοστάσιο';
+      `);
+
+      // 2. Update Cat6 to Cat6a
+      db.run(`
+        UPDATE provisions SET name = REPLACE(name, 'Cat6', 'Cat6a') WHERE name LIKE '%Cat6%';
+        UPDATE provisions SET details = REPLACE(details, 'Cat6', 'Cat6a') WHERE details LIKE '%Cat6%';
+        UPDATE procurement_items SET notes = REPLACE(notes, 'Cat6', 'Cat6a') WHERE notes LIKE '%Cat6%';
+      `);
+
+      // 3. Remove obsolete items
+      db.run(`
+        DELETE FROM procurement_items WHERE id = 'buy_towel_rail_switches';
+        DELETE FROM general_rules WHERE id = 'rule_towel_rail';
+        DELETE FROM provisions WHERE id IN ('wcm_5', 'ens_5');
+        DELETE FROM procurement_items WHERE id = 'buy_ev_charger';
+      `);
+
+      // Mark migration as completed
+      db.run("INSERT OR REPLACE INTO _schema_migrations (id, applied_at) VALUES ('initial_sync_v1', ?)", [Date.now()]);
+    } catch (e) {
+      console.warn("applyMigrations notice:", e);
     }
   }
 
@@ -649,12 +600,22 @@ class SQLiteService {
 
   private executeWithUndo(description: string, forwardSql: string[], inverseSql: string[]) {
     if (!this.db) return;
+    let inTx = false;
     try {
-      this.db.run("BEGIN TRANSACTION;");
+      try {
+        this.db.run("BEGIN TRANSACTION;");
+        inTx = true;
+      } catch (e: any) {
+        // Continue if already within transaction
+      }
+
       for (const sql of forwardSql) {
         this.db.run(sql);
       }
-      this.db.run("COMMIT;");
+
+      if (inTx) {
+        this.db.run("COMMIT;");
+      }
 
       const action: UndoAction = {
         id: Math.random().toString(36).substring(2, 9),
@@ -674,7 +635,7 @@ class SQLiteService {
       this.saveToStorage();
       this.notify();
     } catch (error) {
-      if (this.db) {
+      if (this.db && inTx) {
         try { this.db.run("ROLLBACK;"); } catch { /* ignore */ }
       }
       console.error('SQLite execution failed:', error);
@@ -715,10 +676,29 @@ class SQLiteService {
   }
 
   // Update whole provision
-  public updateProvision(id: string, updates: Partial<Provision>) {
-    if (!this.db) return;
-    const currentRes = this.db.exec(`SELECT name, room, wall, type, completed, pending_review, details FROM provisions WHERE id = '${id}'`);
-    if (currentRes.length === 0 || currentRes[0].values.length === 0) return;
+  public updateProvision(id: string, updates: Partial<Provision>): boolean {
+    if (!this.db) {
+      console.warn('Database not ready during updateProvision');
+      return false;
+    }
+
+    let currentRes = this.db.exec(`SELECT name, room, wall, type, completed, pending_review, details FROM provisions WHERE id = '${id.replace(/'/g, "''")}'`);
+    if (currentRes.length === 0 || currentRes[0].values.length === 0) {
+      const fallback = PROVISIONS.find(p => p.id === id);
+      if (fallback) {
+        this.db.run(
+          `INSERT OR IGNORE INTO provisions (id, name, room, wall, type, completed, pending_review, details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [fallback.id, fallback.name, fallback.room, fallback.wall || '', fallback.type, fallback.completed ? 1 : 0, fallback.pendingReview ? 1 : 0, fallback.details || null]
+        );
+        currentRes = this.db.exec(`SELECT name, room, wall, type, completed, pending_review, details FROM provisions WHERE id = '${id.replace(/'/g, "''")}'`);
+      }
+    }
+
+    if (currentRes.length === 0 || currentRes[0].values.length === 0) {
+      console.error(`Provision with id ${id} not found in database`);
+      return false;
+    }
+
     const row = currentRes[0].values[0];
     const prev: Provision = {
       id,
@@ -745,7 +725,7 @@ class SQLiteService {
           completed = ${next.completed ? 1 : 0},
           pending_review = ${next.pendingReview ? 1 : 0},
           details = ${escapeNullable(next.details)}
-      WHERE id = '${id}';
+      WHERE id = '${id.replace(/'/g, "''")}';
     `];
 
     const inverseSql = [`
@@ -757,10 +737,11 @@ class SQLiteService {
           completed = ${prev.completed ? 1 : 0},
           pending_review = ${prev.pendingReview ? 1 : 0},
           details = ${escapeNullable(prev.details)}
-      WHERE id = '${id}';
+      WHERE id = '${id.replace(/'/g, "''")}';
     `];
 
     this.executeWithUndo(`Επεξεργασία πρόνοιας: "${next.name}"`, forwardSql, inverseSql);
+    return true;
   }
 
   // Toggle procurement purchased tickbox
@@ -1084,12 +1065,30 @@ export function useSqlite() {
     undoCount,
     redoCount,
     lastAction,
-    toggleProvisionCompleted: (id: string) => sqliteService.toggleProvisionCompleted(id),
-    toggleProvisionPending: (id: string) => sqliteService.toggleProvisionPending(id),
-    updateProvision: (id: string, updates: Partial<Provision>) => sqliteService.updateProvision(id, updates),
-    toggleProcurementPurchased: (id: string) => sqliteService.toggleProcurementPurchased(id),
-    updateProcurementItem: (id: string, updates: Partial<ProcurementItem>) => sqliteService.updateProcurementItem(id, updates),
-    updateGeneralRule: (id: string, updates: Partial<GeneralRule>) => sqliteService.updateGeneralRule(id, updates),
+    toggleProvisionCompleted: (id: string) => {
+      setProvisions(prev => prev.map(p => p.id === id ? { ...p, completed: !p.completed } : p));
+      sqliteService.toggleProvisionCompleted(id);
+    },
+    toggleProvisionPending: (id: string) => {
+      setProvisions(prev => prev.map(p => p.id === id ? { ...p, pendingReview: !p.pendingReview } : p));
+      sqliteService.toggleProvisionPending(id);
+    },
+    updateProvision: (id: string, updates: Partial<Provision>) => {
+      setProvisions(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+      return sqliteService.updateProvision(id, updates);
+    },
+    toggleProcurementPurchased: (id: string) => {
+      setProcurementItems(prev => prev.map(item => item.id === id ? { ...item, purchased: !item.purchased } : item));
+      sqliteService.toggleProcurementPurchased(id);
+    },
+    updateProcurementItem: (id: string, updates: Partial<ProcurementItem>) => {
+      setProcurementItems(prev => prev.map(item => item.id === id ? { ...item, ...updates } : item));
+      return sqliteService.updateProcurementItem(id, updates);
+    },
+    updateGeneralRule: (id: string, updates: Partial<GeneralRule>) => {
+      setGeneralRules(prev => prev.map(r => r.id === id ? { ...r, ...updates } : r));
+      return sqliteService.updateGeneralRule(id, updates);
+    },
     undo: () => sqliteService.undo(),
     redo: () => sqliteService.redo(),
     downloadDatabase: () => sqliteService.downloadDatabaseFile(),

@@ -100,8 +100,13 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
 
   const handleSave = () => {
     if (item.type === 'provision') {
+      const trimmedName = pName.trim();
+      if (!trimmedName) {
+        alert('Παρακαλώ εισάγετε όνομα πρόνοιας.');
+        return;
+      }
       onSaveProvision(item.data.id, {
-        name: pName.trim(),
+        name: trimmedName,
         room: pRoom,
         wall: pWall.trim(),
         type: pType,
@@ -110,6 +115,11 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
         pendingReview: pPendingReview
       });
     } else if (item.type === 'procurement') {
+      const trimmedName = prName.trim();
+      if (!trimmedName) {
+        alert('Παρακαλώ εισάγετε τίτλο εξοπλισμού.');
+        return;
+      }
       const parsedPrice = prPrice.trim() ? parseFloat(prPrice.trim()) : null;
       const roomsArr = prRooms
         .split(',')
@@ -117,7 +127,7 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
         .filter(Boolean);
 
       onSaveProcurement(item.data.id, {
-        name: prName.trim(),
+        name: trimmedName,
         category: prCategory,
         brand: prBrand.trim() || undefined,
         model: prModel.trim() || undefined,
@@ -134,8 +144,13 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
         purchased: prPurchased
       });
     } else if (item.type === 'rule') {
+      const trimmedTitle = rTitle.trim();
+      if (!trimmedTitle) {
+        alert('Παρακαλώ εισάγετε τίτλο κανόνα.');
+        return;
+      }
       onSaveRule(item.data.id, {
-        title: rTitle.trim(),
+        title: trimmedTitle,
         category: rCategory,
         scope: rScope.trim(),
         rule: rRule.trim(),
