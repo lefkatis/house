@@ -277,6 +277,76 @@ class SQLiteService {
         'Bespoke AI 4-Door French Door (636L) με έξυπνη οθόνη αφής Family Hub™ και εσωτερική κάμερα AI Vision. Διαθέτει Beverage Center™ (εσωτερική βρύση & αυτόματη κανάτα νερού) και Dual Auto Ice Maker (παγάκια & Ice Bites™). ΚΡΙΣΙΜΟ ΓΙΑ ΠΡΟΝΟΙΕΣ: Απαιτεί μόνιμη παροχή νερού 1/4" (συνδέεται με την πρόνοια kou_7) και πρίζα ρεύματος 13A/16A στον τοίχο του ψυγείου. Διαστάσεις: 91.2cm (Π) x 183.0cm (Υ) x 72.3cm (Β).',
         0
       );
+
+      -- Data migration: insert provisions for heated pool (kyp_11, kyp_12)
+      INSERT OR IGNORE INTO provisions (id, name, room, wall, type, completed, pending_review, details)
+      VALUES (
+        'kyp_11',
+        'Θερμαινόμενη Πισίνα: Υδραυλικό Bypass & 2x Σωλήνες PVC d50/d63 για Heat Pump',
+        '🌳 Κήπος / Πισίνα',
+        'Μηχανοστάσιο Πισίνας',
+        '🚰 Υδραυλικά',
+        0,
+        0,
+        'Αναμονή υδραυλικού Bypass με 3 βάνες PVC (Ø50mm ή Ø63mm) στην έξοδο του φίλτρου πισίνας και 2 σωλήνες PVC πιέσεως (προσαγωγή & επιστροφή) που καταλήγουν στην εξωτερική βάση της αντλίας θερμότητας πισίνας.'
+      );
+
+      INSERT OR IGNORE INTO provisions (id, name, room, wall, type, completed, pending_review, details)
+      VALUES (
+        'kyp_12',
+        'Θερμαινόμενη Πισίνα: Παροχή Ρεύματος & Καλώδιο Εντολής Αντλίας Θερμότητας (Interlock)',
+        '🌳 Κήπος / Πισίνα',
+        'Βάση Αντλίας Θερμότητας Πισίνας',
+        '🔌 Πρίζες',
+        0,
+        0,
+        'Ανεξάρτητη γραμμή ρεύματος (μονοφασική 3x6mm² 25A-32A C-curve ή τριφασική 5x2.5mm²/5x4mm²) από τον κεντρικό/υποπίνακα προς την εξωτερική βάση της Pool Heat Pump + καλώδιο εντολής/σήματος (interlock 2x1mm² ή Cat6a) προς τον πίνακα της αντλίας κυκλοφορίας για αυτόματη έναρξη ροής όταν ζητείται θέρμανση.'
+      );
+
+      -- Data migration: insert procurement items for Pool Heat Pump and Cover
+      INSERT OR IGNORE INTO procurement_items (
+        id, name, category, brand, model, link, estimated_price_eur, price_range,
+        quantity, unit, rooms, is_task, is_optional, task_description, notes, purchased
+      ) VALUES (
+        'buy_pool_heat_pump',
+        'Inverter Αντλία Θερμότητας Πισίνας (Pool Heat Pump με Εναλλάκτη Τιτανίου & Wi-Fi)',
+        '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
+        'Fairland / Hayward / Zodiac / AstralPool',
+        'Full-Inverter Pool Heat Pump (~13kW - 18kW, COP έως 15, R32, Wi-Fi Smart)',
+        NULL,
+        1800,
+        '€1.400 - €2.500',
+        1,
+        'τεμ.',
+        '["🌳 Κήπος / Πισίνα"]',
+        1,
+        0,
+        'Διαστασιολόγηση Inverter αντλίας θερμότητας πισίνας βάσει κυβικών νερού (m³) και επιφάνειας για επέκταση της κολυμβητικής σεζόν (π.χ. Απρίλιο - Νοέμβριο στους 28°C-30°C). Απαιτείται εξωτερική βάση έδρασης με καλό εξαερισμό, υδραυλικό bypass d50/d63 στο μηχανοστάσιο και ανεξάρτητη γραμμή ρεύματος (3x6mm² μονοφασική ή 5x2.5mm² τριφασική) + interlock με την αντλία φίλτρου.',
+        'Αυτόνομη Pool Heat Pump με εναλλάκτη τιτανίου ανθεκτικό σε χλώριο/αλάτι. Συνδέεται στο bypass του μηχανοστασίου. Το θερμομονωτικό κάλυμμα είναι υποχρεωτικό για να μην χάνεται η θερμότητα τη νύχτα.',
+        0
+      );
+
+      INSERT OR IGNORE INTO procurement_items (
+        id, name, category, brand, model, link, estimated_price_eur, price_range,
+        quantity, unit, rooms, is_task, is_optional, task_description, notes, purchased
+      ) VALUES (
+        'buy_pool_cover',
+        'Θερμομονωτικό Κάλυμμα Πισίνας (Solar Bubble Cover ή Αυτόματο Slat Cover)',
+        '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
+        'Προς Επιλογή',
+        'Geobubble 500 micron Thermal Cover με μηχανισμό τύλιξης (Roller) ή Αυτόματο Slat',
+        NULL,
+        650,
+        '€400 - €1.200 (ή €4.000+ για ηλεκτρικό slat)',
+        1,
+        'σετ',
+        '["🌳 Κήπος / Πισίνα"]',
+        1,
+        0,
+        'Χωρίς θερμομονωτικό κάλυμμα, το 75% της θερμότητας της πισίνας χάνεται τη νύχτα μέσω εξάτμισης. Επιλογή θερμομονωτικού καλύμματος (π.χ. Geobubble 500 micron με κύλινδρο τύλιξης inox) για διατήρηση της θερμοκρασίας και μείωση της κατανάλωσης ρεύματος της αντλίας κατά 60-70%.',
+        'Απολύτως απαραίτητο για θερμαινόμενη πισίνα. Εμποδίζει την εξάτμιση και κρατά το νερό ζεστό τη νύχτα.',
+        0
+      );
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
