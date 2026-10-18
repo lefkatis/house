@@ -530,5 +530,23 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     isOptional: true,
     notes: 'Προαιρετική αγορά. Εντοίχιση σε προστατευμένο σημείο (π.χ. μέσα σε ντουλάπα Master Bedroom) με μηχανική πάκτωση σε τοιχίο.',
     purchased: false
+  },
+
+  // --- 🍳 Οικιακές Συσκευές & Κουζίνα ---
+  {
+    id: 'buy_samsung_fridge_rf65',
+    name: 'Ψυγείο Ντουλάπα Samsung Bespoke AI Family Hub™ (RF65DG9H0EB1EF)',
+    category: '🍳 Οικιακές Συσκευές & Κουζίνα',
+    brand: 'Samsung',
+    model: 'RF65DG9H0EB1EF (Bespoke AI Family Hub™ 4-Door French Door 636L)',
+    link: 'https://www.samsung.com/',
+    estimatedPriceEur: 2800,
+    priceRange: '€2.500 - €3.200',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🍳 Κουζίνα'],
+    isTask: false,
+    notes: 'Bespoke AI 4-Door French Door (636L) με έξυπνη οθόνη αφής Family Hub™ και εσωτερική κάμερα AI Vision. Διαθέτει Beverage Center™ (εσωτερική βρύση & αυτόματη κανάτα νερού) και Dual Auto Ice Maker (παγάκια & Ice Bites™). ΚΡΙΣΙΜΟ ΓΙΑ ΠΡΟΝΟΙΕΣ: Απαιτεί μόνιμη παροχή νερού 1/4" (συνδέεται με την πρόνοια kou_7) και πρίζα ρεύματος 13A/16A στον τοίχο του ψυγείου. Διαστάσεις: 91.2cm (Π) x 183.0cm (Υ) x 72.3cm (Β).',
+    purchased: false
   }
 ];

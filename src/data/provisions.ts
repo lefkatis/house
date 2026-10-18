@@ -58,7 +58,7 @@ export const PROVISIONS: Provision[] = [
     details: 'Δυνατότητα τοποθέτησης είτε pop-up στον πάγκο είτε χωνευτά στο πλαϊνό panel της νησίδας'
   },
   { id: 'kou_isl_2', name: 'Εφεδρική Πρίζα 13A Νησίδας', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
-  { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false, details: 'Αναμονή σωληνίσκου 1/4" και διακόπτης/βανάκι παροχής φιλτραρισμένου νερού στον τοίχο του ψυγείου για το Beverage Center και Dual Auto Ice Maker του Samsung Bespoke Family Hub (RF65DG9H0EB1EF).' },
   { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω / Πάγκος', type: '💡 Φώτα', completed: false },
   { 
     id: 'kou_drivers', 

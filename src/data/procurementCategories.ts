@@ -8,6 +8,7 @@ export const PROCUREMENT_CATEGORIES = [
   '⚡ Ηλεκτρολογικός Εξοπλισμός (Sockets/Plugs)',
   '🚪 Πόρτες & Επενδύσεις',
   '🌿 Κήπος, Deck & Εξωτερικοί Χώροι',
+  '🍳 Οικιακές Συσκευές & Κουζίνα',
   'Εργασίες Έρευνας (Tasks to Find)'
 ] as const;
 

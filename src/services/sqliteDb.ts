@@ -249,6 +249,34 @@ class SQLiteService {
           pending_review = 0,
           details = 'Τοποθέτηση στον κεντρικό τοίχο, ακριβώς κάτω από το smart tablet / touch panel.'
       WHERE id = 'sal_12';
+
+      -- Data migration: update kou_7 details with Samsung RF65DG9H0EB1EF reference
+      UPDATE provisions 
+      SET details = 'Αναμονή σωληνίσκου 1/4" και διακόπτης/βανάκι παροχής φιλτραρισμένου νερού στον τοίχο του ψυγείου για το Beverage Center και Dual Auto Ice Maker του Samsung Bespoke Family Hub (RF65DG9H0EB1EF).'
+      WHERE id = 'kou_7';
+
+      -- Data migration: insert Samsung Bespoke AI Refrigerator RF65DG9H0EB1EF
+      INSERT OR IGNORE INTO procurement_items (
+        id, name, category, brand, model, link, estimated_price_eur, price_range,
+        quantity, unit, rooms, is_task, is_optional, task_description, notes, purchased
+      ) VALUES (
+        'buy_samsung_fridge_rf65',
+        'Ψυγείο Ντουλάπα Samsung Bespoke AI Family Hub™ (RF65DG9H0EB1EF)',
+        '🍳 Οικιακές Συσκευές & Κουζίνα',
+        'Samsung',
+        'RF65DG9H0EB1EF (Bespoke AI Family Hub™ 4-Door French Door 636L)',
+        'https://www.samsung.com/',
+        2800,
+        '€2.500 - €3.200',
+        1,
+        'τεμ.',
+        '["🍳 Κουζίνα"]',
+        0,
+        0,
+        NULL,
+        'Bespoke AI 4-Door French Door (636L) με έξυπνη οθόνη αφής Family Hub™ και εσωτερική κάμερα AI Vision. Διαθέτει Beverage Center™ (εσωτερική βρύση & αυτόματη κανάτα νερού) και Dual Auto Ice Maker (παγάκια & Ice Bites™). ΚΡΙΣΙΜΟ ΓΙΑ ΠΡΟΝΟΙΕΣ: Απαιτεί μόνιμη παροχή νερού 1/4" (συνδέεται με την πρόνοια kou_7) και πρίζα ρεύματος 13A/16A στον τοίχο του ψυγείου. Διαστάσεις: 91.2cm (Π) x 183.0cm (Υ) x 72.3cm (Β).',
+        0
+      );
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
