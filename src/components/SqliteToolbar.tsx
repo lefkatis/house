@@ -63,17 +63,17 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
       <button
         onClick={onUndo}
         disabled={!canUndo}
-        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl font-bold border transition-all ${
           canUndo
-            ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-neutral-800 shadow-sm active:scale-95'
-            : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-60'
+            ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700/70 text-amber-950 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/60 shadow-xs active:scale-95 cursor-pointer ring-1 ring-amber-400/30'
+            : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
         }`}
         title="Αναίρεση προηγούμενης αλλαγής (Ctrl+Z / Cmd+Z)"
       >
-        <Undo2 size={13} />
-        <span className="hidden xs:inline sm:inline">Αναίρεση</span>
+        <Undo2 size={13} className={canUndo ? 'stroke-[2.5]' : ''} />
+        <span className="inline">Αναίρεση</span>
         {undoCount > 0 && (
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-extrabold">
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-200/80 dark:bg-amber-900 text-amber-900 dark:text-amber-200 font-black">
             {undoCount}
           </span>
         )}
@@ -83,15 +83,15 @@ export const SqliteToolbar: React.FC<SqliteToolbarProps> = ({
       <button
         onClick={onRedo}
         disabled={!canRedo}
-        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg font-bold border transition-all ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl font-bold border transition-all ${
           canRedo
-            ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-neutral-800 shadow-sm active:scale-95'
-            : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-60'
+            ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-neutral-800 shadow-xs active:scale-95 cursor-pointer'
+            : 'bg-neutral-100 dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800/80 text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50'
         }`}
         title="Επανάληψη αναιρεμένης αλλαγής (Ctrl+Y / Cmd+Shift+Z)"
       >
         <Redo2 size={13} />
-        <span className="hidden xs:inline sm:inline">Επανάληψη</span>
+        <span className="hidden min-[480px]:inline">Επανάληψη</span>
         {redoCount > 0 && (
           <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 font-extrabold">
             {redoCount}

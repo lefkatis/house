@@ -21,6 +21,7 @@ import ProvisionsView from './ProvisionsView';
 import AdminConsoleView from './AdminConsoleView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
+import { FloatingUndoToast } from './components/FloatingUndoToast';
 import { EditItemModal, EditableItem } from './components/EditItemModal';
 import { useAuth, AuthToast, LockScreen, AuthToolbarControls, MagicLinkModal } from './components/AuthGate';
 import { getAssetUrl } from './utils/assets';
@@ -179,7 +180,7 @@ export default function App() {
               </div>
 
               {/* Utility Controls (Full PDF Button, Undo, Redo, Light/Dark Toggle) */}
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2">
                 {/* Full Architectural PDF (11 Pages) Button */}
                 <button
                   onClick={() => setIsPdfModalOpen(true)}
@@ -457,6 +458,18 @@ export default function App() {
 
         {/* Floating Toast Notification */}
         <AuthToast message={toastMessage} />
+
+        {/* Floating Undo/Redo Action Toast & Persistent Bottom Pill */}
+        <FloatingUndoToast
+          lastAction={lastAction}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          undoCount={undoCount}
+          redoCount={redoCount}
+          onUndo={undo}
+          onRedo={redo}
+          isAdmin={isAdmin}
+        />
       </div>
     </div>
   );

@@ -7,6 +7,9 @@ import { INITIAL_VENDOR_OFFERS, VendorOffer } from '../data/offersData';
 
 const STORAGE_KEY = 'house_sqlite_db_v1';
 const LEGACY_STORAGE_KEY = 'lefkpronies_sqlite_db_v2';
+const UNDO_STORAGE_KEY = 'house_sqlite_undo_stack_v1';
+const REDO_STORAGE_KEY = 'house_sqlite_redo_stack_v1';
+const LAST_ACTION_STORAGE_KEY = 'house_sqlite_last_action_v1';
 const MAX_UNDO_STACK = 100;
 
 export interface UndoAction {
@@ -81,6 +84,7 @@ class SQLiteService {
 
       this.ensureSchema(activeDb);
       this.db = activeDb;
+      this.restoreStacksFromStorage();
       this.saveToStorage();
       this.isReady = true;
       this.notify();
@@ -95,6 +99,7 @@ class SQLiteService {
         this.seedInitialData(fallbackDb);
         this.ensureSchema(fallbackDb);
         this.db = fallbackDb;
+        this.restoreStacksFromStorage();
         this.saveToStorage();
         this.isReady = true;
         this.notify();
@@ -105,6 +110,31 @@ class SQLiteService {
       }
     } finally {
       this.isInitializing = false;
+    }
+  }
+
+  private restoreStacksFromStorage() {
+    try {
+      const savedUndo = localStorage.getItem(UNDO_STORAGE_KEY);
+      if (savedUndo) {
+        const parsed = JSON.parse(savedUndo);
+        if (Array.isArray(parsed)) {
+          this.undoStack = parsed;
+        }
+      }
+      const savedRedo = localStorage.getItem(REDO_STORAGE_KEY);
+      if (savedRedo) {
+        const parsed = JSON.parse(savedRedo);
+        if (Array.isArray(parsed)) {
+          this.redoStack = parsed;
+        }
+      }
+      const savedLast = localStorage.getItem(LAST_ACTION_STORAGE_KEY);
+      if (savedLast) {
+        this.lastActionDescription = savedLast;
+      }
+    } catch (stackLoadErr) {
+      console.warn('Could not restore undo/redo stack from storage:', stackLoadErr);
     }
   }
 
@@ -505,6 +535,18 @@ class SQLiteService {
       }
       const base64 = btoa(binaryString);
       localStorage.setItem(STORAGE_KEY, base64);
+
+      try {
+        localStorage.setItem(UNDO_STORAGE_KEY, JSON.stringify(this.undoStack));
+        localStorage.setItem(REDO_STORAGE_KEY, JSON.stringify(this.redoStack));
+        if (this.lastActionDescription) {
+          localStorage.setItem(LAST_ACTION_STORAGE_KEY, this.lastActionDescription);
+        } else {
+          localStorage.removeItem(LAST_ACTION_STORAGE_KEY);
+        }
+      } catch (stackSaveErr) {
+        console.warn('Could not persist undo/redo stack:', stackSaveErr);
+      }
     } catch (err) {
       console.error('Error saving SQLite to localStorage:', err);
     }
@@ -913,12 +955,22 @@ class SQLiteService {
   public undo(): boolean {
     if (!this.db || this.undoStack.length === 0) return false;
     const action = this.undoStack.pop()!;
+    let inTx = false;
     try {
-      this.db.run("BEGIN TRANSACTION;");
+      try {
+        this.db.run("BEGIN TRANSACTION;");
+        inTx = true;
+      } catch (e: any) {
+        // Continue if already within transaction
+      }
+
       for (const sql of action.inverseSql) {
         this.db.run(sql);
       }
-      this.db.run("COMMIT;");
+
+      if (inTx) {
+        this.db.run("COMMIT;");
+      }
 
       this.redoStack.push(action);
       this.lastActionDescription = `Αναίρεση: ${action.description}`;
@@ -927,7 +979,9 @@ class SQLiteService {
       return true;
     } catch (err) {
       console.error('Failed to execute undo:', err);
-      if (this.db) {
+      // Restore action to undoStack so it is not permanently lost
+      this.undoStack.push(action);
+      if (this.db && inTx) {
         try { this.db.run("ROLLBACK;"); } catch { /* ignore */ }
       }
       return false;
@@ -937,12 +991,22 @@ class SQLiteService {
   public redo(): boolean {
     if (!this.db || this.redoStack.length === 0) return false;
     const action = this.redoStack.pop()!;
+    let inTx = false;
     try {
-      this.db.run("BEGIN TRANSACTION;");
+      try {
+        this.db.run("BEGIN TRANSACTION;");
+        inTx = true;
+      } catch (e: any) {
+        // Continue if already within transaction
+      }
+
       for (const sql of action.forwardSql) {
         this.db.run(sql);
       }
-      this.db.run("COMMIT;");
+
+      if (inTx) {
+        this.db.run("COMMIT;");
+      }
 
       this.undoStack.push(action);
       this.lastActionDescription = `Επανάληψη: ${action.description}`;
@@ -951,7 +1015,9 @@ class SQLiteService {
       return true;
     } catch (err) {
       console.error('Failed to execute redo:', err);
-      if (this.db) {
+      // Restore action to redoStack so it is not permanently lost
+      this.redoStack.push(action);
+      if (this.db && inTx) {
         try { this.db.run("ROLLBACK;"); } catch { /* ignore */ }
       }
       return false;
@@ -995,6 +1061,9 @@ class SQLiteService {
   public resetToDefaults() {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(LEGACY_STORAGE_KEY);
+    localStorage.removeItem(UNDO_STORAGE_KEY);
+    localStorage.removeItem(REDO_STORAGE_KEY);
+    localStorage.removeItem(LAST_ACTION_STORAGE_KEY);
     this.undoStack = [];
     this.redoStack = [];
     this.lastActionDescription = 'Επαναφορά αρχικών δεδομένων';
@@ -1089,8 +1158,36 @@ export function useSqlite() {
       setGeneralRules(prev => prev.map(r => r.id === id ? { ...r, ...updates } : r));
       return sqliteService.updateGeneralRule(id, updates);
     },
-    undo: () => sqliteService.undo(),
-    redo: () => sqliteService.redo(),
+    undo: () => {
+      const res = sqliteService.undo();
+      if (res) {
+        setProvisions(sqliteService.getProvisions());
+        setProcurementItems(sqliteService.getProcurementItems());
+        setGeneralRules(sqliteService.getGeneralRules());
+        setOffers(sqliteService.getVendorOffers());
+        setCanUndo(sqliteService.canUndo());
+        setCanRedo(sqliteService.canRedo());
+        setUndoCount(sqliteService.getUndoCount());
+        setRedoCount(sqliteService.getRedoCount());
+        setLastAction(sqliteService.getLastActionDescription());
+      }
+      return res;
+    },
+    redo: () => {
+      const res = sqliteService.redo();
+      if (res) {
+        setProvisions(sqliteService.getProvisions());
+        setProcurementItems(sqliteService.getProcurementItems());
+        setGeneralRules(sqliteService.getGeneralRules());
+        setOffers(sqliteService.getVendorOffers());
+        setCanUndo(sqliteService.canUndo());
+        setCanRedo(sqliteService.canRedo());
+        setUndoCount(sqliteService.getUndoCount());
+        setRedoCount(sqliteService.getRedoCount());
+        setLastAction(sqliteService.getLastActionDescription());
+      }
+      return res;
+    },
     downloadDatabase: () => sqliteService.downloadDatabaseFile(),
     importDatabase: (buffer: ArrayBuffer) => sqliteService.importDatabaseFile(buffer),
     resetToDefaults: () => sqliteService.resetToDefaults()
