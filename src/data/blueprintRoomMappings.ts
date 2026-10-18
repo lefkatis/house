@@ -235,23 +235,39 @@ export const DEFAULT_PROVISION_PINS: DefaultProvisionPin[] = [
   { provisionId: 'wcm_1', xPercent: 46.5, yPercent: 60.5 },
   { provisionId: 'wc_main_towel', xPercent: 46.5, yPercent: 60.5 },
   { provisionId: 'wc_main_vent', xPercent: 47.0, yPercent: 64.5 },
+  { provisionId: 'wcm_contact', xPercent: 47.0, yPercent: 66.0 },
   { provisionId: 'ens_1', xPercent: 62.0, yPercent: 60.5 },
   { provisionId: 'wc_ensuite_towel', xPercent: 62.0, yPercent: 60.5 },
   { provisionId: 'wc_ensuite_vent', xPercent: 62.5, yPercent: 64.5 },
+  { provisionId: 'ens_contact', xPercent: 62.5, yPercent: 66.0 },
   { provisionId: 'wc_guest_vent', xPercent: 32.5, yPercent: 66.5 },
+  { provisionId: 'wcx_contact', xPercent: 31.5, yPercent: 67.5 },
 
   // Πλυσταριό
   { provisionId: 'laundry_washer', xPercent: 43.0, yPercent: 61.5 },
   { provisionId: 'laundry_vent', xPercent: 43.0, yPercent: 64.5 },
+  { provisionId: 'ply_4', xPercent: 43.0, yPercent: 66.0 },
+
+  // Χώρος Εισόδου
+  { provisionId: 'eis_contact', xPercent: 30.0, yPercent: 60.0 },
+
+  // Pantry
+  { provisionId: 'pan_contact', xPercent: 29.0, yPercent: 26.5 },
 
   // Parking
   { provisionId: 'park_bmw_charger', xPercent: 21.0, yPercent: 30.0 },
   { provisionId: 'park_garage_button', xPercent: 25.5, yPercent: 35.0 },
   { provisionId: 'park_light_switch', xPercent: 26.5, yPercent: 38.0 },
   { provisionId: 'park_presence_sensor', xPercent: 23.5, yPercent: 36.0 },
+  { provisionId: 'par_contact', xPercent: 26.5, yPercent: 36.5 },
 
   // Μηχανοστάσιο
   { provisionId: 'mech_server_rack', xPercent: 27.0, yPercent: 71.0 },
   { provisionId: 'mech_hvac_board', xPercent: 28.5, yPercent: 73.0 },
-  { provisionId: 'mech_water_softener', xPercent: 25.5, yPercent: 73.0 }
+  { provisionId: 'mech_water_softener', xPercent: 25.5, yPercent: 73.0 },
+  { provisionId: 'mix_contact', xPercent: 24.5, yPercent: 71.0 },
+
+  // Βοηθητικό Σπίτι
+  { provisionId: 'aux_contact_door', xPercent: 22.0, yPercent: 68.0 },
+  { provisionId: 'aux_contact_win', xPercent: 28.0, yPercent: 74.0 }
 ];

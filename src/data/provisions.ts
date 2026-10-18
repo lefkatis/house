@@ -88,6 +88,15 @@ export const PROVISIONS: Provision[] = [
   { id: 'pan_1', name: 'Μελλοντικές Αναμονές Νερού (Ζεστό/Κρύο) & Αποχέτευση', room: '🥫 Pantry', wall: 'Τοίχος Υδραυλικών', type: '🚰 Υδραυλικά', completed: false },
   { id: 'pan_2', name: 'Αναμονές Ρεύματος (Πρίζες 13A)', room: '🥫 Pantry', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
   { id: 'pan_3', name: 'Διακόπτες Φωτισμού', room: '🥫 Pantry', wall: 'Είσοδος Pantry', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'pan_contact', 
+    name: 'Contact Sensor (Κούφωμα Pantry)', 
+    room: '🥫 Pantry', 
+    wall: 'Παράθυρο / Πόρτα', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Μαγνητική επαφή στο κούφωμα του Pantry για συναγερμό και αυτοματισμό φωτισμού.'
+  },
 
   // --- Γραφείο ---
   { id: 'gra_1', name: 'Πολλαπλές Πρίζες 16A (Γραφείο Επιλογή Α)', room: '🖥️ Γραφείο', wall: 'Αριστερός Τοίχος', type: '🔌 Πρίζες', completed: false },
@@ -170,6 +179,15 @@ export const PROVISIONS: Provision[] = [
   { id: 'wcm_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC - Main', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'wcm_contact', 
+    name: 'Contact Sensor (Παράθυρο WC Main)', 
+    room: '🚽 WC - Main', 
+    wall: 'Παράθυρο', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Ενσύρματη μαγνητική επαφή (reed switch) στο κούφωμα του παραθύρου για συναγερμό & αυτοματοποίηση εξαερισμού.'
+  },
 
   // WC Ensuite
   { 
@@ -184,11 +202,29 @@ export const PROVISIONS: Provision[] = [
   { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ensuite', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ensuite', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'ens_contact', 
+    name: 'Contact Sensor (Παράθυρο WC Ensuite)', 
+    room: '🚽 WC Ensuite', 
+    wall: 'Παράθυρο', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Ενσύρματη μαγνητική επαφή (reed switch) στο κούφωμα του παραθύρου για συναγερμό & αυτοματοποίηση εξαερισμού.'
+  },
 
   // WC Ξένων (χωρίς πετσετοκρεμάστρα)
   { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcx_2', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ξένων', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
   { id: 'wcx_3', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ξένων', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'wcx_contact', 
+    name: 'Contact Sensor (Παράθυρο WC Ξένων)', 
+    room: '🚽 WC Ξένων', 
+    wall: 'Παράθυρο', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Ενσύρματη μαγνητική επαφή (reed switch) στο κούφωμα του παραθύρου για σύνδεση με το σύστημα συναγερμού.'
+  },
 
   // --- Πλυσταριό ---
   { id: 'ply_1', name: 'Πρίζες (Πλυντήριο / Στεγνωτήριο)', room: '🧺 Πλυσταριό', wall: 'Τοίχος Συσκευών', type: '🔌 Πρίζες', completed: false },
@@ -214,6 +250,15 @@ export const PROVISIONS: Provision[] = [
   // --- Χώρος Εισόδου ---
   { id: 'eis_1', name: 'Smart Doorbell (Κύρια Πόρτα) - PoE Cat6a', room: '🚪 Χώρος Εισόδου', wall: 'Εξώπορτα', type: '🔒 Ασφάλεια', completed: false },
   { id: 'eis_2', name: 'Έξυπνη Κλειδαριά (Smart Lock)', room: '🚪 Χώρος Εισόδου', wall: 'Εξώπορτα', type: '🔒 Ασφάλεια', completed: false },
+  { 
+    id: 'eis_contact', 
+    name: 'Contact Sensor (Κύρια Πόρτα Εισόδου)', 
+    room: '🚪 Χώρος Εισόδου', 
+    wall: 'Εξώπορτα', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Βαρέως τύπου ενσύρματη μαγνητική επαφή (heavy duty reed switch) στην κάσα της κύριας εξώπορτας για ένδειξη ανοίγματος/κλεισίματος, αυτοματισμούς εισόδου και συναγερμό.'
+  },
   { id: 'eis_3', name: 'Πληκτρολόγιο Συναγερμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '🔒 Ασφάλεια', completed: false },
   { id: 'eis_4', name: 'Διακόπτες Φωτισμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
@@ -277,8 +322,17 @@ export const PROVISIONS: Provision[] = [
     room: '🚗 Parking', 
     wall: 'Γωνία Καγκέλου Μονού Parking (Εσωτερικά)', 
     type: '🔌 Πρίζες', 
-    completed: false,
+    completed: false, 
     details: 'Αναμονή ρεύματος εσωτερικά του τοίχου, στη γωνία του κάγκελου όπου ανοίγει το κάγκελο του μονού parking.'
+  },
+  { 
+    id: 'par_contact', 
+    name: 'Contact Sensor (Πόρτα Parking / Επικοινωνίας)', 
+    room: '🚗 Parking', 
+    wall: 'Πόρτα Parking', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Μαγνητική επαφή στην πόρτα επικοινωνίας / εισόδου του parking για ασφάλεια.'
   },
 
   // --- Server Cabinet ---
@@ -301,6 +355,15 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'mix_8', name: 'Σύστημα Ανακυκλοφορίας Ζεστού Νερού', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🔧 Συντήρηση', completed: false },
   { id: 'mix_9', name: 'Inverter Φωτοβολταϊκών & Μπαταρία (Cat6a & Σωληνώσεις)', room: '⚙️ Μηχανοστάσιο', wall: 'Τοίχος Φωτοβολταϊκών', type: '🔌 Πρίζες', completed: false },
+  { 
+    id: 'mix_contact', 
+    name: 'Contact Sensor (Εξωτερική Πόρτα Μηχανοστασίου)', 
+    room: '⚙️ Μηχανοστάσιο', 
+    wall: 'Εξωτερική Πόρτα', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Μαγνητική επαφή στην εξωτερική πόρτα του μηχανοστασίου για ασφάλεια περιμέτρου και ειδοποίηση πρόσβασης.'
+  },
   
   // --- Βοηθητικό Σπίτι ---
   { id: 'aux_1', name: 'Αναμονές Κρύο/Ζεστό Νερό & Αποχέτευση', room: '🏠 Βοηθητικό Σπίτι', wall: 'Τοίχος Κουζίνας', type: '🚰 Υδραυλικά', completed: false },
@@ -309,4 +372,22 @@ export const PROVISIONS: Provision[] = [
   { id: 'aux_4', name: 'Κεντρικός Φωτισμός Δωματίου στο Ταβάνι', room: '🏠 Βοηθητικό Σπίτι', wall: 'Ταβάνι (Οροφή)', type: '💡 Φώτα', details: 'Αναμονή παροχής ρεύματος στο ταβάνι (οροφή) για τον κανονικό κεντρικό φωτισμό του δωματίου στο βοηθητικό σπίτι.', completed: false },
   { id: 'aux_5', name: 'Υποπίνακας Ρεύματος (Αυτόνομο Σύστημα)', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🔌 Πρίζες', completed: false },
   { id: 'aux_6', name: 'Cat6a Σύνδεση με Κυρίως Σπίτι', room: '🏠 Βοηθητικό Σπίτι', wall: 'Είσοδος', type: '🖥️ Server Cabinet', completed: false },
+  { 
+    id: 'aux_contact_door', 
+    name: 'Contact Sensor (Πόρτα Εισόδου Βοηθητικού)', 
+    room: '🏠 Βοηθητικό Σπίτι', 
+    wall: 'Πόρτα Εισόδου', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Μαγνητική επαφή στην πόρτα εισόδου του βοηθητικού σπιτιού για ασφάλεια και συναγερμό.'
+  },
+  { 
+    id: 'aux_contact_win', 
+    name: 'Contact Sensor (Παράθυρο Βοηθητικού)', 
+    room: '🏠 Βοηθητικό Σπίτι', 
+    wall: 'Παράθυρο', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Μαγνητική επαφή στο κούφωμα του παραθύρου του βοηθητικού σπιτιού για περιμετρική προστασία.'
+  },
 ];

@@ -448,6 +448,25 @@ class SQLiteService {
     } catch (e) {
       console.warn("rename_towel_rail migration notice:", e);
     }
+
+    // Migration: Update Contact Sensors procurement item and ensure contact provisions are present
+    try {
+      const checkContact = db.exec("SELECT 1 FROM _schema_migrations WHERE id = 'add_all_contact_sensors_v1'");
+      if (checkContact.length === 0 || checkContact[0].values.length === 0) {
+        db.run(`
+          UPDATE procurement_items 
+          SET quantity = 20,
+              rooms = '["🛋️ Σαλόνι / Τραπεζαρία","🍳 Κουζίνα","🥫 Pantry","🖥️ Γραφείο","🛏️ Master Bedroom","🛏️ Bedroom 1","🛏️ Bedroom 2","🚽 WC - Main","🚽 WC Ensuite","🚽 WC Ξένων","🧺 Πλυσταριό","🚪 Χώρος Εισόδου","🚗 Parking","⚙️ Μηχανοστάσιο","🏠 Βοηθητικό Σπίτι"]',
+              task_description = 'Συνεννόηση με τον εγκαταστάτη κουφωμάτων & συναγερμού (CHM Security / Eyetouch) για χωνευτές contact sensors στα προφίλ αλουμινίου σε όλα τα παράθυρα (συμπεριλαμβανομένων όλων των τουαλετών/WC), μπαλκονόπορτες και εξωτερικές πόρτες πριν την τοποθέτηση.',
+              notes = 'Ενσύρματη καλωδίωση συναγερμού σε όλα τα ανοιγόμενα/συρόμενα κουφώματα και πόρτες σε όλο το σπίτι (συμπεριλαμβανομένων των WC Main, Ensuite, Ξένων, εισόδου, μηχανοστασίου, βοηθητικού) για πλήρη περιμετρική προστασία (CHM Security / Eyetouch).'
+          WHERE id = 'buy_reed_switches';
+
+          INSERT OR REPLACE INTO _schema_migrations (id, applied_at) VALUES ('add_all_contact_sensors_v1', ${Date.now()});
+        `);
+      }
+    } catch (e) {
+      console.warn("add_all_contact_sensors migration notice:", e);
+    }
   }
 
   private seedInitialData(db: Database) {
