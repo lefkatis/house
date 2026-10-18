@@ -358,10 +358,10 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   },
   {
     id: 'buy_towel_rails',
-    name: 'Ηλεκτρικές Πετσετοκρεμάστρες Μπάνιων 400W-600W (Αναμονή ~60cm)',
+    name: 'Towel Rails Μπάνιων 400W-600W (Αναμονή ~60cm)',
     category: '🔧 HVAC & Μηχανοστάσιο',
     brand: 'Προς Επιλογή',
-    model: 'Ηλεκτρική Πετσετοκρεμάστρα 230V Switched Fused Spur (Main & Ensuite)',
+    model: 'Ηλεκτρικό Towel Rail 230V Switched Fused Spur (Main & Ensuite)',
     link: undefined,
     estimatedPriceEur: 150,
     priceRange: '€110 - €220',
@@ -370,7 +370,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     rooms: ['🚽 WC - Main', '🚽 WC Ensuite'],
     isTask: true,
     taskDescription: 'Επιλογή διαστάσεων, ισχύος (400W-600W) και φινιρίσματος (Chrome/Matte Black) για το κυρίως μπάνιο και το ensuite. Η αναμονή παροχής ρεύματος τοποθετείται σε ύψος περίπου 60cm από το τελειωμένο δάπεδο (flex outlet).',
-    notes: 'Σύνδεση στην πρόνοια 230V (~60cm από το δάπεδο) με ξεχωριστό διακόπτη Switched Fused Spur / Heater Switch εκτός Zone 2.',
+    notes: 'Σύνδεση στην πρόνοια Towel Rail 230V (~60cm από το δάπεδο) με ξεχωριστό διακόπτη Switched Fused Spur / Heater Switch εκτός Zone 2.',
     purchased: false
   },
   {

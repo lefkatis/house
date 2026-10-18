@@ -109,8 +109,8 @@ export function getIECSymbolType(provisionName: string, category: string): { typ
   if (n.includes('εξαερισμού') || n.includes('extractor') || n.includes('εξαερισμός')) {
     return { type: 'extractor_fan', label: 'IEC 60617-11-19-01: Μηχανικός Εξαεριστήρας (Extractor Fan)', code: '11-19-01' };
   }
-  if (n.includes('πετσετοκρεμάστρα') || n.includes('θερμαντικά')) {
-    return { type: 'towel_heater', label: 'IEC 60617: Ηλεκτρική Πετσετοκρεμάστρα / Θερμαντικό Σώμα (Electric Towel Rail)', code: '11-12-01' };
+  if (n.includes('πετσετοκρεμάστρα') || n.includes('towel rail') || n.includes('towel') || n.includes('θερμαντικά')) {
+    return { type: 'towel_heater', label: 'IEC 60617: Παροχή Towel Rail / Πετσετοκρεμάστρα (Electric Towel Rail)', code: '11-12-01' };
   }
 
   if (n.includes('υποπίνακας') || n.includes('cabinet') || n.includes('rack')) {

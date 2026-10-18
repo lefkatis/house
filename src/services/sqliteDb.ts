@@ -415,10 +415,38 @@ class SQLiteService {
         DELETE FROM procurement_items WHERE id = 'buy_ev_charger';
       `);
 
-      // Mark migration as completed
+      // Mark initial migration as completed
       db.run("INSERT OR REPLACE INTO _schema_migrations (id, applied_at) VALUES ('initial_sync_v1', ?)", [Date.now()]);
     } catch (e) {
       console.warn("applyMigrations notice:", e);
+    }
+
+    // Migration: Rename 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας' to 'Παροχή Towel Rail'
+    try {
+      const checkTowel = db.exec("SELECT 1 FROM _schema_migrations WHERE id = 'rename_towel_rail_v1'");
+      if (checkTowel.length === 0 || checkTowel[0].values.length === 0) {
+        db.run(`
+          UPDATE provisions 
+          SET name = REPLACE(name, 'Παροχή Ηλεκτρικής Πετσετοκρεμάστρας', 'Παροχή Towel Rail') 
+          WHERE name LIKE '%Παροχή Ηλεκτρικής Πετσετοκρεμάστρας%';
+
+          UPDATE provisions 
+          SET name = REPLACE(name, 'Ηλεκτρικής Πετσετοκρεμάστρας', 'Towel Rail') 
+          WHERE name LIKE '%Ηλεκτρικής Πετσετοκρεμάστρας%';
+
+          UPDATE procurement_items
+          SET name = REPLACE(name, 'Ηλεκτρικές Πετσετοκρεμάστρες', 'Towel Rails')
+          WHERE name LIKE '%Ηλεκτρικές Πετσετοκρεμάστρες%';
+
+          UPDATE procurement_items
+          SET model = REPLACE(model, 'Ηλεκτρική Πετσετοκρεμάστρα', 'Ηλεκτρικό Towel Rail')
+          WHERE model LIKE '%Ηλεκτρική Πετσετοκρεμάστρα%';
+
+          INSERT OR REPLACE INTO _schema_migrations (id, applied_at) VALUES ('rename_towel_rail_v1', ${Date.now()});
+        `);
+      }
+    } catch (e) {
+      console.warn("rename_towel_rail migration notice:", e);
     }
   }
 

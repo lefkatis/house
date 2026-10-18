@@ -232,8 +232,10 @@ export const DEFAULT_PROVISION_PINS: DefaultProvisionPin[] = [
   { provisionId: 'bed2_light_switch', xPercent: 55.5, yPercent: 56.5 },
 
   // Μπάνια
+  { provisionId: 'wcm_1', xPercent: 46.5, yPercent: 60.5 },
   { provisionId: 'wc_main_towel', xPercent: 46.5, yPercent: 60.5 },
   { provisionId: 'wc_main_vent', xPercent: 47.0, yPercent: 64.5 },
+  { provisionId: 'ens_1', xPercent: 62.0, yPercent: 60.5 },
   { provisionId: 'wc_ensuite_towel', xPercent: 62.0, yPercent: 60.5 },
   { provisionId: 'wc_ensuite_vent', xPercent: 62.5, yPercent: 64.5 },
   { provisionId: 'wc_guest_vent', xPercent: 32.5, yPercent: 66.5 },
