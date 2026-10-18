@@ -539,6 +539,13 @@ export default function ProvisionsView({
               </button>
             )}
 
+            {!isAdmin && (
+              <span className="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-850 flex items-center gap-1 font-medium">
+                <AlertTriangle size={11} />
+                <span>Μόνο Προβολή (Απαιτείται κωδικός Admin για αλλαγές)</span>
+              </span>
+            )}
+
             {isAdmin && filteredProvisions.length > 0 && (
               <button
                 onClick={handleBulkComplete}
@@ -693,7 +700,10 @@ export default function ProvisionsView({
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.98 }}
                                 transition={{ duration: 0.15 }}
+                                onClick={isAdmin && onEditProvision ? () => onEditProvision(provision) : undefined}
                                 className={`rounded-xl p-3 border backdrop-blur-md transition-all duration-200 relative flex flex-col justify-between ${
+                                  isAdmin && onEditProvision ? 'cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500/60 hover:shadow-md' : ''
+                                } ${
                                   provision.completed
                                     ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 opacity-75'
                                     : provision.pendingReview
@@ -811,9 +821,9 @@ export default function ProvisionsView({
                           {group.items.map(provision => (
                             <div
                               key={provision.id}
-                              onClick={isAdmin && onToggleCompleted ? () => onToggleCompleted(provision.id) : undefined}
+                              onClick={isAdmin && onEditProvision ? () => onEditProvision(provision) : undefined}
                               className={`p-2.5 sm:px-3 sm:py-2.5 flex items-center justify-between gap-2.5 transition-colors select-none ${
-                                isAdmin ? 'cursor-pointer' : 'cursor-default'
+                                isAdmin && onEditProvision ? 'cursor-pointer hover:bg-indigo-50/60 dark:hover:bg-indigo-950/20' : 'cursor-default'
                               } ${
                                 provision.completed
                                   ? 'bg-emerald-50/30 dark:bg-emerald-950/10 opacity-75'
@@ -939,19 +949,25 @@ export default function ProvisionsView({
                               {group.items.map(provision => (
                                 <tr
                                   key={provision.id}
+                                  onClick={isAdmin && onEditProvision ? () => onEditProvision(provision) : undefined}
                                   className={`transition-colors ${
+                                    isAdmin && onEditProvision
+                                      ? 'cursor-pointer hover:bg-indigo-50/70 dark:hover:bg-indigo-950/30'
+                                      : 'hover:bg-neutral-50 dark:hover:bg-neutral-850/60'
+                                  } ${
                                     provision.completed
                                       ? 'bg-emerald-50/30 dark:bg-emerald-950/10 opacity-75'
                                       : provision.pendingReview
                                       ? 'bg-amber-50/50 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/20'
-                                      : 'hover:bg-neutral-50 dark:hover:bg-neutral-850/60'
+                                      : ''
                                   }`}
                                 >
                                   {/* Checkbox */}
-                                  <td className="py-2.5 px-3 text-center">
+                                  <td className="py-2.5 px-3 text-center" onClick={(e) => e.stopPropagation()}>
                                     <button
                                       disabled={!isAdmin || !onToggleCompleted}
-                                      onClick={() => {
+                                      onClick={(e) => {
+                                        e.stopPropagation();
                                         if (isAdmin && onToggleCompleted) onToggleCompleted(provision.id);
                                       }}
                                       className={`p-0.5 rounded transition-colors ${
@@ -980,9 +996,24 @@ export default function ProvisionsView({
 
                                   {/* Name */}
                                   <td className="py-2.5 px-3 font-bold text-neutral-900 dark:text-neutral-100">
-                                    <span className={provision.completed ? 'line-through text-neutral-400' : ''}>
-                                      {provision.name}
-                                    </span>
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className={provision.completed ? 'line-through text-neutral-400' : ''}>
+                                        {provision.name}
+                                      </span>
+                                      {isAdmin && onEditProvision && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            onEditProvision(provision);
+                                          }}
+                                          className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors opacity-70 hover:opacity-100"
+                                          title="Επεξεργασία πρόνοιας"
+                                        >
+                                          <Pencil size={11} />
+                                        </button>
+                                      )}
+                                    </div>
                                   </td>
 
                                   {/* Room */}
@@ -1008,12 +1039,15 @@ export default function ProvisionsView({
                                   </td>
 
                                   {/* TBD */}
-                                  <td className="py-2.5 px-2 text-center">
+                                  <td className="py-2.5 px-2 text-center" onClick={(e) => e.stopPropagation()}>
                                     {isAdmin ? (
                                       <button
                                         type="button"
                                         disabled={!onTogglePending}
-                                        onClick={() => onTogglePending && onTogglePending(provision.id)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          if (onTogglePending) onTogglePending(provision.id);
+                                        }}
                                         className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                                           provision.pendingReview
                                             ? 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900 border-amber-300 dark:border-amber-700/60'
@@ -1041,9 +1075,12 @@ export default function ProvisionsView({
 
                                   {/* Actions */}
                                   {isAdmin && onEditProvision && (
-                                    <td className="py-2.5 px-3 text-right whitespace-nowrap">
+                                    <td className="py-2.5 px-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                                       <button
-                                        onClick={() => onEditProvision(provision)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          onEditProvision(provision);
+                                        }}
                                         className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-indigo-600 hover:text-white text-neutral-600 dark:text-neutral-400 transition-colors inline-flex items-center gap-1 text-[11px]"
                                         title="Επεξεργασία"
                                       >

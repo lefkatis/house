@@ -598,29 +598,30 @@ class SQLiteService {
 
     const next: Provision = { ...prev, ...updates };
 
-    const escape = (str?: string) => (str !== undefined && str !== null ? `'${str.replace(/'/g, "''")}'` : 'NULL');
+    const escapeText = (str?: string) => (str !== undefined && str !== null ? `'${str.replace(/'/g, "''")}'` : "''");
+    const escapeNullable = (str?: string) => (str !== undefined && str !== null && str.trim() !== '' ? `'${str.replace(/'/g, "''")}'` : 'NULL');
 
     const forwardSql = [`
       UPDATE provisions 
-      SET name = ${escape(next.name)},
-          room = ${escape(next.room)},
-          wall = ${escape(next.wall)},
-          type = ${escape(next.type)},
+      SET name = ${escapeText(next.name)},
+          room = ${escapeText(next.room)},
+          wall = ${escapeText(next.wall)},
+          type = ${escapeText(next.type)},
           completed = ${next.completed ? 1 : 0},
           pending_review = ${next.pendingReview ? 1 : 0},
-          details = ${escape(next.details)}
+          details = ${escapeNullable(next.details)}
       WHERE id = '${id}';
     `];
 
     const inverseSql = [`
       UPDATE provisions 
-      SET name = ${escape(prev.name)},
-          room = ${escape(prev.room)},
-          wall = ${escape(prev.wall)},
-          type = ${escape(prev.type)},
+      SET name = ${escapeText(prev.name)},
+          room = ${escapeText(prev.room)},
+          wall = ${escapeText(prev.wall)},
+          type = ${escapeText(prev.type)},
           completed = ${prev.completed ? 1 : 0},
           pending_review = ${prev.pendingReview ? 1 : 0},
-          details = ${escape(prev.details)}
+          details = ${escapeNullable(prev.details)}
       WHERE id = '${id}';
     `];
 

@@ -470,14 +470,18 @@ export const AuthToolbarControls: React.FC<AuthToolbarControlsProps> = ({
       {/* Current User Badge */}
       {currentUser && (
         <span 
-          className="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-white/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shadow-2xs"
           title={`Συνδεδεμένος ως: ${currentUser.name} (${currentUser.role === 'admin' || currentUser.isMaster ? 'Διαχειριστής' : 'Μόνο Προβολή'})`}
         >
           <Users size={11} className="text-indigo-500" />
-          <span>{currentUser.name.split(' ')[0]}</span>
-          {!(currentUser.isMaster || currentUser.role === 'admin') && (
+          <span className="max-w-[70px] sm:max-w-none truncate">{currentUser.name.split(' ')[0]}</span>
+          {!(currentUser.isMaster || currentUser.role === 'admin') ? (
             <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-extrabold border border-amber-300/60 dark:border-amber-800/60">
               Μόνο Προβολή
+            </span>
+          ) : (
+            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-extrabold border border-indigo-300/60 dark:border-indigo-800/60">
+              Admin
             </span>
           )}
         </span>
