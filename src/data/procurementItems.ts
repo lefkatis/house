@@ -255,7 +255,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     id: 'buy_reed_switches',
     name: 'Contact Sensors Κουφωμάτων (Χωνευτές)',
     category: '🔒 Συναγερμός & Ασφάλεια',
-    brand: 'Προς Επιλογή Συναγερμού',
+    brand: 'CHM Security / Eyetouch',
     model: 'Contact Sensors NC για αλουμίνια',
     link: undefined,
     estimatedPriceEur: 8,
@@ -264,15 +264,15 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🖥️ Γραφείο', '🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2', '🧺 Πλυσταριό'],
     isTask: true,
-    taskDescription: 'Συνεννόηση με τον εγκαταστάτη κουφωμάτων & συναγερμού για χωνευτές contact sensors στα προφίλ αλουμινίου πριν την τοποθέτηση.',
-    notes: 'Ενσύρματη καλωδίωση συναγερμού σε όλα τα ανοιγόμενα/συρόμενα κουφώματα για πλήρη περιμετρική προστασία.',
+    taskDescription: 'Συνεννόηση με τον εγκαταστάτη κουφωμάτων & συναγερμού (CHM Security / Eyetouch) για χωνευτές contact sensors στα προφίλ αλουμινίου πριν την τοποθέτηση.',
+    notes: 'Ενσύρματη καλωδίωση συναγερμού σε όλα τα ανοιγόμενα/συρόμενα κουφώματα για πλήρη περιμετρική προστασία (προσφορές από CHM Security και Eyetouch).',
     purchased: false
   },
   {
     id: 'buy_glass_break',
     name: 'Αισθητήρες Θραύσης Κρυστάλλων 12V (Glass Break)',
     category: '🔒 Συναγερμός & Ασφάλεια',
-    brand: 'Προς Επιλογή Συναγερμού',
+    brand: 'CHM Security / Eyetouch',
     model: 'Ακουστικοί Αισθητήρες Θραύσης 12V (DSC / Paradox / Honeywell)',
     link: undefined,
     estimatedPriceEur: 30,
@@ -281,8 +281,8 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🛏️ Master Bedroom', '🖥️ Γραφείο'],
     isTask: true,
-    taskDescription: 'Επιλογή μοντέλου ακουστικού αισθητήρα θραύσης συμβατού με τον κεντρικό πίνακα συναγερμού. Καλωδίωση 12V ψηλά κοντά στις μεγάλες τζαμαρίες.',
-    notes: 'Άμεση ανίχνευση θραύσης κρυστάλλων σε μεγάλες μπαλκονόπορτες και παράθυρα.',
+    taskDescription: 'Επιλογή μοντέλου ακουστικού αισθητήρα θραύσης συμβατού με τον κεντρικό πίνακα συναγερμού (CHM Security / Eyetouch). Καλωδίωση 12V ψηλά κοντά στις μεγάλες τζαμαρίες.',
+    notes: 'Άμεση ανίχνευση θραύσης κρυστάλλων σε μεγάλες μπαλκονόπορτες και παράθυρα (συνεργάτες CHM Security / Eyetouch).',
     purchased: false
   },
 
@@ -337,6 +337,23 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     isTask: true,
     taskDescription: 'Έλεγχος σκληρότητας νερού και επιλογή μοντέλου (Clack, Kinetico, BWT) κατάλληλων λίτρων ρητίνης. Απαιτείται αδιάβροχη πρίζα 13A και αποχέτευση drain.',
     notes: 'Προστασία σωληνώσεων, αντλίας θερμότητας, boiler και συσκευών από άλατα.',
+    purchased: false
+  },
+  {
+    id: 'buy_drinking_water_veluda',
+    name: 'Υποπάγκιο Σύστημα Πόσιμου Νερού & Chiller (Ιταλικό Blupura / Veluda)',
+    category: '🔧 HVAC & Μηχανοστάσιο',
+    brand: 'Veluda / Blupura (Italy)',
+    model: 'Blupura Undercounter Chiller & Filtration System + Ειδική Μπαταρία Mixer',
+    link: 'https://www.veluda.com.cy',
+    estimatedPriceEur: 2500,
+    priceRange: '€2.200 - €2.800',
+    quantity: 1,
+    unit: 'σετ',
+    rooms: ['🍳 Κουζίνα'],
+    isTask: true,
+    taskDescription: 'Προσφορά από Veluda για ιταλικό υποπάγκιο ψύκτη/σύστημα νερού Blupura μαζί με τη βρύση (mixer) στα ~€2.500. Απαιτείται μόνο 1 πρίζα ρεύματος 230V κάτω από τον πάγκο του νεροχύτη (1 πρίζα εν οκ).',
+    notes: 'Ιταλικό σύστημα Blupura undercounter (Veluda) για κρύο, θερμοκρασίας δωματίου και sparkling νερό μαζί με μπαταρία/mixer κουζίνας (~2.5K). Χρειάζεται 1 πρίζα κάτω από το νεροχύτη.',
     purchased: false
   },
   {

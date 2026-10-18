@@ -11,7 +11,9 @@ import {
   X, 
   AlertTriangle,
   RotateCcw,
-  DoorClosed
+  DoorClosed,
+  Globe,
+  Mail
 } from 'lucide-react';
 import { Subcontractor, INITIAL_SUBCONTRACTORS } from '../data/partnersData';
 
@@ -27,7 +29,16 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const existingIds = new Set(parsed.map((p: Subcontractor) => p.id));
+          const missingDefaults = INITIAL_SUBCONTRACTORS.filter(p => !existingIds.has(p.id));
+          if (missingDefaults.length > 0) {
+            const combined = [...parsed, ...missingDefaults];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(combined));
+            return combined;
+          }
+          return parsed;
+        }
       }
     } catch (e) {
       console.error('Failed to load subcontractors from localStorage', e);
@@ -46,6 +57,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
   const [phone, setPhone] = useState('');
   const [altPhone, setAltPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<Subcontractor['status']>('contacted');
   const [notes, setNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -73,6 +85,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
     setPhone('');
     setAltPhone('');
     setEmail('');
+    setWebsite('');
     setStatus('contacted');
     setNotes('');
     setFormError(null);
@@ -87,6 +100,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
     setPhone(sub.phone);
     setAltPhone(sub.altPhone || '');
     setEmail(sub.email || '');
+    setWebsite(sub.website || '');
     setStatus(sub.status);
     setNotes(sub.notes);
     setFormError(null);
@@ -139,6 +153,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
             phone: phone.trim(),
             altPhone: altPhone.trim() || undefined,
             email: email.trim() || undefined,
+            website: website.trim() || undefined,
             status,
             statusLabel,
             notes: notes.trim()
@@ -155,6 +170,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
         phone: phone.trim(),
         altPhone: altPhone.trim() || undefined,
         email: email.trim() || undefined,
+        website: website.trim() || undefined,
         status,
         statusLabel,
         notes: notes.trim()
@@ -166,7 +182,7 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
   };
 
   const handleResetToDefaults = () => {
-    if (confirm('Επαναφορά του αρχικού υπεργολάβου (Σταύρος Χαραλάμπους - Σιδεράς);')) {
+    if (confirm('Επαναφορά των αρχικών υπεργολάβων και συνεργείων (Σιδεράς, Veluda Blupura, CHM Security, Eyetouch);')) {
       setSubcontractors(INITIAL_SUBCONTRACTORS);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SUBCONTRACTORS));
     }
@@ -319,12 +335,50 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
                   {/* Copy Phone */}
                   <button
                     onClick={() => handleCopyPhone(sub.phone)}
-                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-semibold transition-all border border-neutral-200 dark:border-neutral-700 col-span-2 sm:col-span-1"
+                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-semibold transition-all border border-neutral-200 dark:border-neutral-700"
                     title="Αντιγραφή αριθμού τηλεφώνου"
                   >
                     {copiedPhone === sub.phone ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
                     <span>{copiedPhone === sub.phone ? 'Αντιγράφηκε' : 'Αντιγραφή'}</span>
                   </button>
+
+                  {/* Alt Phone if available */}
+                  {sub.altPhone && (
+                    <a
+                      href={`tel:${sub.altPhone.replace(/[^0-9+]/g, '')}`}
+                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 hover:bg-neutral-100 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium transition-all shadow-2xs"
+                      title={`Εναλλακτικό τηλέφωνο: ${sub.altPhone}`}
+                    >
+                      <Phone size={12} className="opacity-70" />
+                      <span className="truncate">{sub.altPhone}</span>
+                    </a>
+                  )}
+
+                  {/* Website link if available */}
+                  {sub.website && (
+                    <a
+                      href={sub.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 font-bold transition-all shadow-2xs"
+                      title={`Επίσκεψη ιστοσελίδας: ${sub.website}`}
+                    >
+                      <Globe size={13} />
+                      <span className="truncate">Website</span>
+                    </a>
+                  )}
+
+                  {/* Email if available */}
+                  {sub.email && (
+                    <a
+                      href={`mailto:${sub.email}`}
+                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/80 text-cyan-700 dark:text-cyan-300 font-bold transition-all shadow-2xs"
+                      title={`Email: ${sub.email}`}
+                    >
+                      <Mail size={13} />
+                      <span className="truncate">Email</span>
+                    </a>
+                  )}
                 </div>
 
                 {/* Notes box */}
@@ -424,6 +478,8 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
                   className="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-amber-500"
                 >
                   <option value="Σιδεράς / Μεταλλικές Κατασκευές">Σιδεράς / Μεταλλικές Κατασκευές</option>
+                  <option value="💧 Συστήματα Νερού, Chiller & Φίλτρα">💧 Συστήματα Νερού, Chiller & Φίλτρα</option>
+                  <option value="🔒 Συστήματα Ασφαλείας & Συναγερμοί">🔒 Συστήματα Ασφαλείας & Συναγερμοί</option>
                   <option value="Αλουμινάς / Κουφώματα">Αλουμινάς / Κουφώματα</option>
                   <option value="Ηλεκτρολόγος Εγκαταστάτης">Ηλεκτρολόγος Εγκαταστάτης</option>
                   <option value="Υδραυλικός Εγκαταστάτης">Υδραυλικός Εγκαταστάτης</option>
@@ -482,6 +538,47 @@ export const SubcontractorsSection: React.FC<SubcontractorsSectionProps> = ({ is
                     <option value="selected">Επιλεγμένος</option>
                     <option value="completed">Ολοκληρώθηκε</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Εναλλακτικό Τηλέφωνο
+                  </label>
+                  <input
+                    type="text"
+                    value={altPhone}
+                    onChange={(e) => setAltPhone(e.target.value)}
+                    placeholder="π.χ. 22 878500"
+                    className="w-full px-3 py-2 rounded-xl font-mono bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="π.χ. info@veluda.com.cy"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">
+                    Ιστοσελίδα (Website)
+                  </label>
+                  <input
+                    type="url"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="π.χ. https://www.veluda.com.cy"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-amber-500"
+                  />
                 </div>
               </div>
 

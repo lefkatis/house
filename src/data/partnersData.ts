@@ -25,6 +25,7 @@ export interface Subcontractor {
   phone: string;
   altPhone?: string;
   email?: string;
+  website?: string;
   status: 'contacted' | 'pending_quote' | 'selected' | 'completed';
   statusLabel: string;
   notes: string;
@@ -83,5 +84,44 @@ export const INITIAL_SUBCONTRACTORS: Subcontractor[] = [
     status: 'contacted',
     statusLabel: 'Σε Επικοινωνία',
     notes: 'Υπεργολάβος σιδεράς για την κατασκευή και τοποθέτηση των εξωτερικών μεταλλικών θυρίδων και πορτών έξω από το μικρό (μονό) parking.'
+  },
+  {
+    id: 'sub_veluda',
+    name: 'Veluda Water Filters Cyprus (Ιταλικό Blupura)',
+    specialty: '💧 Συστήματα Νερού, Chiller & Φίλτρα',
+    workScope: 'Εγκατάσταση υποπάγκιου συστήματος νερού / ψύκτη Blupura (Ιταλίας) με ειδικό Mixer (3-way/4-way βρύση νεροχύτη)',
+    phone: '77 78 89 18',
+    altPhone: '22 878500',
+    email: 'info@veluda.com.cy',
+    website: 'https://www.veluda.com.cy',
+    status: 'pending_quote',
+    statusLabel: 'Αναμονή Προσφοράς',
+    notes: 'Ιταλικό Blupura undercounter σύστημα νερού/chiller. Κόστος: ~€2,500 (2.5K) μαζί με το mixer (μπαταρία νεροχύτη). Ηλεκτρολογική απαίτηση: Μόνο 1 πρίζα ρεύματος 230V κάτω από το νεροχύτη (1 πρίζα εν οκ). Showroom: Λεωφ. Αθαλάσσας 16, Στρόβολος, 2018 Λευκωσία.'
+  },
+  {
+    id: 'sub_chm',
+    name: 'CHM Security Systems',
+    specialty: '🔒 Συστήματα Ασφαλείας & Συναγερμοί',
+    workScope: 'Κεντρικός συναγερμός, καλωδίωση επαφών κουφωμάτων (contact sensors), αισθητήρες θραύσης κρυστάλλων και κάμερες CCTV',
+    phone: '700 70 246',
+    altPhone: '99 303221',
+    email: 'info@chmsecurity.com.cy',
+    website: 'https://chmsecurity.com.cy',
+    status: 'contacted',
+    statusLabel: 'Σε Επικοινωνία',
+    notes: 'Εταιρεία συστημάτων ασφαλείας, συναγερμών και καμερών CCTV στην Κύπρο. Μελέτη για ενσύρματο σύστημα ασφαλείας και περιμετρική προστασία (σταθερό: 22 370246, κινητό: 99 303221).'
+  },
+  {
+    id: 'sub_eyetouch',
+    name: 'Eyetouch (Eye Touch Security & Smart Solutions)',
+    specialty: '🔒 Συστήματα Ασφαλείας & Smart Automation',
+    workScope: 'Σύστημα συναγερμού, εξωτερικές κάμερες CCTV, θυροτηλεόραση και διασύνδεση με Smart Home',
+    phone: '22 444400',
+    altPhone: '96 000102',
+    email: 'info@eyetouchlife.com',
+    website: 'https://eyetouchlife.com',
+    status: 'contacted',
+    statusLabel: 'Σε Επικοινωνία',
+    notes: 'Εξειδικευμένη εταιρεία συστημάτων ασφαλείας, συναγερμών, καμερών και έξυπνων αυτοματισμών στη Λευκωσία (Γεωργίου Γρίβα Διγενή 42, 1096 Λευκωσία). Προσφορά για συναγερμό και κάμερες.'
   }
 ];

@@ -11,8 +11,8 @@ export type Provision = {
 
 export const PROVISIONS: Provision[] = [
   // --- Σαλόνι / Τραπεζαρία ---
-  { id: 'sal_1', name: 'Κεντρικό Touch Panel (Ύψος Ματιού)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
-  { id: 'sal_2', name: 'Ethernet Port', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '🖥️ Server Cabinet', completed: false, details: 'Αναμονή Cat6a PoE για Touch Panel στο ύψος του ματιού' },
+  { id: 'sal_1', name: 'Κεντρικό Touch Panel (Ύψος Ματιού) - Smart Home Tablet', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Αναμονή Cat6a PoE και τροφοδοσίας στο ύψος του ματιού (~150cm) για Smart Home Tablet / Touch Panel.' },
+  { id: 'sal_2', name: 'Ethernet Port', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '🖥️ Server Cabinet', completed: false, details: 'Αναμονή Cat6a PoE για Touch Panel / Smart Home Tablet στο ύψος του ματιού' },
   { id: 'sal_3', name: 'Έξυπνοι Διακόπτες / Έξυπνα Ρελέ (Βαθιά Κουτιά 6cm & Ουδέτερος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_4', name: 'Ηλεκτρικές Κουρτίνες (Παροχή Ρεύματος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Παράθυρα / Μπαλκονόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_5', name: 'Presense Sensor (220V/12V)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
@@ -39,15 +39,15 @@ export const PROVISIONS: Provision[] = [
   { id: 'kou_3', name: 'Access Point (Ethernet Port)', room: '🍳 Κουζίνα', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
   { 
     id: 'kou_4', 
-    name: '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Αντίστροφη Όσμωση, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)', 
+    name: '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Σύστημα Νερού Veluda/Blupura, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)', 
     room: '🍳 Κουζίνα', 
     wall: 'Πάγκος Νεροχύτη', 
     type: '🔌 Πρίζες', 
     completed: false,
-    details: '1) Αντίστροφη Όσμωση (RO), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
+    details: '1) Σύστημα Νερού & Mixer (Veluda / Ιταλικό Blupura - 1 πρίζα εν οκ, κόστος ~€2.5K), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
   },
   { id: 'kou_5', name: 'Διακόπτης Σκουπιδοφάγου', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🔌 Πρίζες', completed: false },
-  { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🚰 Υδραυλικά', completed: false },
+  { id: 'kou_6', name: 'Υδραυλικά: Αντίστροφη Όσμωση, Chiller, Boiler, Σκουπιδοφάγος', room: '🍳 Κουζίνα', wall: 'Πάγκος Νεροχύτη', type: '🚰 Υδραυλικά', completed: false, details: 'Αντίστροφη Όσμωση / Chiller (Ιταλικό Blupura από Veluda με mixer ~€2.5K), Boiler, Σκουπιδοφάγος. 1 πρίζα αρκεί για το σύστημα νερού.' },
   { 
     id: 'kou_isl_1', 
     name: 'Χωνευτές / Pop-up Πρίζες Νησίδας (Πάγκος ή Πλαϊνό Panel, 13A)', 

@@ -212,6 +212,18 @@ class SQLiteService {
           wall = 'Ταβάνι (Οροφή)',
           details = 'Αναμονή παροχής ρεύματος στο ταβάνι (οροφή) για τον κανονικό κεντρικό φωτισμό του δωματίου στο βοηθητικό σπίτι.'
       WHERE id = 'aux_4';
+
+      -- Data migration: update sal_1 to Smart Home Tablet
+      UPDATE provisions 
+      SET name = 'Κεντρικό Touch Panel (Ύψος Ματιού) - Smart Home Tablet',
+          details = 'Αναμονή Cat6a PoE και τροφοδοσίας στο ύψος του ματιού (~150cm) για Smart Home Tablet / Touch Panel.'
+      WHERE id = 'sal_1';
+
+      -- Data migration: update kou_4 to mention Veluda Blupura water system & 1 socket requirement
+      UPDATE provisions 
+      SET name = '4x Πρίζες 13A Κάτω από Νεροχύτη (1: Σύστημα Νερού Veluda/Blupura, 2: Chiller Sparkling, 3: Boiler Βραστού, 4: Σκουπιδοφάγος)',
+          details = '1) Σύστημα Νερού & Mixer (Veluda / Ιταλικό Blupura - 1 πρίζα εν οκ, κόστος ~€2.5K), 2) Chiller για sparkling νερό, 3) Boiler για βραστό νερό, 4) Σκουπιδοφάγος'
+      WHERE id = 'kou_4';
     `);
 
     // Migration: ensure is_optional column exists in procurement_items
