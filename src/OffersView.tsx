@@ -229,7 +229,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
             partnerCategory === 'mep' ? 'bg-white/20 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'
           }`}>
-            3 Προσφορές
+            4 Προσφορές
           </span>
         </button>
 
@@ -394,7 +394,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
         {isAdmin && (
           <button
             onClick={() => {
-              if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 3 προσφορών με όλα τα τεύχη PDF;')) {
+              if (confirm('Θέλετε να επαναφέρετε τα προκαθορισμένα δεδομένα των 4 προσφορών με όλα τα τεύχη PDF;')) {
                 setOffers(INITIAL_VENDOR_OFFERS);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_VENDOR_OFFERS));
                 localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -426,7 +426,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
         /* IN-DEPTH COMPARISON TABLE & EXECUTIVE ANALYSIS */
         <div className="space-y-4">
           {/* Executive Verdict Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
             {/* Vacanas Card */}
             <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-2 border-emerald-500/40 rounded-2xl p-4 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between mb-2">
@@ -454,6 +454,37 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                 <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
                   <Check size={13} className="text-emerald-500 flex-shrink-0" />
                   <span>Τελική παραλαβή 1 χρόνο μετά & έλεγχος σχεδίων εργολάβων</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kettis Card */}
+            <div className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border border-blue-400 dark:border-blue-700/60 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-600 text-white shadow-sm">
+                  <Award size={12} />
+                  12 Επιβλέψεις & Bonus 5%
+                </span>
+                <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400">€4.300 + ΦΠΑ</span>
+              </div>
+              <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white leading-tight">
+                C.S. Kettis Ltd & CEVH
+              </h3>
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-snug">
+                Πολύ ισχυρή πρόταση (+€200 από Vacanas) με 12 επιτόπιες επιβλέψεις (6 Μηχ. + 6 Ηλ.) και ΠΕΑ με bonus 5%.
+              </p>
+              <div className="mt-3 pt-2.5 border-t border-blue-500/20 space-y-1 text-[11px]">
+                <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300 font-semibold">
+                  <Check size={13} className="text-blue-500 flex-shrink-0" />
+                  <span>12 επισκέψεις εργοταξίου (οι περισσότερες από όλους)</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <TrendingUp size={13} className="text-blue-500 flex-shrink-0" />
+                  <span>ΠΕΑ (€500) με κάλυψη διαδικασίας bonus 5% κάλυψης</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                  <Check size={13} className="text-blue-500 flex-shrink-0" />
+                  <span>Χαμηλό κόστος μελετών Α.Ο. (€900 Μηχ. + €900 Ηλ.)</span>
                 </div>
               </div>
             </div>
@@ -530,7 +561,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                   Αναλυτικός Συγκριτικός Πίνακας Μελετών Η/Μ
                 </h2>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                  Πλήρης παράθεση οικονομικών στοιχείων, τεχνικής κάλυψης και εγγυήσεων μεταξύ των 3 προσφορών.
+                  Πλήρης παράθεση οικονομικών στοιχείων, τεχνικής κάλυψης και εγγυήσεων μεταξύ των 4 προσφορών.
                 </p>
               </div>
               <div className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -555,7 +586,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                   
                   {/* --- CATEGORY 1: FINANCIAL BREAKDOWN --- */}
                   <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
-                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+                    <td colSpan={5} className="py-2.5 px-3 uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                       <Receipt size={14} />
                       <span>1. Οικονομικά Στοιχεία & Ανάλυση Κόστους</span>
                     </td>
@@ -575,6 +606,9 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-3.5 px-4 font-black text-sm text-neutral-900 dark:text-neutral-100">
                       €6.100 <span className="text-[10px] font-normal text-neutral-500">(Στάδια Ι + ΙΙ + ΙΙΙ)</span>
                     </td>
+                    <td className="py-3.5 px-4 font-black text-sm text-blue-600 dark:text-blue-400">
+                      €4.300 <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-950/60 px-1.5 py-0.5 rounded ml-1">2η Χαμηλότερη (+€200)</span>
+                    </td>
                   </tr>
 
                   {/* Electrical AO */}
@@ -583,6 +617,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€850</td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€975 <span className="text-[10px] text-neutral-400 font-normal">(65% του €1.500)</span></td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.500</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€900</td>
                   </tr>
 
                   {/* Mechanical AO */}
@@ -591,6 +626,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.800</td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.170 <span className="text-[10px] text-neutral-400 font-normal">(65% του €1.800)</span></td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€2.000</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€900 <span className="text-[10px] text-emerald-600 font-bold ml-1">Χαμηλότερη</span></td>
                   </tr>
 
                   {/* Energy Certificate */}
@@ -599,6 +635,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€400</td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€800</td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€400</td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€500 <span className="text-[10px] text-blue-600 font-medium">(συμπ. 5% bonus)</span></td>
                   </tr>
 
                   {/* Contractor Tender & BoQ */}
@@ -607,6 +644,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">Περιλαμβάνεται στο βασικό πακέτο</td>
                     <td className="py-2.5 px-4 text-emerald-700 dark:text-emerald-400 font-semibold">Περιλαμβάνεται (Όροι, BoQ & Αξιολόγηση)</td>
                     <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€1.200 <span className="text-[10px] text-neutral-400 font-normal">(Ηλ. €500 + Μηχ. €700)</span></td>
+                    <td className="py-2.5 px-4 font-semibold text-neutral-800 dark:text-neutral-200">€500 <span className="text-[10px] text-neutral-400 font-normal">(Ηλ. €250 + Μηχ. €250)</span></td>
                   </tr>
 
                   {/* Supervision Fees */}
@@ -621,6 +659,9 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-800 dark:text-neutral-200">
                       <span className="font-bold">€1.000</span> (10 επισκέψεις: 5 Μηχ. + 5 Ηλ.)
                     </td>
+                    <td className="py-2.5 px-4 text-neutral-800 dark:text-neutral-200">
+                      <span className="font-bold text-blue-600 dark:text-blue-400">€1.500</span> (12 επισκέψεις: 6 Μηχ. + 6 Ηλ.)
+                    </td>
                   </tr>
 
                   {/* Extra inspection fee */}
@@ -629,6 +670,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">€100 / επίσκεψη</td>
                     <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400 font-semibold text-emerald-600 dark:text-emerald-400">Κατά την κρίση του συμβούλου</td>
                     <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">€100 / επίσκεψη (επαρχία Λάρνακας)</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">€125 / επίσκεψη</td>
                   </tr>
 
                   {/* Optional add-ons */}
@@ -643,11 +685,14 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">
                       Φωτιστικά (+€1.000), Smart Home (+€500)
                     </td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">
+                      Επιπλέον επιβλέψεις (€125/επίσκεψη)
+                    </td>
                   </tr>
 
                   {/* --- CATEGORY 2: TECHNICAL DELIVERABLES --- */}
                   <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
-                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
+                    <td colSpan={5} className="py-2.5 px-3 uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
                       <ShieldCheck size={14} />
                       <span>2. Τεχνικό Αντικείμενο & Κάλυψη Παραδοτέων</span>
                     </td>
@@ -658,10 +703,12 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><Check size={12}/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                   </tr>
 
                   <tr>
                     <td className="py-2.5 px-3 font-semibold text-neutral-700 dark:text-neutral-300">Κολυμβητική Δεξαμενή (Μελέτη Πισίνας)</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
@@ -672,6 +719,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                   </tr>
 
                   <tr>
@@ -679,6 +727,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-amber-700 dark:text-amber-400 font-medium">Προαιρετικό Μέρος Β (+€450)</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται πλήρως</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> TV, Tel, Cat6a Cabling</td>
                   </tr>
 
                   <tr>
@@ -686,6 +735,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">Βασικές πρόνοιες διακοπτών/ρολών</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Συστήματα ελέγχου & αυτοματισμών</td>
                     <td className="py-2.5 px-4 text-amber-700 dark:text-amber-400 font-medium">Επιπλέον χρέωση €500</td>
+                    <td className="py-2.5 px-4 text-neutral-600 dark:text-neutral-400">Βασικές πρόνοιες δομημένης καλωδίωσης</td>
                   </tr>
 
                   <tr>
@@ -696,6 +746,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     </td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Μονογραμμικά & Υπολογισμοί (17th ed.)</td>
                   </tr>
 
                   <tr>
@@ -703,6 +754,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-500">Βασική επίβλεψη</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Ρητή υποχρέωση (Στάδιο Β.2)</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται σε tender/επίβλεψη</td>
                   </tr>
 
                   <tr>
@@ -710,11 +762,12 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-500">Προσωρινή παραλαβή</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Προσωρινή & Τελική 1 χρόνο μετά (Β.7)</td>
                     <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται</td>
+                    <td className="py-2.5 px-4 text-emerald-600 dark:text-emerald-400 font-semibold"><Check size={12} className="inline mr-1"/> Περιλαμβάνεται στην επίβλεψη</td>
                   </tr>
 
                   {/* --- CATEGORY 3: TERMS & RISK ASSESSMENT --- */}
                   <tr className="bg-neutral-100/80 dark:bg-neutral-800/80 font-bold text-neutral-900 dark:text-white text-[11px]">
-                    <td colSpan={4} className="py-2.5 px-3 uppercase tracking-wider text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
+                    <td colSpan={5} className="py-2.5 px-3 uppercase tracking-wider text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
                       <Clock size={14} />
                       <span>3. Όροι Πληρωμής, Ασφάλεια & Ρίσκο Cash Flow</span>
                     </td>
@@ -731,6 +784,9 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 font-semibold">
                       ✅ Τμηματικά ανά στάδιο (Στάδιο Ι, ΙΙ και ΙΙΙ ξεχωριστά)
                     </td>
+                    <td className="py-3 px-4 text-emerald-700 dark:text-emerald-400 font-semibold">
+                      ✅ Σταδιακά (Μελέτες Α.Ο., Tenders, Επιβλέψεις)
+                    </td>
                   </tr>
 
                   <tr>
@@ -741,6 +797,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                       €1.000.000 (Κεντρική Ασφαλιστική)
                     </td>
                     <td className="py-2.5 px-4 text-neutral-500">Πρότυποι όροι ΕΤΕΚ</td>
+                    <td className="py-2.5 px-4 text-neutral-400 italic">Δεν επισυνάπτεται στο τεύχος</td>
                   </tr>
 
                   <tr>
@@ -748,6 +805,7 @@ export default function OffersView({ isAdmin = false }: OffersViewProps = {}) {
                     <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">3-4 εβδομάδες</td>
                     <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">3-4 εβδομάδες</td>
                     <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">Κατόπιν συνεννόησης</td>
+                    <td className="py-2.5 px-4 text-neutral-700 dark:text-neutral-300">3-4 εβδομάδες</td>
                   </tr>
 
                   {/* Documents & Download */}

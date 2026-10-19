@@ -383,6 +383,25 @@ class SQLiteService {
     } catch (e) {
       console.warn("Could not seed default general rules:", e);
     }
+
+    // Ensure all default vendor offers are seeded (for existing DB instances)
+    try {
+      const insertOfferStmt = db.prepare(`
+        INSERT OR IGNORE INTO vendor_offers (id, vendor_id, vendor_name, data_json)
+        VALUES (?, ?, ?, ?)
+      `);
+      for (const o of INITIAL_VENDOR_OFFERS) {
+        insertOfferStmt.run([
+          o.id,
+          o.id,
+          o.vendorName,
+          JSON.stringify(o)
+        ]);
+      }
+      insertOfferStmt.free();
+    } catch (e) {
+      console.warn("Could not seed default vendor offers:", e);
+    }
   }
 
   private applyMigrations(db: Database) {
