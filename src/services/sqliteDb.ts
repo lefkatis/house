@@ -699,7 +699,7 @@ class SQLiteService {
 
   public getVendorOffers(): VendorOffer[] {
     if (!this.db) return INITIAL_VENDOR_OFFERS;
-    const res = this.db.exec("SELECT data_json FROM vendor_offers ORDER BY CASE vendor_id WHEN 'vendor_4' THEN 1 WHEN 'vendor_2' THEN 2 WHEN 'vendor_1' THEN 3 WHEN 'vendor_3' THEN 4 ELSE 99 END, rowid ASC");
+    const res = this.db.exec("SELECT data_json FROM vendor_offers WHERE vendor_id != 'vendor_2' ORDER BY CASE vendor_id WHEN 'vendor_4' THEN 1 WHEN 'vendor_1' THEN 2 WHEN 'vendor_3' THEN 3 ELSE 99 END, rowid ASC");
     if (res.length === 0) return [];
     return res[0].values.map((row) => JSON.parse(row[0] as string));
   }
