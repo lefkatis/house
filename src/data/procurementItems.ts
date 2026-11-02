@@ -351,6 +351,23 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     notes: 'Ενσύρματη τροφοδοσία 12V DC μέσω σπιράλ καλωδίωσης από το rack/πίνακα. Ελεγχόμενο άνοιγμα μέσω UniFi G4 Doorbell Pro, Home Assistant, PIN keypad ή RFID.',
     purchased: false
   },
+  {
+    id: 'buy_outdoor_entrance_lighting',
+    name: 'Φωτιστικά Κύριας Εισόδου (Downlights IP65) & Προβολέας LED Πύλης 3000K',
+    category: '🔒 Συναγερμός & Ασφάλεια',
+    brand: 'Philips / Lutec / Ledvance / Steinel',
+    model: 'IP65 Downlights Στεγάστρου + Slim Architectural Floodlight 20W-30W (Warm White 3000K)',
+    link: undefined,
+    estimatedPriceEur: 120,
+    priceRange: '€80 - €180',
+    quantity: 1,
+    unit: 'σετ',
+    rooms: ['🚪 Χώρος Εισόδου', '🌳 Κήπος / Πισίνα'],
+    isTask: true,
+    taskDescription: 'Επιλογή χωνευτών αδιάβροχων σποτ IP65 για το στέγαστρο της εισόδου και κομψού προβολέα/απλίκας LED για την κολόνα της πύλης (3000K θερμό φως, με κλίση προς το driveway για να μην τυφλώνει την κάμερα του κουδουνιού). Σύνδεση με ρελέ Shelly.',
+    notes: 'Συνδυασμός αρχιτεκτονικού φωτισμού καλωσορίσματος και ασφάλειας. Αυτόματο άναμμα σε κίνηση, νυχτερινή άφιξη ή πάτημα κουδουνιού.',
+    purchased: false
+  },
 
   // --- 🪟 Σκίαση & Αυτοματισμός ---
   {
