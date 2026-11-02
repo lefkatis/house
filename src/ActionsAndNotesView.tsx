@@ -18,8 +18,8 @@ import {
 import { ActionItem, INITIAL_ACTION_ITEMS } from './data/actionsData';
 import { RememberItem, INITIAL_REMEMBER_ITEMS } from './data/thingsToRememberData';
 
-const ACTIONS_STORAGE_KEY = 'house_actions_list_v2';
-const REMEMBER_STORAGE_KEY = 'house_remember_list_v2';
+const ACTIONS_STORAGE_KEY = 'house_actions_list_v3';
+const REMEMBER_STORAGE_KEY = 'house_remember_list_v3';
 
 export interface ActionsAndNotesViewProps {
   isAdmin?: boolean;

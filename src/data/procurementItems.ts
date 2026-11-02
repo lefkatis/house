@@ -87,7 +87,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   // --- 💡 Έξυπνοι Διακόπτες & Relays ---
   {
     id: 'buy_relay_shelly_plus1',
-    name: 'Έξυπνο Ρελέ Μονό 16A (Shelly Plus 1)',
+    name: 'Έξυπνο Relay Μονό 16A (Shelly Plus 1)',
     category: '💡 Έξυπνοι Διακόπτες & Relays',
     brand: 'Shelly',
     model: 'Shelly Plus 1 (Wi-Fi & Bluetooth, Dry Contacts)',
@@ -98,12 +98,12 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🍳 Κουζίνα', '🚪 Χώρος Εισόδου', '🚗 Parking', '🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2'],
     isTask: false,
-    notes: 'Χωνευτό ρελέ πίσω από μονούς διακόπτες τοίχου (απαιτεί βαθιά κουτιά 6cm και ουδέτερο). Dry contacts κατάλληλο και για μπουτόν γκαραζόπορτας και ηλεκτρικές κλειδαριές.',
+    notes: 'Χωνευτό relay πίσω από μονούς διακόπτες τοίχου (απαιτεί βαθιά κουτιά 6cm και ουδέτερο). Dry contacts κατάλληλο και για μπουτόν γκαραζόπορτας και ηλεκτρικές κλειδαριές.',
     purchased: false
   },
   {
     id: 'buy_relay_shelly_plus2pm',
-    name: 'Έξυπνο Ρελέ Διπλό με Μέτρηση Κατανάλωσης (Shelly Plus 2PM)',
+    name: 'Έξυπνο Relay Διπλό με Μέτρηση Κατανάλωσης (Shelly Plus 2PM)',
     category: '💡 Έξυπνοι Διακόπτες & Relays',
     brand: 'Shelly',
     model: 'Shelly Plus 2PM (2x 10A, Power Metering & Roller Shutter)',
@@ -119,7 +119,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
   },
   {
     id: 'buy_relay_shelly_dimmer',
-    name: 'Έξυπνο Ρελέ Dimmer DIN Rail (Shelly Pro Dimmer 1PM)',
+    name: 'Έξυπνο Relay Dimmer DIN Rail (Shelly Pro Dimmer 1PM)',
     category: '💡 Έξυπνοι Διακόπτες & Relays',
     brand: 'Shelly',
     model: 'Shelly Pro Dimmer 1PM (DIN-Rail Mount)',
@@ -146,24 +146,24 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'σετ',
     rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🛏️ Master Bedroom', '🚪 Χώρος Εισόδου'],
     isTask: false,
-    notes: '4-κάναλος ελεγκτής μπουτόν σκηνών (χωρίς ρελέ φορτίου). Διαβάζει 4 πλήκτρα και στέλνει έως 16 εντολές/σενάρια (single, double, triple, long press) στο Home Assistant. Απαιτεί βαθύ κουτί 60mm και ουδέτερο.',
+    notes: '4-κάναλος ελεγκτής μπουτόν σκηνών (χωρίς relay φορτίου). Διαβάζει 4 πλήκτρα και στέλνει έως 16 εντολές/σενάρια (single, double, triple, long press) στο Home Assistant. Απαιτεί βαθύ κουτί 60mm και ουδέτερο.',
     purchased: false
   },
   {
     id: 'buy_wardrobe_led_set',
-    name: 'Σετ Ταινιών LED COB 24V & Μαγνητικοί Διακόπτες για Ντουλάπες',
+    name: 'Σετ Ταινιών LED COB 24V & Μαγνητικοί Διακόπτες για Ντουλάπα Master Bedroom',
     category: '💡 Έξυπνοι Διακόπτες & Relays',
     brand: 'Govee / Tuya / Mean Well',
     model: '24V High-CRI COB LED Strip + Slim 24V Power Supply + Magnetic Door Switches',
     link: undefined,
-    estimatedPriceEur: 130,
-    priceRange: '€90 - €180',
+    estimatedPriceEur: 80,
+    priceRange: '€60 - €120',
     quantity: 1,
     unit: 'σετ',
-    rooms: ['🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2'],
+    rooms: ['🛏️ Master Bedroom'],
     isTask: true,
-    taskDescription: 'Επιλογή συνεχούς φωτισμού LED COB (χωρίς κουκκίδες) για τις εσωτερικές ράγες των ντουλαπιών σε όλα τα υπνοδωμάτια. Σύνδεση με τροφοδοτικό 24V DC και μαγνητικές επαφές πόρτας για αυτόματο άναμμα μόλις ανοίγει κάθε φύλλο ντουλάπας.',
-    notes: 'Κομψός και πρακτικός φωτισμός ντουλάπας. Θερμό λευκό 3000K.',
+    taskDescription: 'Επιλογή συνεχούς φωτισμού LED COB (χωρίς κουκκίδες) για τις εσωτερικές ράγες της γκαρνταρόμπας του Master Bedroom. Σύνδεση με τροφοδοτικό 24V DC και μαγνητικές επαφές πόρτας για αυτόματο άναμμα μόλις ανοίγει κάθε φύλλο ντουλάπας.',
+    notes: 'Κομψός και πρακτικός φωτισμός γκαρνταρόμπας Master Bedroom. Θερμό λευκό 3000K.',
     purchased: false
   },
 
@@ -398,7 +398,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'τεμ.',
     rooms: ['🌳 Κήπος / Πισίνα'],
     isTask: true,
-    taskDescription: 'Επιλογή αδιάβροχης ηλεκτρικής κλειδαριάς (rim lock) ή ηλεκτρικού κυπρίου βαρέως τύπου για εξωτερική καγκελόπορτα πεζών. Σύνδεση με τροφοδοτικό 12V DC/AC, μπουτόν εξόδου και ρελέ Shelly Plus 1 Dry Contact / Konnected / UniFi Access για απομακρυσμένο ξεκλείδωμα.',
+    taskDescription: 'Επιλογή αδιάβροχης ηλεκτρικής κλειδαριάς (rim lock) ή ηλεκτρικού κυπρίου βαρέως τύπου για εξωτερική καγκελόπορτα πεζών. Σύνδεση με τροφοδοτικό 12V DC/AC, μπουτόν εξόδου και relay Shelly Plus 1 Dry Contact / Konnected / UniFi Access για απομακρυσμένο ξεκλείδωμα.',
     notes: 'Ενσύρματη τροφοδοσία 12V DC μέσω σπιράλ καλωδίωσης από το rack/πίνακα. Ελεγχόμενο άνοιγμα μέσω UniFi G4 Doorbell Pro, Home Assistant, PIN keypad ή RFID.',
     purchased: false
   },
@@ -415,7 +415,7 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     unit: 'σετ',
     rooms: ['🚪 Χώρος Εισόδου', '🌳 Κήπος / Πισίνα'],
     isTask: true,
-    taskDescription: 'Επιλογή χωνευτών αδιάβροχων σποτ IP65 για το στέγαστρο της εισόδου και κομψού προβολέα/απλίκας LED για την κολόνα της πύλης (3000K θερμό φως, με κλίση προς το driveway για να μην τυφλώνει την κάμερα του κουδουνιού). Σύνδεση με ρελέ Shelly.',
+    taskDescription: 'Επιλογή χωνευτών αδιάβροχων σποτ IP65 για το στέγαστρο της εισόδου και κομψού προβολέα/απλίκας LED για την κολόνα της πύλης (3000K θερμό φως, με κλίση προς το driveway για να μην τυφλώνει την κάμερα του κουδουνιού). Σύνδεση με relay Shelly.',
     notes: 'Συνδυασμός αρχιτεκτονικού φωτισμού καλωσορίσματος και ασφάλειας. Αυτόματο άναμμα σε κίνηση, νυχτερινή άφιξη ή πάτημα κουδουνιού.',
     purchased: false
   },

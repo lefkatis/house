@@ -51,7 +51,7 @@ export function getIECSymbolType(provisionName: string, category: string): { typ
   }
 
   // Switches
-  if (n.includes('διακόπτες') || n.includes('διακόπτης') || n.includes('ρελέ')) {
+  if (n.includes('διακόπτες') || n.includes('διακόπτης') || n.includes('ρελέ') || n.includes('relay')) {
     if (n.includes('dimmer')) {
       return { type: 'switch_dimmer', label: 'IEC 60617: Ροοστάτης / Dimmer Φωτισμού', code: '11-14-04' };
     }

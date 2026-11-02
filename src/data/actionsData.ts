@@ -58,7 +58,7 @@ export const INITIAL_ACTION_ITEMS: ActionItem[] = [
     category: '🪟 Σκίαση & Κουφώματα',
     priority: 'high',
     status: 'pending',
-    description: 'Απόφαση αν θα τοποθετηθούν εξωτερικά ηλεκτρικά ρολά (roller shutters) στα υπνοδωμάτια (πλήρης συσκότιση / ασφάλεια) ή/και σε άλλα ανοίγματα. Αν ναι, απαιτείται πρόνοια 230V σε κάθε κούφωμα και έξυπνα ρελέ Shelly Plus 2PM για έλεγχο από το Home Assistant.',
+    description: 'Απόφαση αν θα τοποθετηθούν εξωτερικά ηλεκτρικά ρολά (roller shutters) στα υπνοδωμάτια (πλήρης συσκότιση / ασφάλεια) ή/και σε άλλα ανοίγματα. Αν ναι, απαιτείται πρόνοια 230V σε κάθε κούφωμα και έξυπνα relay Shelly Plus 2PM για έλεγχο από το Home Assistant.',
     tags: ['Shutters', 'Ρολά', 'Σκίαση', 'Κουφώματα', 'Shelly Plus 2PM'],
     createdAt: '2026-11-02'
   },

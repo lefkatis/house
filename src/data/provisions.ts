@@ -13,7 +13,7 @@ export const PROVISIONS: Provision[] = [
   // --- Σαλόνι / Τραπεζαρία ---
   { id: 'sal_1', name: 'Κεντρικό Touch Panel (Ύψος Ματιού) - Smart Home Tablet', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Αναμονή Cat6a PoE και τροφοδοσίας στο ύψος του ματιού (~150cm) για Smart Home Tablet / Touch Panel.' },
   { id: 'sal_2', name: 'Ethernet Port', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Κεντρικός Τοίχος', type: '🖥️ Server Cabinet', completed: false, details: 'Αναμονή Cat6a PoE για Touch Panel / Smart Home Tablet στο ύψος του ματιού' },
-  { id: 'sal_3', name: 'Light switches', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
+  { id: 'sal_3', name: 'Light switches', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα relay φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
   { id: 'sal_4', name: 'Ηλεκτρικές Κουρτίνες (Παροχή Ρεύματος)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Μπαλκονόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_5', name: 'Presense Sensor (220V/12V)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'sal_6', name: 'Access Point (Ethernet Port)', room: '🛋️ Σαλόνι / Τραπεζαρία', wall: 'Οροφή', type: '🖥️ Server Cabinet', completed: false },
@@ -31,6 +31,24 @@ export const PROVISIONS: Provision[] = [
     completed: false, 
     pendingReview: false, 
     details: 'Τοποθέτηση στον κεντρικό τοίχο, ακριβώς κάτω από το smart tablet / touch panel.' 
+  },
+  { 
+    id: 'sal_balcony_column_switches', 
+    name: 'Light switches στην Κολόνα της Μπαλκονόπορτας', 
+    room: '🛋️ Σαλόνι / Τραπεζαρία', 
+    wall: 'Κολόνα Μπαλκονόπορτας', 
+    type: '📡 Έξυπνο Σπίτι', 
+    completed: false, 
+    details: 'Διακόπτες φωτισμού στην κολόνα της μπαλκονόπορτας για άμεσο έλεγχο των φώτων της βεράντας/κήπου και του σαλονιού. Βαθύ κουτί 6cm με ουδέτερο αγωγό για έξυπνο relay Shelly.' 
+  },
+  { 
+    id: 'sal_balcony_column_sockets', 
+    name: 'Πρίζες Ρεύματος 13A στην Κολόνα της Μπαλκονόπορτας', 
+    room: '🛋️ Σαλόνι / Τραπεζαρία', 
+    wall: 'Κολόνα Μπαλκονόπορτας', 
+    type: '🔌 Πρίζες', 
+    completed: false, 
+    details: 'Διπλή πρίζα 13A στην κολόνα της μπαλκονόπορτας για φωτιστικό δαπέδου, φόρτιση συσκευών ή εποχιακό εξοπλισμό.' 
   },
 
   // --- Κουζίνα ---
@@ -58,6 +76,15 @@ export const PROVISIONS: Provision[] = [
     details: 'Δυνατότητα τοποθέτησης είτε pop-up στον πάγκο είτε χωνευτά στο πλαϊνό panel της νησίδας'
   },
   { id: 'kou_isl_2', name: 'Εφεδρική Πρίζα 13A Νησίδας', room: '🍳 Κουζίνα', wall: 'Νησίδα (Πάγκος)', type: '🔌 Πρίζες', completed: false },
+  { 
+    id: 'kou_coffee_station_sockets', 
+    name: 'Πρίζες Ρεύματος 13A για Coffee Station (Espresso, Μύλος, Βραστήρας)', 
+    room: '🍳 Κουζίνα', 
+    wall: 'Coffee Station (Πάγκος Κουζίνας)', 
+    type: '🔌 Πρίζες', 
+    completed: false, 
+    details: 'Σετ 3-4 πρίζες 13A σε ειδικό σημείο του πάγκου αφιερωμένο για Coffee Station (μηχανή espresso, μύλος καφέ, αφρογαλιέρα, βραστήρας).' 
+  },
   { id: 'kou_7', name: 'Σωληνίσκος 1/4" για Παροχή Νερού από Όσμωση στο Ψυγείο', room: '🍳 Κουζίνα', wall: 'Τοίχος Ψυγείου', type: '🚰 Υδραυλικά', completed: false, details: 'Αναμονή σωληνίσκου 1/4" και διακόπτης/βανάκι παροχής φιλτραρισμένου νερού στον τοίχο του ψυγείου για το Beverage Center και Dual Auto Ice Maker του Samsung Bespoke Family Hub (RF65DG9H0EB1EF).' },
   { id: 'kou_8', name: 'Κρυφοί Φωτισμοί (Κάτω από Πάγκους)', room: '🍳 Κουζίνα', wall: 'Ντουλάπια Πάνω / Πάγκος', type: '💡 Φώτα', completed: false },
   { 
@@ -80,7 +107,7 @@ export const PROVISIONS: Provision[] = [
     pendingReview: true,
     details: 'Εκκρεμεί οριστικοποίηση των ακριβών τοίχων/διαστάσεων βάσει των τελικών σχεδίων κουζίνας.'
   },
-  { id: 'kou_10', name: 'Light switches', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα ρελέ φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
+  { id: 'kou_10', name: 'Light switches', room: '🍳 Κουζίνα', wall: 'Τοίχος Εισόδου', type: '📡 Έξυπνο Σπίτι', completed: false, details: 'Έξυπνοι διακόπτες / έξυπνα relay φωτισμού (βαθιά κουτιά 6cm & ουδέτερος αγωγός).' },
   { id: 'kou_11', name: 'Contact Sensors (Κούφωμα)', room: '🍳 Κουζίνα', wall: 'Παράθυρο', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kou_glass', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων (12V ψηλά)', room: '🍳 Κουζίνα', wall: 'Τζαμαρία', type: '🔒 Ασφάλεια', completed: false },
   
@@ -133,7 +160,7 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'mb_5', name: 'Presense Sensor', room: '🛏️ Master Bedroom', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'mb_6', name: 'Contact Sensors & Αισθητήρας Θραύσης Κρυστάλλων', room: '🛏️ Master Bedroom', wall: 'Μπαλκονόπορτα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'mb_7', name: 'Έξυπνοι Διακόπτες / Ρελέ (Smart Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'mb_7', name: 'Έξυπνοι Διακόπτες / Relay (Smart Relays) - Αλέ Ρετούρ', room: '🛏️ Master Bedroom', wall: 'Κομοδίνα & Είσοδος', type: '📡 Έξυπνο Σπίτι', completed: false },
 
   // --- Bedroom 1 ---
   { 
@@ -149,7 +176,6 @@ export const PROVISIONS: Provision[] = [
   { id: 'b1_2', name: 'Presense Sensor', room: '🛏️ Bedroom 1', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b1_3', name: 'Πρίζες & Cat6a (Γραφείο/TV)', room: '🛏️ Bedroom 1', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b1_4', name: 'Contact Sensors', room: '🛏️ Bedroom 1', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'b1_wardrobe_led', name: 'Φωτισμός Ντουλάπας (Ταινία LED & Αισθητήρας Πόρτας / Driver 24V)', room: '🛏️ Bedroom 1', wall: 'Ντουλάπα', type: '💡 Φώτα', completed: false, details: 'Αναμονή ρεύματος 230V για τροφοδοτικό 24V DC και ταινία LED COB με μαγνητικό διακόπτη/αισθητήρα πόρτας για αυτόματο φωτισμό στο άνοιγμα.' },
 
   // --- Bedroom 2 ---
   { 
@@ -165,7 +191,6 @@ export const PROVISIONS: Provision[] = [
   { id: 'b2_2', name: 'Presense Sensor', room: '🛏️ Bedroom 2', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b2_3', name: 'Πρίζες & Cat6a (Γραφείο/TV)', room: '🛏️ Bedroom 2', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b2_4', name: 'Contact Sensors', room: '🛏️ Bedroom 2', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'b2_wardrobe_led', name: 'Φωτισμός Ντουλάπας (Ταινία LED & Αισθητήρας Πόρτας / Driver 24V)', room: '🛏️ Bedroom 2', wall: 'Ντουλάπα', type: '💡 Φώτα', completed: false, details: 'Αναμονή ρεύματος 230V για τροφοδοτικό 24V DC και ταινία LED COB με μαγνητικό διακόπτη/αισθητήρα πόρτας για αυτόματο φωτισμό στο άνοιγμα.' },
 
   // --- Bathrooms & WC ---
   // WC - Main
@@ -180,7 +205,7 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'wcm_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC - Main', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcm_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC - Main', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
-  { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'wcm_4', name: 'Έξυπνος Διακόπτης / Relay Φωτισμού', room: '🚽 WC - Main', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
   { 
     id: 'wcm_contact', 
     name: 'Contact Sensor (Παράθυρο WC Main)', 
@@ -203,7 +228,7 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'ens_2', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ensuite', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'ens_3', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ensuite', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
-  { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'ens_4', name: 'Έξυπνος Διακόπτης / Relay Φωτισμού', room: '🚽 WC Ensuite', wall: 'Είσοδος Ensuite', type: '📡 Έξυπνο Σπίτι', completed: false },
   { 
     id: 'ens_contact', 
     name: 'Contact Sensor (Παράθυρο WC Ensuite)', 
@@ -217,7 +242,7 @@ export const PROVISIONS: Provision[] = [
   // WC Ξένων (χωρίς πετσετοκρεμάστρα)
   { id: 'wcx_1', name: 'Πρόνοια Μηχανικού Εξαερισμού (Extractor Fan)', room: '🚽 WC Ξένων', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'wcx_2', name: 'Πρίζα Μπάνιου (Shaver Socket BS EN 61558-2-5 / IP44)', room: '🚽 WC Ξένων', wall: 'Τοίχος Νιπτήρα', type: '🔌 Πρίζες', completed: false },
-  { id: 'wcx_3', name: 'Έξυπνος Διακόπτης / Ρελέ Φωτισμού', room: '🚽 WC Ξένων', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { id: 'wcx_3', name: 'Έξυπνος Διακόπτης / Relay Φωτισμού', room: '🚽 WC Ξένων', wall: 'Είσοδος WC', type: '📡 Έξυπνο Σπίτι', completed: false },
   { 
     id: 'wcx_contact', 
     name: 'Contact Sensor (Παράθυρο WC Ξένων)', 
@@ -278,7 +303,7 @@ export const PROVISIONS: Provision[] = [
     wall: 'Στέγαστρο / Εξωτερικός Τοίχος Εισόδου', 
     type: '💡 Φώτα', 
     completed: false,
-    details: 'Αναμονή γραμμής φωτισμού 230V στην οροφή του στεγάστρου της κύριας εξώπορτας για χωνευτά σποτάκια LED IP65 (downlights) ή επίτοιχη απλίκα Up/Down και προβολέα πρόσοψης. Ελεγχόμενο από έξυπνο ρελέ Shelly για αυτόματο άναμμα στο ηλιοβασίλεμα, κατά την άφιξη (welcome home) ή όταν χτυπάει το UniFi Doorbell.'
+    details: 'Αναμονή γραμμής φωτισμού 230V στην οροφή του στεγάστρου της κύριας εξώπορτας για χωνευτά σποτάκια LED IP65 (downlights) ή επίτοιχη απλίκα Up/Down και προβολέα πρόσοψης. Ελεγχόμενο από έξυπνο relay Shelly για αυτόματο άναμμα στο ηλιοβασίλεμα, κατά την άφιξη (welcome home) ή όταν χτυπάει το UniFi Doorbell.'
   },
   { 
     id: 'eis_camera', 
@@ -335,7 +360,7 @@ export const PROVISIONS: Provision[] = [
     wall: 'Καγκελόπορτα', 
     type: '📡 Έξυπνο Σπίτι', 
     completed: false,
-    details: 'Αναμονή για έξυπνο ρελέ (π.χ. Shelly Plus 1 Dry Contact) για παλμό εντολής ανοίγματος της ηλεκτρικής κλειδαριάς ή του αυτοματισμού της εξωτερικής πόρτας.'
+    details: 'Αναμονή για έξυπνο relay (π.χ. Shelly Plus 1 Dry Contact) για παλμό εντολής ανοίγματος της ηλεκτρικής κλειδαριάς ή του αυτοματισμού της εξωτερικής πόρτας.'
   },
   { 
     id: 'kyp_gate_smart_lock', 
@@ -344,7 +369,7 @@ export const PROVISIONS: Provision[] = [
     wall: 'Καγκελόπορτα / Είσοδος Αυλής', 
     type: '🔒 Ασφάλεια', 
     completed: false,
-    details: 'Αναμονή ενσύρματης τροφοδοσίας 12V DC/AC (καλώδιο 2x1.5mm² ή καλώδιο συναγερμού σε σπιράλ) από το Server Cabinet / τροφοδοτικό προς την καγκελόπορτα για ηλεκτρική κλειδαριά / κυπρί βαρέως τύπου (Fail-Secure IP65). Διασύνδεση με dry-contact ρελέ (Shelly Plus 1 ή Konnected) και UniFi G4 Doorbell Pro για απομακρυσμένο άνοιγμα μέσω Home Assistant, NFC tag, και έξυπνου κουδουνιού.'
+    details: 'Αναμονή ενσύρματης τροφοδοσίας 12V DC/AC (καλώδιο 2x1.5mm² ή καλώδιο συναγερμού σε σπιράλ) από το Server Cabinet / τροφοδοτικό προς την καγκελόπορτα για ηλεκτρική κλειδαριά / κυπρί βαρέως τύπου (Fail-Secure IP65). Διασύνδεση με dry-contact relay (Shelly Plus 1 ή Konnected) και UniFi G4 Doorbell Pro για απομακρυσμένο άνοιγμα μέσω Home Assistant, NFC tag, και έξυπνου κουδουνιού.'
   },
   { 
     id: 'kyp_gate_light', 
@@ -353,7 +378,7 @@ export const PROVISIONS: Provision[] = [
     wall: 'Κολώνα Καγκελόπορτας / Είσοδος', 
     type: '💡 Φώτα', 
     completed: false,
-    details: 'Υπόγεια παροχή ρεύματος 230V (καλώδιο 3x1.5mm² NYY σε προστατευτικό σωλήνα) από τον πίνακα/υποπίνακα μέχρι την κολόνα της εξωτερικής καγκελόπορτας. Τροφοδοτεί φωτισμό κολώνας/αριθμού σπιτιού ή κατευθυντικό προβολέα LED ασφαλείας για το driveway. Ελεγχόμενο από έξυπνο ρελέ Shelly με αυτοματισμούς νυχτερινού καλωσορίσματος και συναγερμού.'
+    details: 'Υπόγεια παροχή ρεύματος 230V (καλώδιο 3x1.5mm² NYY σε προστατευτικό σωλήνα) από τον πίνακα/υποπίνακα μέχρι την κολόνα της εξωτερικής καγκελόπορτας. Τροφοδοτεί φωτισμό κολώνας/αριθμού σπιτιού ή κατευθυντικό προβολέα LED ασφαλείας για το driveway. Ελεγχόμενο από έξυπνο relay Shelly με αυτοματισμούς νυχτερινού καλωσορίσματος και συναγερμού.'
   },
   { id: 'kyp_5', name: 'Κάμερες Παρακολούθησης PoE (Περιμετρικά)', room: '🌳 Κήπος / Πισίνα', wall: 'Περίφραξη', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kyp_6', name: 'Εξωτερική Σειρήνα Συναγερμού', room: '🌳 Κήπος / Πισίνα', wall: 'Πρόσοψη', type: '🔒 Ασφάλεια', completed: false },
@@ -361,12 +386,12 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_8', name: 'Φωτισμός Περιμετρικά & Ανθώνας', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '💡 Φώτα', completed: false },
   { 
     id: 'kyp_boundary_wall_lights', 
-    name: 'Φωτισμός Περιτειχίσματος / Μάντρας (Επίτοιχες Απλίκες Up-Down Περιμετρικά)', 
+    name: 'Φωτισμός Περιτείχισματος / Περίφραξης (Επίτοιχες Απλίκες Up-Down Περιμετρικά)', 
     room: '🌳 Κήπος / Πισίνα', 
-    wall: 'Περιτείχισμα / Μάντρα', 
+    wall: 'Περίφραξη / Περιτείχισμα', 
     type: '💡 Φώτα', 
     completed: false, 
-    details: 'Αναμονές καλωδίωσης 230V σε επιλεγμένα σημεία του περιμετρικού τοίχου (περιτείχισμα/μάντρα οικοπέδου) για επίτοιχα αρχιτεκτονικά φωτιστικά / απλίκες Up-Down. Ελεγχόμενο από έξυπνο ρελέ Shelly με αστρονομικό χρονοδιακόπτη (sunset/sunrise).' 
+    details: 'Αναμονές καλωδίωσης 230V σε επιλεγμένα σημεία της περίφραξης / περιτειχίσματος (περίφραξη οικοπέδου) για επίτοιχα αρχιτεκτονικά φωτιστικά / απλίκες Up-Down. Ελεγχόμενο από έξυπνο relay Shelly με αστρονομικό χρονοδιακόπτη (sunset/sunrise).' 
   },
   { 
     id: 'kyp_floodlight_garden', 
@@ -458,7 +483,7 @@ export const PROVISIONS: Provision[] = [
     room: '⚙️ Μηχανοστάσιο', 
     wall: 'Υδραυλικά / Ηλεκτρολογικός Πίνακας', 
     type: '📡 Έξυπνο Σπίτι', 
-    details: 'Απευθείας σωλήνωση από τον κεντρικό ηλεκτρολογικό πίνακα προς το ηλιακό σύστημα/boiler. Ο θερμολουτήρας (boiler) πρέπει υποχρεωτικά να διαθέτει βάραθρο (pocket) για τον αισθητήρα θερμοκρασίας (probe DS18B20). Το κόκκινο Shelly Plus 1 (ή Shelly Pro) μπαίνει ΣΤΟΝ ΠΙΝΑΚΑ και οπλίζει ρελέ ισχύος (contactor 20A/25A) για την αντίσταση 3000W.',
+    details: 'Απευθείας σωλήνωση από τον κεντρικό ηλεκτρολογικό πίνακα προς το ηλιακό σύστημα/boiler. Ο θερμολουτήρας (boiler) πρέπει υποχρεωτικά να διαθέτει βάραθρο (pocket) για τον αισθητήρα θερμοκρασίας (probe DS18B20). Το κόκκινο Shelly Plus 1 (ή Shelly Pro) μπαίνει ΣΤΟΝ ΠΙΝΑΚΑ και οπλίζει relay ισχύος (contactor 20A/25A) για την αντίσταση 3000W.',
     completed: false 
   },
   { id: 'mix_8', name: 'Σύστημα Ανακυκλοφορίας Ζεστού Νερού', room: '⚙️ Μηχανοστάσιο', wall: 'Υδραυλικά', type: '🔧 Συντήρηση', completed: false },
@@ -516,7 +541,7 @@ export const PROVISIONS: Provision[] = [
     wall: 'Είσοδος Αποθήκης', 
     type: '📡 Έξυπνο Σπίτι', 
     completed: false, 
-    details: 'Διακόπτης με ουδέτερο και βαθύ κουτί για έξυπνο ρελέ Shelly Plus 1.' 
+    details: 'Διακόπτης με ουδέτερο και βαθύ κουτί για έξυπνο relay Shelly Plus 1.' 
   },
   { 
     id: 'apo_3', 
