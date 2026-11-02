@@ -11,13 +11,15 @@ import {
   Briefcase, 
   ExternalLink,
   Download,
-  X
+  X,
+  CheckSquare
 } from 'lucide-react';
 import ProcurementView from './ProcurementView';
 import GeneralRulesView from './GeneralRulesView';
 import HousePlanView from './HousePlanView';
 import OffersView from './OffersView';
 import ProvisionsView from './ProvisionsView';
+import ActionsAndNotesView from './ActionsAndNotesView';
 import AdminConsoleView from './AdminConsoleView';
 import { useSqlite } from './services/sqliteDb';
 import { SqliteToolbar } from './components/SqliteToolbar';
@@ -54,7 +56,7 @@ export default function App() {
   } = useSqlite();
 
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin'>(() => {
+  const [viewMode, setViewMode] = useState<'grid' | 'plan' | 'buy' | 'rules' | 'offers' | 'admin' | 'actions'>(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
       if (hostname.startsWith('admin.') || hostname === 'admin.house.lefk.dev') {
@@ -71,6 +73,9 @@ export default function App() {
           return 'grid';
         }
         return 'admin';
+      }
+      if (params.get('view') === 'actions' || window.location.hash === '#/actions') {
+        return 'actions';
       }
     }
     return 'grid';
@@ -233,7 +238,7 @@ export default function App() {
 
             {/* Full Width Navigation Menu */}
             <nav className="w-full">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-2 w-full p-1 sm:p-1.5 bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300/80 dark:border-neutral-800 rounded-2xl shadow-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-2 w-full p-1 sm:p-1.5 bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300/80 dark:border-neutral-800 rounded-2xl shadow-xs">
                 <button 
                   onClick={() => setViewMode('grid')}
                   className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
@@ -277,6 +282,17 @@ export default function App() {
                 >
                   <FileText size={16} />
                   <span>Γενικές Οδηγίες</span>
+                </button>
+                <button 
+                  onClick={() => setViewMode('actions')}
+                  className={`flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                    viewMode === 'actions' 
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-white dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                  }`}
+                >
+                  <CheckSquare size={16} />
+                  <span>Ενέργειες & Reminders</span>
                 </button>
                 <button 
                   onClick={() => setViewMode('offers')}
@@ -329,6 +345,8 @@ export default function App() {
           />
         ) : viewMode === 'offers' ? (
           <OffersView isAdmin={isAdmin} />
+        ) : viewMode === 'actions' ? (
+          <ActionsAndNotesView isAdmin={isAdmin} />
         ) : (
           <ProvisionsView
             provisions={provisions}
