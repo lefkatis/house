@@ -368,6 +368,40 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     notes: 'Συνδυασμός αρχιτεκτονικού φωτισμού καλωσορίσματος και ασφάλειας. Αυτόματο άναμμα σε κίνηση, νυχτερινή άφιξη ή πάτημα κουδουνιού.',
     purchased: false
   },
+  {
+    id: 'buy_indoor_foyer_camera',
+    name: 'Εσωτερική Κάμερα Foyer PoE (UniFi Protect / Privacy Shutter)',
+    category: '🔒 Συναγερμός & Ασφάλεια',
+    brand: 'Ubiquiti UniFi / Aqara',
+    model: 'UniFi Protect G5 Dome PoE / AI Theta ή Κάμερα με Mechanical Shutter',
+    link: undefined,
+    estimatedPriceEur: 140,
+    priceRange: '€110 - €190',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🚪 Χώρος Εισόδου'],
+    isTask: true,
+    taskDescription: 'Επιλογή εσωτερικής κάμερας PoE για τον χώρο εισόδου (στραμμένη αποκλειστικά στην εξώπορτα) για οπτική επιβεβαίωση συναγερμού (visual verification). Διασύνδεση με UniFi Protect & Home Assistant για αυτόματη διακοπή PoE (ή μηχανικό κλείστρο) όσο η οικογένεια είναι στο σπίτι.',
+    notes: 'Πλήρης προστασία ιδιωτικότητας: ανάβει και καταγράφει ΜΟΝΟ όταν το σπίτι οπλίζεται (Away mode) ή σε συναγερμό.',
+    purchased: false
+  },
+  {
+    id: 'buy_smart_irrigation_system',
+    name: 'Ηλεκτροβαλβίδες 24V AC & Έξυπνος Ελεγκτής Ποτίσματος (OpenSprinkler / Hunter)',
+    category: '🔧 HVAC & Μηχανοστάσιο',
+    brand: 'Hunter / Rain Bird / OpenSprinkler',
+    model: 'Hunter PGV 1" 24V AC Valves (4-6 ζώνες) + OpenSprinkler LAN/Wi-Fi Controller',
+    link: 'https://opensprinkler.com/',
+    estimatedPriceEur: 260,
+    priceRange: '€200 - €340',
+    quantity: 1,
+    unit: 'σετ',
+    rooms: ['🌳 Κήπος / Πισίνα', '⚙️ Μηχανοστάσιο'],
+    isTask: true,
+    taskDescription: 'Επιλογή συλλέκτη με 4-6 ηλεκτροβαλβίδες 24V AC για υπόγειο φρεάτιο κήπου και έξυπνου ελεγκτή ποτίσματος OpenSprinkler ή Shelly Pro relay board στο μηχανοστάσιο. Διασύνδεση με Home Assistant για αυτόματο skip λόγω βροχής, προσαρμογή διάρκειας ανά εποχή και interlock με την αντλία γεώτρησης.',
+    notes: 'Υπόγειο πολυπολικό καλώδιο 7-core / 9-core direct burial από το μηχανοστάσιο στο φρεάτιο.',
+    purchased: false
+  },
 
   // --- 🪟 Σκίαση & Αυτοματισμός ---
   {

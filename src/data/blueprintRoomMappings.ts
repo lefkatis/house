@@ -253,6 +253,7 @@ export const DEFAULT_PROVISION_PINS: DefaultProvisionPin[] = [
   { provisionId: 'eis_water_meter', xPercent: 31.5, yPercent: 59.5 },
   { provisionId: 'eis_3', xPercent: 31.0, yPercent: 60.5 },
   { provisionId: 'eis_porch_light', xPercent: 29.5, yPercent: 59.0 },
+  { provisionId: 'eis_camera', xPercent: 32.0, yPercent: 61.5 },
 
   // Pantry
   { provisionId: 'pan_contact', xPercent: 29.0, yPercent: 26.5 },
@@ -278,5 +279,6 @@ export const DEFAULT_PROVISION_PINS: DefaultProvisionPin[] = [
   { provisionId: 'kyp_gate_smart_lock', xPercent: 19.5, yPercent: 22.0 },
   { provisionId: 'kyp_3', xPercent: 19.0, yPercent: 21.0 },
   { provisionId: 'kyp_4', xPercent: 20.0, yPercent: 21.5 },
-  { provisionId: 'kyp_gate_light', xPercent: 18.5, yPercent: 21.5 }
+  { provisionId: 'kyp_gate_light', xPercent: 18.5, yPercent: 21.5 },
+  { provisionId: 'kyp_irrigation_valves', xPercent: 17.0, yPercent: 23.5 }
 ];
