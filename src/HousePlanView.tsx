@@ -89,7 +89,10 @@ export default function HousePlanView({
     try {
       const saved = localStorage.getItem(PINS_STORAGE_KEY) || localStorage.getItem(LEGACY_PINS_STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed: DefaultProvisionPin[] = JSON.parse(saved);
+        const existingIds = new Set(parsed.map((p: DefaultProvisionPin) => p.provisionId));
+        const missingDefaults = DEFAULT_PROVISION_PINS.filter(dp => !existingIds.has(dp.provisionId));
+        return missingDefaults.length > 0 ? [...parsed, ...missingDefaults] : parsed;
       }
     } catch (e) {
       console.error('Failed to load saved pins', e);

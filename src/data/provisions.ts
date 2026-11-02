@@ -261,6 +261,15 @@ export const PROVISIONS: Provision[] = [
   },
   { id: 'eis_3', name: 'Πληκτρολόγιο Συναγερμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '🔒 Ασφάλεια', completed: false },
   { id: 'eis_4', name: 'Διακόπτες Φωτισμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'eis_water_meter', 
+    name: 'Μέτρηση Κατανάλωσης Νερού (Water Consumption / Smart Water Meter)', 
+    room: '🚪 Χώρος Εισόδου', 
+    wall: 'Κεντρική Παροχή Νερού (Είσοδος / POE)', 
+    type: '🚰 Υδραυλικά', 
+    completed: false,
+    details: 'Αναμονή για έξυπνο μετρητή κατανάλωσης νερού (Smart Water Meter / Pulse Flow Meter) και ηλεκτροβάνα διακοπής (Smart Shut-off Valve) στην κεντρική είσοδο παροχής νερού (Point of Entry - POE). Περιλαμβάνει: 1) Υδραυλική αναμονή (bypass σύνδεσης υδρομετρητή 3/4" ή 1"), 2) Παροχή ρεύματος (πρίζα 230V ή 12V/24V) για την ηλεκτροβάνα και τον πομπό, 3) Καλωδίωση σήματος (Cat6a / 2-core καλώδιο παλμών) προς τον πίνακα / Server Rack για live μέτρηση κατανάλωσης (λίτρα/m³) στο Home Assistant / Shelly και αυτόματη αποκοπή σε περίπτωση διαρροής.'
+  },
 
   // --- Βεράντα / BBQ ---
   { id: 'bbq_1', name: 'BBQ Area: Παροχές Ρεύματος & Νερού & Αποχέτευση', room: '🪑 Βεράντα / BBQ', wall: 'Ψησταριά', type: '🚰 Υδραυλικά', completed: false },

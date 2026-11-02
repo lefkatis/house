@@ -356,6 +356,23 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     purchased: false
   },
   {
+    id: 'buy_smart_water_meter',
+    name: 'Έξυπνος Μετρητής Κατανάλωσης Νερού & Ηλεκτροβάνα (Smart Water Meter / POE)',
+    category: '🔧 HVAC & Μηχανοστάσιο',
+    brand: 'Shelly / B-Meters / Grohe',
+    model: 'Smart Ultrasonic / Pulse Water Meter + Motorized Ball Valve 230V/24V (Home Assistant / Shelly Integration)',
+    link: 'https://www.shelly.com',
+    estimatedPriceEur: 180,
+    priceRange: '€140 - €260',
+    quantity: 1,
+    unit: 'σετ',
+    rooms: ['🚪 Χώρος Εισόδου', '⚙️ Μηχανοστάσιο'],
+    isTask: true,
+    taskDescription: 'Εγκατάσταση έξυπνου υδρομετρητή (π.χ. B-Meters με pulse output ή υπερήχων) συνδεδεμένου σε Shelly Plus 1 / Shelly Pro στην κεντρική είσοδο παροχής νερού (Point of Entry) και μηχανοκίνητης ηλεκτροβάνας 230V/24V. Παρέχει συνεχή καταγραφή της κατανάλωσης νερού σε m³ και άμεση αποκοπή σε περίπτωση διαρροής.',
+    notes: 'Πλήρης εποπτεία κατανάλωσης νερού (Point of Entry). Διασύνδεση με Home Assistant για real-time στατιστικά κατανάλωσης, έλεγχο διαρροών και αυτόματο κλείσιμο παροχής όταν οπλίζει ο συναγερμός (away mode).',
+    purchased: false
+  },
+  {
     id: 'buy_drinking_water_veluda',
     name: 'Υποπάγκιο Σύστημα Πόσιμου Νερού & Chiller (Ιταλικό Blupura / Veluda)',
     category: '🔧 HVAC & Μηχανοστάσιο',

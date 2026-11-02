@@ -250,6 +250,7 @@ export const DEFAULT_PROVISION_PINS: DefaultProvisionPin[] = [
 
   // Χώρος Εισόδου
   { provisionId: 'eis_contact', xPercent: 30.0, yPercent: 60.0 },
+  { provisionId: 'eis_water_meter', xPercent: 31.5, yPercent: 59.5 },
 
   // Pantry
   { provisionId: 'pan_contact', xPercent: 29.0, yPercent: 26.5 },
