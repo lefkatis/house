@@ -76,6 +76,7 @@ export default function ProvisionsView({
   const [selectedRooms, setSelectedRooms] = useState<Set<string>>(new Set(ROOMS));
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(TYPES));
   const [onlyWithNotes, setOnlyWithNotes] = useState<boolean>(false);
+  const [showMoreStatusFilters, setShowMoreStatusFilters] = useState<boolean>(false);
   const [showFiltersDrawer, setShowFiltersDrawer] = useState<boolean>(() => {
     const saved = localStorage.getItem('house_provisions_show_filters');
     if (saved !== null) {
@@ -116,7 +117,6 @@ export default function ProvisionsView({
   const totalCount = provisions.length;
   const completedCount = useMemo(() => provisions.filter(p => p.completed).length, [provisions]);
   const tbdCount = useMemo(() => provisions.filter(p => p.pendingReview).length, [provisions]);
-  const completionPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   // Toggle Filters
   const toggleRoom = (room: string) => {
@@ -288,50 +288,6 @@ export default function ProvisionsView({
   return (
     <div className="flex flex-col gap-3 h-full">
       
-      {/* Top Header & Summary Widget */}
-      <div className="bg-white/80 dark:bg-neutral-900/60 backdrop-blur-md border border-neutral-300 dark:border-neutral-800 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-base sm:text-lg font-extrabold text-neutral-900 dark:text-white leading-tight">
-              Λίστα & Διαχείριση Παροχών
-            </h2>
-            <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40">
-              {filteredProvisions.length} από {totalCount}
-            </span>
-          </div>
-          <p className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            Προβολή, ταξινόμηση και έλεγχος όλων των ηλεκτρολογικών, μηχανολογικών και smart home παροχών.
-          </p>
-        </div>
-
-        {/* Progress Bar & Quick Stats */}
-        <div className="flex items-center gap-3 bg-neutral-100 dark:bg-neutral-950/60 p-2 sm:px-3 sm:py-2 rounded-xl border border-neutral-200 dark:border-neutral-800 self-stretch md:self-auto justify-between md:justify-end">
-          <div className="flex items-center gap-2">
-            <div className="w-24 sm:w-32 bg-neutral-200 dark:bg-neutral-800 h-2 rounded-full overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-emerald-500 to-cyan-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${completionPercent}%` }}
-              />
-            </div>
-            <div className="text-right">
-              <div className="text-xs font-black text-neutral-900 dark:text-neutral-100 leading-none">
-                {completedCount}/{totalCount}
-              </div>
-              <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold leading-none mt-0.5">
-                {completionPercent}% έτοιμο
-              </div>
-            </div>
-          </div>
-
-          {tbdCount > 0 && (
-            <div className="flex items-center gap-1 px-2 py-1 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800/60 rounded-lg text-xs font-bold">
-              <AlertTriangle size={13} />
-              <span>{tbdCount} TBD</span>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* Main Interactive Toolbar */}
       <div className="bg-white/90 dark:bg-neutral-900/70 backdrop-blur-md border border-neutral-300 dark:border-neutral-800 rounded-2xl p-3 shadow-sm flex flex-col gap-2.5">
         
@@ -467,11 +423,14 @@ export default function ProvisionsView({
         {/* Row 2: Status Filter Tabs & Quick Action Badges */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-neutral-200 dark:border-neutral-800/80">
           
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1.5">
             <button
-              onClick={() => setStatusFilter('all')}
+              onClick={() => {
+                setStatusFilter('all');
+                setOnlyWithNotes(false);
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
-                statusFilter === 'all'
+                statusFilter === 'all' && !onlyWithNotes
                   ? 'bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
                   : 'bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
@@ -479,51 +438,49 @@ export default function ProvisionsView({
               Όλες ({totalCount})
             </button>
 
+            {/* Expandable Menu Toggle for More Filters */}
             <button
-              onClick={() => setStatusFilter('incomplete')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
-                statusFilter === 'incomplete'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400'
+              onClick={() => setShowMoreStatusFilters(!showMoreStatusFilters)}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                showMoreStatusFilters || statusFilter !== 'all' || onlyWithNotes
+                  ? 'bg-indigo-50 dark:bg-indigo-950/70 border-indigo-400 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 font-bold shadow-sm'
+                  : 'bg-neutral-100 dark:bg-neutral-800/60 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900'
               }`}
             >
-              Εκκρεμείς ({totalCount - completedCount})
+              <SlidersHorizontal size={12} />
+              <span>Περισσότερα Φίλτρα</span>
+              {(statusFilter !== 'all' || onlyWithNotes) && (
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+              )}
+              <ChevronDown size={12} className={`transition-transform duration-200 ${showMoreStatusFilters ? 'rotate-180' : ''}`} />
             </button>
 
-            <button
-              onClick={() => setStatusFilter('completed')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
-                statusFilter === 'completed'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400'
-              }`}
-            >
-              Ολοκληρωμένες ({completedCount})
-            </button>
-
-            <button
-              onClick={() => setStatusFilter('tbd')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${
-                statusFilter === 'tbd'
-                  ? 'bg-amber-600 text-white shadow-sm'
-                  : 'bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-amber-600 dark:hover:text-amber-400'
-              }`}
-            >
-              <AlertTriangle size={11} />
-              <span>TBD ({tbdCount})</span>
-            </button>
-
-            <button
-              onClick={() => setOnlyWithNotes(!onlyWithNotes)}
-              className={`px-2 py-1 rounded-lg text-xs font-medium transition-all border ${
-                onlyWithNotes
-                  ? 'bg-cyan-100 dark:bg-cyan-950/80 border-cyan-400 text-cyan-800 dark:text-cyan-300 font-bold'
-                  : 'bg-neutral-100 dark:bg-neutral-800/40 border-neutral-300 dark:border-neutral-700 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-              }`}
-              title="Φιλτράρισμα παροχών με τεχνικές σημειώσεις/ύψη"
-            >
-              Με Σημειώσεις
-            </button>
+            {/* Active filter badges when a sub-filter is applied */}
+            {statusFilter === 'incomplete' && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs font-bold border border-indigo-200 dark:border-indigo-800">
+                Εκκρεμείς ({totalCount - completedCount})
+                <button onClick={() => setStatusFilter('all')} className="hover:opacity-70 ml-0.5">✕</button>
+              </span>
+            )}
+            {statusFilter === 'completed' && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
+                Ολοκληρωμένες ({completedCount})
+                <button onClick={() => setStatusFilter('all')} className="hover:opacity-70 ml-0.5">✕</button>
+              </span>
+            )}
+            {statusFilter === 'tbd' && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-200 dark:border-amber-800">
+                <AlertTriangle size={11} />
+                TBD ({tbdCount})
+                <button onClick={() => setStatusFilter('all')} className="hover:opacity-70 ml-0.5">✕</button>
+              </span>
+            )}
+            {onlyWithNotes && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-200 dark:border-cyan-800">
+                Με Σημειώσεις
+                <button onClick={() => setOnlyWithNotes(false)} className="hover:opacity-70 ml-0.5">✕</button>
+              </span>
+            )}
           </div>
 
           {/* Quick Bulk Actions */}
@@ -558,6 +515,61 @@ export default function ProvisionsView({
             )}
           </div>
         </div>
+
+        {/* Expandable Menu for More Filters (Εκκρεμείς, Ολοκληρωμένες, TBD, Με Σημειώσεις) */}
+        {showMoreStatusFilters && (
+          <div className="pt-2 pb-1 border-t border-neutral-200 dark:border-neutral-800/80 flex flex-wrap items-center gap-1.5 animate-fadeIn bg-neutral-50/80 dark:bg-neutral-950/40 p-2 rounded-xl">
+            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider mr-1">
+              Κατάσταση & Σημειώσεις:
+            </span>
+
+            <button
+              onClick={() => setStatusFilter(statusFilter === 'incomplete' ? 'all' : 'incomplete')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                statusFilter === 'incomplete'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 border border-neutral-200 dark:border-neutral-700'
+              }`}
+            >
+              Εκκρεμείς ({totalCount - completedCount})
+            </button>
+
+            <button
+              onClick={() => setStatusFilter(statusFilter === 'completed' ? 'all' : 'completed')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                statusFilter === 'completed'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 border border-neutral-200 dark:border-neutral-700'
+              }`}
+            >
+              Ολοκληρωμένες ({completedCount})
+            </button>
+
+            <button
+              onClick={() => setStatusFilter(statusFilter === 'tbd' ? 'all' : 'tbd')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${
+                statusFilter === 'tbd'
+                  ? 'bg-amber-600 text-white shadow-sm'
+                  : 'bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-amber-600 dark:hover:text-amber-400 border border-neutral-200 dark:border-neutral-700'
+              }`}
+            >
+              <AlertTriangle size={11} />
+              <span>TBD ({tbdCount})</span>
+            </button>
+
+            <button
+              onClick={() => setOnlyWithNotes(!onlyWithNotes)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                onlyWithNotes
+                  ? 'bg-cyan-100 dark:bg-cyan-950/80 border-cyan-400 text-cyan-800 dark:text-cyan-300 font-bold'
+                  : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900'
+              }`}
+              title="Φιλτράρισμα παροχών με τεχνικές σημειώσεις/ύψη"
+            >
+              Με Σημειώσεις
+            </button>
+          </div>
+        )}
 
         {/* Collapsible Filter Panel (Rooms & Categories) */}
         {showFiltersDrawer && (

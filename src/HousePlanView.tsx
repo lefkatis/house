@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, 
   MapPin, 
@@ -7,7 +6,6 @@ import {
   RefreshCw, 
   Filter, 
   AlertTriangle,
-  LayoutDashboard,
   CheckCircle2,
   Circle,
   Pencil,
@@ -23,39 +21,6 @@ import {
   DefaultProvisionPin 
 } from './data/blueprintRoomMappings';
 import { getAssetUrl } from './utils/assets';
-
-type PlanTab = 'schematic' | 'ground';
-
-const SCHEMATIC_ROOMS = [
-  // Top Row: Outdoor / Parking / Veranda
-  { id: '🚗 Parking', name: '🚗 Parking', x: 20, y: 20, w: 220, h: 140, color: 'emerald' },
-  { id: '🪑 Βεράντα / BBQ', name: '🪑 Βεράντα / BBQ', x: 260, y: 20, w: 320, h: 140, color: 'amber' },
-  { id: '🌳 Κήπος / Πισίνα', name: '🌳 Κήπος / Πισίνα', x: 600, y: 20, w: 380, h: 140, color: 'teal' },
-
-  // Middle Row Left & Center: Living / Kitchen / Entry / Office
-  { id: '🚪 Χώρος Εισόδου', name: '🚪 Χώρος Εισόδου', x: 20, y: 180, w: 120, h: 130, color: 'indigo' },
-  { id: '🛋️ Σαλόνι / Τραπεζαρία', name: '🛋️ Σαλόνι / Τραπεζαρία', x: 160, y: 180, w: 420, h: 220, color: 'indigo' },
-  { id: '🍳 Κουζίνα', name: '🍳 Κουζίνα', x: 600, y: 180, w: 260, h: 220, color: 'cyan' },
-  { id: '🥫 Pantry', name: '🥫 Pantry', x: 880, y: 180, w: 100, h: 100, color: 'cyan' },
-  { id: '🧺 Πλυσταριό', name: '🧺 Πλυσταριό', x: 880, y: 300, w: 100, h: 100, color: 'purple' },
-
-  // Central Corridor & Office
-  { id: '🖥️ Γραφείο', name: '🖥️ Γραφείο', x: 20, y: 330, w: 120, h: 170, color: 'blue' },
-  { id: '🛤️ Διάδρομος', name: '🛤️ Διάδρομος', x: 160, y: 420, w: 420, h: 80, color: 'slate' },
-  { id: '🚽 WC Ξένων', name: '🚽 WC Ξένων', x: 600, y: 420, w: 120, h: 80, color: 'rose' },
-  { id: '⚙️ Μηχανοστάσιο', name: '⚙️ Μηχανοστάσιο', x: 740, y: 420, w: 120, h: 80, color: 'orange' },
-  { id: '🖥️ Server Cabinet', name: '🖥️ Server Cabinet', x: 860, y: 420, w: 120, h: 80, color: 'cyan' },
-
-  // Bottom Row: Bedrooms & Bathrooms
-  { id: '🛏️ Bedroom 1', name: '🛏️ Bedroom 1', x: 20, y: 520, w: 200, h: 180, color: 'violet' },
-  { id: '🛏️ Bedroom 2', name: '🛏️ Bedroom 2', x: 240, y: 520, w: 200, h: 180, color: 'violet' },
-  { id: '🚽 WC - Main', name: '🚽 WC - Main', x: 460, y: 520, w: 120, h: 180, color: 'pink' },
-  { id: '🛏️ Master Bedroom', name: '🛏️ Master Bedroom', x: 600, y: 520, w: 260, h: 180, color: 'indigo' },
-  { id: '🚽 WC Ensuite', name: '🚽 WC Ensuite', x: 880, y: 520, w: 100, h: 180, color: 'pink' },
-
-  // Auxiliary House (Detached)
-  { id: '🏠 Βοηθητικό Σπίτι', name: '🏠 Βοηθητικό Σπίτι', x: 20, y: 720, w: 960, h: 90, color: 'sky' }
-];
 
 const PINS_STORAGE_KEY = 'house_architectural_pins_v1';
 const LEGACY_PINS_STORAGE_KEY = 'pronies_architectural_pins_v1';
@@ -76,7 +41,6 @@ export default function HousePlanView({
   onEditProvision
 }: HousePlanViewProps = {}) {
   const provisions = provisionsProp || PROVISIONS;
-  const [activeTab, setActiveTab] = useState<PlanTab>('schematic');
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [showOnlyPending, setShowOnlyPending] = useState<boolean>(false);
@@ -173,52 +137,6 @@ export default function HousePlanView({
 
   return (
     <div className="flex-1 w-full flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
-      
-      {/* Top Banner: Drawing Selector & Controls */}
-      <div className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md backdrop-blur-md flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between flex-shrink-0">
-        
-        {/* Title & Metadata */}
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold uppercase tracking-wider mb-1">
-            <Home size={12} />
-            Αρχιτεκτονικά Σχέδια & Παροχές (HOUSE 2021)
-          </div>
-          <h2 className="text-sm sm:text-base font-black text-neutral-900 dark:text-white tracking-tight flex flex-wrap items-center gap-2">
-            <span>Αρχιτεκτονική Κάτοψη & Χαρτογράφηση Δωματίων</span>
-            <span className="text-xs px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-mono font-normal">
-              A1.2 • 1:100 @ A2
-            </span>
-          </h2>
-        </div>
-
-        {/* Plan Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs">
-          <button
-            onClick={() => setActiveTab('schematic')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'schematic'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-            }`}
-          >
-            <LayoutDashboard size={13} />
-            <span>Σχηματική Κάτοψη</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('ground')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'ground'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-            }`}
-          >
-            <Home size={13} />
-            <span>Κάτοψη Ισογείου (A1.2)</span>
-          </button>
-        </div>
-
-      </div>
 
       {/* FILTER & ROOM QUICK SELECT BAR */}
       <div className="bg-neutral-100/80 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2 sm:p-2.5 flex flex-col gap-2 text-xs flex-shrink-0">
@@ -367,300 +285,8 @@ export default function HousePlanView({
 
       </div>
 
-      {/* MAIN VIEW AREA */}
-      {activeTab === 'schematic' ? (
-        /* INTERACTIVE SVG SCHEMATIC FLOOR PLAN (HOUSE DIVIDED WITHOUT PDF) */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-shrink-0 lg:flex-1 min-h-[340px] sm:min-h-[480px] lg:min-h-[600px]">
-          
-          {/* Left/Center Column: Interactive SVG Floor Plan */}
-          <div className="lg:col-span-8 xl:col-span-8 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-2.5 sm:p-3 shadow-md flex flex-col relative min-h-[300px] sm:min-h-[440px] lg:min-h-[580px]">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 flex-shrink-0 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
-                  <LayoutDashboard size={14} className="text-indigo-500" />
-                  Σχεδιάγραμμα Χώρων (HOUSE 2021)
-                </span>
-                <span className="text-[11px] text-neutral-500 font-normal">
-                  ({SCHEMATIC_ROOMS.length} δωμάτια & ζώνες)
-                </span>
-              </div>
-              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 italic">
-                Κάντε κλικ σε δωμάτιο για προβολή παροχών
-              </span>
-            </div>
+      {/* MAIN VIEW AREA: GROUND FLOOR ARCHITECTURAL BLUEPRINT */}
 
-            <div className="w-full lg:flex-1 overflow-auto bg-neutral-50 dark:bg-neutral-950/80 rounded-xl p-1.5 sm:p-2 border border-neutral-200 dark:border-neutral-800/80 flex items-center justify-center min-h-[260px] sm:min-h-[380px] lg:min-h-[500px]">
-              <svg 
-                width="100%"
-                height="100%"
-                viewBox="0 0 1000 830" 
-                className="w-full h-auto min-h-[240px] sm:min-h-[360px] max-h-[640px] block select-none"
-              >
-                {/* Background grid markings */}
-                <defs>
-                  <pattern id="schematic-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeOpacity="0.05" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="1000" height="830" fill="url(#schematic-grid)" />
-
-                {/* Rooms */}
-                {SCHEMATIC_ROOMS.map(room => {
-                  const isSelected = selectedRoom === room.id;
-                  const roomProvisions = provisions.filter(p => p.room === room.id);
-                  const pendingCount = roomProvisions.filter(p => p.pendingReview).length;
-                  const count = roomProvisions.length;
-
-                  return (
-                    <g 
-                      key={room.id}
-                      onClick={() => setSelectedRoom(isSelected ? null : room.id)}
-                      className="cursor-pointer group transition-all"
-                    >
-                      {/* Room Area */}
-                      <rect
-                        x={room.x}
-                        y={room.y}
-                        width={room.w}
-                        height={room.h}
-                        rx="8"
-                        className={`transition-all duration-200 ${
-                          isSelected
-                            ? 'fill-indigo-600/20 stroke-indigo-500 stroke-[3]'
-                            : 'fill-white dark:fill-neutral-900/80 stroke-neutral-300 dark:stroke-neutral-700/80 hover:stroke-indigo-400 hover:fill-indigo-500/10 stroke-[1.5]'
-                        }`}
-                      />
-
-                      {/* Room Label */}
-                      <text
-                        x={room.x + 12}
-                        y={room.y + 26}
-                        className={`text-xs font-bold transition-colors ${
-                          isSelected 
-                            ? 'fill-indigo-600 dark:fill-indigo-400' 
-                            : 'fill-neutral-900 dark:fill-neutral-100'
-                        }`}
-                        fontSize="13"
-                        fontWeight="700"
-                      >
-                        {room.name}
-                      </text>
-
-                      {/* Provisions Count Badge */}
-                      <g transform={`translate(${room.x + 12}, ${room.y + 36})`}>
-                        <rect 
-                          width="58" 
-                          height="18" 
-                          rx="4" 
-                          className="fill-neutral-100 dark:fill-neutral-800 stroke-neutral-300 dark:stroke-neutral-700 stroke-[0.8]"
-                        />
-                        <text 
-                          x="29" 
-                          y="13" 
-                          textAnchor="middle" 
-                          fontSize="10" 
-                          fontWeight="600"
-                          className="fill-neutral-700 dark:fill-neutral-300"
-                        >
-                          {count} παροχές
-                        </text>
-                      </g>
-
-                      {/* TBD / Pending Badge if applicable */}
-                      {pendingCount > 0 && (
-                        <g transform={`translate(${room.x + room.w - 60}, ${room.y + 12})`}>
-                          <rect 
-                            width="48" 
-                            height="18" 
-                            rx="4" 
-                            className="fill-amber-500/20 stroke-amber-500 stroke-[1]"
-                          />
-                          <text 
-                            x="24" 
-                            y="13" 
-                            textAnchor="middle" 
-                            fontSize="9" 
-                            fontWeight="800"
-                            className="fill-amber-600 dark:fill-amber-300"
-                          >
-                            ⚠️ {pendingCount} TBD
-                          </text>
-                        </g>
-                      )}
-
-                      {/* Architectural wall details for Kitchen */}
-                      {room.id === '🍳 Κουζίνα' && (
-                        <>
-                          <rect 
-                            x={room.x + 40} 
-                            y={room.y + 80} 
-                            width="140" 
-                            height="55" 
-                            rx="4" 
-                            className="fill-cyan-500/10 stroke-cyan-500/60 stroke-dasharray-[3,2] stroke-[1.5]"
-                          />
-                          <text 
-                            x={room.x + 110} 
-                            y={room.y + 112} 
-                            textAnchor="middle" 
-                            fontSize="10" 
-                            fontWeight="bold"
-                            className="fill-cyan-600 dark:fill-cyan-300"
-                          >
-                            Νησίδα (Πάγκος)
-                          </text>
-                        </>
-                      )}
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
-          </div>
-
-          {/* Right Column: Selected Room / Filtered Provisions Drawer */}
-          <div className="lg:col-span-4 xl:col-span-4 bg-white dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-3 shadow-md flex flex-col max-h-[450px] lg:max-h-none min-h-[320px] lg:min-h-[500px]">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
-              <div>
-                <h3 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <MapPin size={13} className="text-indigo-500" />
-                  {selectedRoom ? selectedRoom : 'Όλες οι Παροχές'}
-                </h3>
-                <span className="text-[10px] text-neutral-500">
-                  {filteredProvisions.length} ενεργά στοιχεία {selectedRoom ? 'στον χώρο' : 'στην κατοικία'}
-                </span>
-              </div>
-              {selectedRoom && (
-                <button
-                  onClick={() => setSelectedRoom(null)}
-                  className="text-[10px] px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 font-semibold text-neutral-600 dark:text-neutral-300 transition-colors"
-                >
-                  Προβολή Όλων
-                </button>
-              )}
-            </div>
-
-            {/* List of provisions with IEC 60617 Symbols */}
-            <div className="overflow-y-auto flex-1 space-y-2 pr-1">
-              <AnimatePresence>
-                {filteredProvisions.map(p => (
-                  <motion.div
-                    key={p.id}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className={`p-2.5 rounded-xl border transition-all text-xs ${
-                      p.completed
-                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 opacity-75'
-                        : p.pendingReview
-                        ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900/40'
-                        : 'bg-neutral-50/70 dark:bg-neutral-800/40 border-neutral-200 dark:border-neutral-700/70 hover:border-indigo-400'
-                    }`}
-                  >
-                    <div className="flex items-start gap-2.5">
-                      {/* Completion Checkbox */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isAdmin || !onToggleCompleted) return;
-                          onToggleCompleted(p.id, !p.completed);
-                        }}
-                        disabled={!isAdmin}
-                        className={`p-0.5 rounded transition-colors mt-0.5 ${
-                          !isAdmin ? 'cursor-default opacity-80' : ''
-                        } ${
-                          p.completed
-                            ? 'text-emerald-600 dark:text-emerald-400'
-                            : 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-300'
-                        }`}
-                        title={!isAdmin ? (p.completed ? 'Ολοκληρωμένο (Μόνο Προβολή)' : 'Εκκρεμεί (Μόνο Προβολή)') : (p.completed ? 'Σημειώθηκε ως ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο')}
-                      >
-                        {p.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-                      </button>
-
-                      {/* IEC 60617 Symbol */}
-                      <IECSymbol provisionName={p.name} category={p.type} size={22} />
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-1 mb-1">
-                          <div className="flex items-center flex-wrap gap-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-                              {p.room}
-                            </span>
-                            {p.wall && (
-                              <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50">
-                                {p.wall}
-                              </span>
-                            )}
-                            {p.pendingReview && (
-                              isAdmin && onTogglePending ? (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onTogglePending(p.id, false);
-                                  }}
-                                  className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1 hover:bg-amber-300 transition-colors"
-                                  title="Κλικ για αφαίρεση TBD"
-                                >
-                                  <AlertTriangle size={9} />
-                                  TBD
-                                </button>
-                              ) : (
-                                <span
-                                  className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 flex items-center gap-1"
-                                  title="Εκκρεμές (TBD) - Μόνο Προβολή"
-                                >
-                                  <AlertTriangle size={9} />
-                                  TBD
-                                </span>
-                              )
-                            )}
-                          </div>
-
-                          {/* Edit button */}
-                          {isAdmin && onEditProvision && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onEditProvision(p);
-                              }}
-                              className="p-1 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                              title="Επεξεργασία παροχής"
-                            >
-                              <Pencil size={12} />
-                            </button>
-                          )}
-                        </div>
-
-                        <h4 className={`text-xs font-bold leading-snug ${
-                          p.completed 
-                            ? 'line-through text-neutral-400 dark:text-neutral-500' 
-                            : 'text-neutral-900 dark:text-neutral-100'
-                        }`}>
-                          {p.name}
-                        </h4>
-
-                        {p.details && (
-                          <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                            {p.details}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {filteredProvisions.length === 0 && (
-                <div className="text-center py-10 text-neutral-400 text-xs">
-                  Δεν βρέθηκαν παροχές για αυτό το δωμάτιο ή φίλτρο.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        /* INTERACTIVE GROUND FLOOR PLAN (A1.2) - MAIN FEATURE */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-shrink-0 lg:flex-1 min-h-[340px] sm:min-h-[480px] lg:min-h-[600px]">
           
           {/* Central Architectural Blueprint Viewer */}
@@ -1045,7 +671,6 @@ export default function HousePlanView({
           </div>
 
         </div>
-      )}
 
     </div>
   );

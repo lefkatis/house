@@ -13,9 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
-  Shield,
-  Layers,
-  Sparkles
+  Layers
 } from 'lucide-react';
 import { ActionItem, INITIAL_ACTION_ITEMS } from './data/actionsData';
 import { RememberItem, INITIAL_REMEMBER_ITEMS } from './data/thingsToRememberData';
@@ -239,81 +237,6 @@ export default function ActionsAndNotesView({ isAdmin = false }: ActionsAndNotes
   return (
     <div className="flex-1 w-full flex flex-col gap-3 sm:gap-4 lg:overflow-y-auto lg:max-h-[85vh] pr-1">
       
-      {/* Top Banner / Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0">
-        
-        {/* Actions Card */}
-        <div 
-          onClick={() => setActiveTab('actions')}
-          className={`cursor-pointer rounded-xl p-2.5 sm:p-3 transition-all border ${
-            activeTab === 'actions'
-              ? 'bg-gradient-to-br from-indigo-500/10 via-indigo-500/5 to-transparent border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
-              : 'bg-white dark:bg-neutral-900/60 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700'
-          }`}
-        >
-          <div className="flex items-center justify-between text-indigo-600 dark:text-indigo-400 mb-1">
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Ενέργειες (Actions)</span>
-            <Zap size={15} />
-          </div>
-          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {stats.pendingActions} <span className="text-xs sm:text-sm font-normal text-neutral-500">εκκρεμείς</span>
-          </div>
-          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
-            {stats.completedActions} ολοκληρωμένες από {stats.totalActions} σύνολο
-          </div>
-        </div>
-
-        {/* Things to Remember Card */}
-        <div 
-          onClick={() => setActiveTab('remember')}
-          className={`cursor-pointer rounded-xl p-2.5 sm:p-3 transition-all border ${
-            activeTab === 'remember'
-              ? 'bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/50 shadow-md ring-1 ring-amber-500/30'
-              : 'bg-white dark:bg-neutral-900/60 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700'
-          }`}
-        >
-          <div className="flex items-center justify-between text-amber-600 dark:text-amber-400 mb-1">
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Υπενθυμίσεις (Remember)</span>
-            <Bookmark size={15} />
-          </div>
-          <div className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {stats.totalRemember} <span className="text-xs sm:text-sm font-normal text-neutral-500">σημεία</span>
-          </div>
-          <div className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
-            {stats.criticalRemember} κρίσιμης σημασίας
-          </div>
-        </div>
-
-        {/* Nabu Casa Quick Status */}
-        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-sm backdrop-blur-md">
-          <div className="flex items-center justify-between text-cyan-600 dark:text-cyan-400 mb-1">
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Home Assistant Cloud</span>
-            <Sparkles size={15} />
-          </div>
-          <div className="text-sm sm:text-base font-bold text-neutral-900 dark:text-white tracking-tight truncate">
-            Nabu Casa Account
-          </div>
-          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">
-            Remote Access & TTS Integration
-          </div>
-        </div>
-
-        {/* Konnected Quick Status */}
-        <div className="bg-white/80 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl p-2.5 sm:p-3 shadow-sm backdrop-blur-md">
-          <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 mb-1">
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Alarm Integration</span>
-            <Shield size={15} />
-          </div>
-          <div className="text-sm sm:text-base font-bold text-neutral-900 dark:text-white tracking-tight truncate">
-            Konnected Alarm Panel Pro
-          </div>
-          <div className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">
-            Wired Sensors & Beepers
-          </div>
-        </div>
-
-      </div>
-
       {/* Main Section Navigation Tabs & Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-1 flex-shrink-0">
         

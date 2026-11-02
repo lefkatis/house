@@ -248,7 +248,7 @@ export default function App() {
                   }`}
                 >
                   <Grid size={16} />
-                  <span>Λίστα</span>
+                  <span>Λίστα Παροχών</span>
                 </button>
                 <button 
                   onClick={() => setViewMode('plan')}
