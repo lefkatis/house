@@ -149,6 +149,23 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     notes: '4-κάναλος ελεγκτής μπουτόν σκηνών (χωρίς ρελέ φορτίου). Διαβάζει 4 πλήκτρα και στέλνει έως 16 εντολές/σενάρια (single, double, triple, long press) στο Home Assistant. Απαιτεί βαθύ κουτί 60mm και ουδέτερο.',
     purchased: false
   },
+  {
+    id: 'buy_wardrobe_led_set',
+    name: 'Σετ Ταινιών LED COB 24V & Μαγνητικοί Διακόπτες για Ντουλάπες',
+    category: '💡 Έξυπνοι Διακόπτες & Relays',
+    brand: 'Govee / Tuya / Mean Well',
+    model: '24V High-CRI COB LED Strip + Slim 24V Power Supply + Magnetic Door Switches',
+    link: undefined,
+    estimatedPriceEur: 130,
+    priceRange: '€90 - €180',
+    quantity: 1,
+    unit: 'σετ',
+    rooms: ['🛏️ Master Bedroom', '🛏️ Bedroom 1', '🛏️ Bedroom 2'],
+    isTask: true,
+    taskDescription: 'Επιλογή συνεχούς φωτισμού LED COB (χωρίς κουκκίδες) για τις εσωτερικές ράγες των ντουλαπιών σε όλα τα υπνοδωμάτια. Σύνδεση με τροφοδοτικό 24V DC και μαγνητικές επαφές πόρτας για αυτόματο άναμμα μόλις ανοίγει κάθε φύλλο ντουλάπας.',
+    notes: 'Κομψός και πρακτικός φωτισμός ντουλάπας. Θερμό λευκό 3000K.',
+    purchased: false
+  },
 
   // --- 🖥️ Κεντρικός Έλεγχος & Δίκτυο ---
   {
@@ -231,6 +248,40 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     isTask: true,
     taskDescription: 'Επιλογή επίτοιχου 19" rack 6U ή 9U με γυάλινη/διάτρητη πόρτα, ράφι για Mini PC, 1U PDU (πολύπριζο rack) και 1U Fan Tray για απαγωγή θερμότητας.',
     notes: 'Φιλοξενία Mini PC, Switch, Modem, NVR, PDU και Zigbee coordinator. Παροχή 16A.',
+    purchased: false
+  },
+  {
+    id: 'buy_rackmount_ups',
+    name: 'Rackmount UPS 19" 1000VA-1500VA (Server Rack & Συναγερμός)',
+    category: '🖥️ Κεντρικός Έλεγχος & Δίκτυο',
+    brand: 'CyberPower / APC / Eaton',
+    model: 'CyberPower OR1000ERM1U ή APC Smart-UPS 1000VA/1500VA (Line-Interactive)',
+    link: 'https://www.cyberpower.com/',
+    estimatedPriceEur: 320,
+    priceRange: '€250 - €450',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['⚙️ Μηχανοστάσιο'],
+    isTask: true,
+    taskDescription: 'Επιλογή 19" Rackmount UPS (1U ή 2U) για το κάτω μέρος του rack. Σε διακοπή ρεύματος κρατάει αδιάλειπτα online: το PoE switch (κάμερες, access points, doorbells), το Konnected alarm panel & σειρήνες, το Mini PC του Home Assistant και το failover router. Σύνδεση USB με το Home Assistant για αυτόματη ένδειξη μπαταρίας.',
+    notes: 'Εξασφαλίζει ότι αν κοπεί το ρεύμα (τυχαία ή από εισβολέα) ο συναγερμός, οι κάμερες και οι ειδοποιήσεις συνεχίζουν να λειτουργούν κανονικά.',
+    purchased: false
+  },
+  {
+    id: 'buy_lte_failover_router',
+    name: 'UniFi LTE Backup Pro (4G/5G Failover με SIM Card)',
+    category: '🖥️ Κεντρικός Έλεγχος & Δίκτυο',
+    brand: 'Ubiquiti UniFi',
+    model: 'UniFi LTE Backup Pro (U-LTE-Pro-EU)',
+    link: 'https://eu.store.ui.com/eu/en/category/all-cloud-gateways-internet-routing/products/u-lte-pro',
+    estimatedPriceEur: 210,
+    priceRange: '€180 - €260',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['⚙️ Μηχανοστάσιο'],
+    isTask: true,
+    taskDescription: 'Επιλογή συσκευής εφεδρικού internet με υποδοχή κάρτας Nano-SIM (4G/LTE) που υιοθετείται αυτόματα στο UniFi network. Σε περίπτωση διακοπής της κύριας γραμμής οπτικής ίνας (fiber outage), το δίκτυο γυρίζει αυτόματα και άμεσα σε cellular internet χωρίς να διακοπούν οι κάμερες και οι ειδοποιήσεις.',
+    notes: 'Τροφοδοτείται με PoE. Αυτόματο failover & failback χωρίς καμία διακοπή στα κρίσιμα συστήματα ασφαλείας.',
     purchased: false
   },
 

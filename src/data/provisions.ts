@@ -149,6 +149,7 @@ export const PROVISIONS: Provision[] = [
   { id: 'b1_2', name: 'Presense Sensor', room: '🛏️ Bedroom 1', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b1_3', name: 'Πρίζες & Cat6a (Γραφείο/TV)', room: '🛏️ Bedroom 1', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b1_4', name: 'Contact Sensors', room: '🛏️ Bedroom 1', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'b1_wardrobe_led', name: 'Φωτισμός Ντουλάπας (Ταινία LED & Αισθητήρας Πόρτας / Driver 24V)', room: '🛏️ Bedroom 1', wall: 'Ντουλάπα', type: '💡 Φώτα', completed: false, details: 'Αναμονή ρεύματος 230V για τροφοδοτικό 24V DC και ταινία LED COB με μαγνητικό διακόπτη/αισθητήρα πόρτας για αυτόματο φωτισμό στο άνοιγμα.' },
 
   // --- Bedroom 2 ---
   { 
@@ -164,6 +165,7 @@ export const PROVISIONS: Provision[] = [
   { id: 'b2_2', name: 'Presense Sensor', room: '🛏️ Bedroom 2', wall: 'Γωνία 1 (Ψηλά)', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'b2_3', name: 'Πρίζες & Cat6a (Γραφείο/TV)', room: '🛏️ Bedroom 2', wall: 'Τοίχος Γραφείου', type: '🔌 Πρίζες', completed: false },
   { id: 'b2_4', name: 'Contact Sensors', room: '🛏️ Bedroom 2', wall: 'Παράθυρα', type: '🔒 Ασφάλεια', completed: false },
+  { id: 'b2_wardrobe_led', name: 'Φωτισμός Ντουλάπας (Ταινία LED & Αισθητήρας Πόρτας / Driver 24V)', room: '🛏️ Bedroom 2', wall: 'Ντουλάπα', type: '💡 Φώτα', completed: false, details: 'Αναμονή ρεύματος 230V για τροφοδοτικό 24V DC και ταινία LED COB με μαγνητικό διακόπτη/αισθητήρα πόρτας για αυτόματο φωτισμό στο άνοιγμα.' },
 
   // --- Bathrooms & WC ---
   // WC - Main
@@ -303,6 +305,24 @@ export const PROVISIONS: Provision[] = [
   { id: 'bbq_3', name: 'Cinema: TV / Οθόνη - HDMI, Cat6a, Ρεύμα', room: '🪑 Βεράντα / BBQ', wall: 'Τοίχος Προβολής', type: '📡 Έξυπνο Σπίτι', completed: false },
   { id: 'bbq_4', name: 'Εξωτερικά Heaters (Οροφή) & Ceiling Fans', room: '🪑 Βεράντα / BBQ', wall: 'Οροφή', type: '🔧 Συντήρηση', completed: false },
   { id: 'bbq_5', name: 'Επιδαπέδια Πρίζα Φωτισμού (Ελιά)', room: '🪑 Βεράντα / BBQ', wall: 'Δάπεδο (Ελιά)', type: '🔌 Πρίζες', completed: false },
+  { 
+    id: 'bbq_island_power', 
+    name: 'Island BBQ: Παροχή Ρεύματος Δαπέδου (Πρίζες 13A & Φωτισμός Πάγκου)', 
+    room: '🪑 Βεράντα / BBQ', 
+    wall: 'Δάπεδο Νησίδας BBQ', 
+    type: '🔌 Πρίζες', 
+    completed: false, 
+    details: 'Υπόγεια αναμονή ρεύματος 230V στο δάπεδο στο σημείο όπου θα τοποθετηθεί το εξωτερικό island/πάγκος εργασίας μπροστά από το BBQ για στεγανές πρίζες συσκευών και φωτισμό πάγκου.' 
+  },
+  { 
+    id: 'bbq_island_plumbing', 
+    name: 'Island BBQ: Αναμονή Παροχής Νερού & Αποχέτευσης για Νεροχύτη', 
+    room: '🪑 Βεράντα / BBQ', 
+    wall: 'Δάπεδο Νησίδας BBQ', 
+    type: '🚰 Υδραυλικά', 
+    completed: false, 
+    details: 'Υπόγειες αναμονές κρύου/ζεστού νερού και αποχέτευσης στο δάπεδο της νησίδας BBQ για εξωτερικό βοηθητικό νεροχύτη.' 
+  },
 
   // --- Κήπος / Πισίνα ---
   { id: 'kyp_1', name: 'Φωτισμός Overflow Πισίνας (Ειδική καλωδίωση)', room: '🌳 Κήπος / Πισίνα', wall: 'Υπερυψωμένο Overflow', type: '💡 Φώτα', completed: false },
@@ -339,6 +359,24 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_6', name: 'Εξωτερική Σειρήνα Συναγερμού', room: '🌳 Κήπος / Πισίνα', wall: 'Πρόσοψη', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kyp_7', name: 'Αδιάβροχες Πρίζες Κήπου (π.χ. για φουσκωτό)', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '🔌 Πρίζες', completed: false },
   { id: 'kyp_8', name: 'Φωτισμός Περιμετρικά & Ανθώνας', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '💡 Φώτα', completed: false },
+  { 
+    id: 'kyp_boundary_wall_lights', 
+    name: 'Φωτισμός Περιτειχίσματος / Μάντρας (Επίτοιχες Απλίκες Up-Down Περιμετρικά)', 
+    room: '🌳 Κήπος / Πισίνα', 
+    wall: 'Περιτείχισμα / Μάντρα', 
+    type: '💡 Φώτα', 
+    completed: false, 
+    details: 'Αναμονές καλωδίωσης 230V σε επιλεγμένα σημεία του περιμετρικού τοίχου (περιτείχισμα/μάντρα οικοπέδου) για επίτοιχα αρχιτεκτονικά φωτιστικά / απλίκες Up-Down. Ελεγχόμενο από έξυπνο ρελέ Shelly με αστρονομικό χρονοδιακόπτη (sunset/sunrise).' 
+  },
+  { 
+    id: 'kyp_floodlight_garden', 
+    name: 'Προβολείς LED Ασφαλείας Κήπου & Πισίνας (Security Floodlights)', 
+    room: '🌳 Κήπος / Πισίνα', 
+    wall: 'Εξωτερικός Τοίχος / Πρόσοψη Κήπου', 
+    type: '💡 Φώτα', 
+    completed: false, 
+    details: 'Αναμονή για κατευθυντικούς προβολείς LED ασφαλείας 230V (3000K θερμό λευκό, 30W-50W) ψηλά στον εξωτερικό τοίχο προς την αυλή και την πισίνα. Ελεγχόμενοι από Shelly / Home Assistant: ανάβουν σε νυχτερινό σενάριο κήπου, ή αυτόματα στο μέγιστο αν ενεργοποιηθεί ο συναγερμός/PIR περιμέτρου.' 
+  },
   { id: 'kyp_9', name: 'Βρύσες Ποτίσματος / Λασάνι', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '🚰 Υδραυλικά', completed: false },
   { 
     id: 'kyp_irrigation_valves', 
@@ -459,5 +497,43 @@ export const PROVISIONS: Provision[] = [
     type: '🔒 Ασφάλεια', 
     completed: false,
     details: 'Μαγνητική επαφή στο κούφωμα του παραθύρου του βοηθητικού σπιτιού για περιμετρική προστασία.'
+  },
+
+  // --- Αποθήκη ---
+  { 
+    id: 'apo_1', 
+    name: 'Κεντρικός Φωτισμός Αποθήκης (Οροφή / Στεγανό LED)', 
+    room: '📦 Αποθήκη', 
+    wall: 'Οροφή', 
+    type: '💡 Φώτα', 
+    completed: false, 
+    details: 'Αναμονή παροχής ρεύματος στην οροφή για στεγανό φωτιστικό LED IP65.' 
+  },
+  { 
+    id: 'apo_2', 
+    name: 'Διακόπτης Φωτισμού Αποθήκης', 
+    room: '📦 Αποθήκη', 
+    wall: 'Είσοδος Αποθήκης', 
+    type: '📡 Έξυπνο Σπίτι', 
+    completed: false, 
+    details: 'Διακόπτης με ουδέτερο και βαθύ κουτί για έξυπνο ρελέ Shelly Plus 1.' 
+  },
+  { 
+    id: 'apo_3', 
+    name: 'Διπλές Πρίζες Ρεύματος 13A (Πάγκος Εργασίας / Φορτιστές)', 
+    room: '📦 Αποθήκη', 
+    wall: 'Τοίχος Εργαλείων', 
+    type: '🔌 Πρίζες', 
+    completed: false, 
+    details: 'Τουλάχιστον 2 διπλές πρίζες 13A για φόρτιση εργαλείων κήπου, μπαταριών και ηλεκτρικών συσκευών.' 
+  },
+  { 
+    id: 'apo_contact', 
+    name: 'Contact Sensor (Πόρτα Αποθήκης)', 
+    room: '📦 Αποθήκη', 
+    wall: 'Πόρτα Αποθήκης', 
+    type: '🔒 Ασφάλεια', 
+    completed: false, 
+    details: 'Ενσύρματη μαγνητική επαφή στην πόρτα της αποθήκης συνδεδεμένη στον συναγερμό / Konnected.' 
   },
 ];
