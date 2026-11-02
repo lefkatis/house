@@ -133,6 +133,22 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     notes: 'Εγκατάσταση σε πίνακα για ρύθμιση έντασης (dimming) κρυφών φωτισμών οροφής και πάγκων κουζίνας.',
     purchased: false
   },
+  {
+    id: 'buy_shelly_i4_bundle',
+    name: 'Shelly Plus i4 & 4-Button Wall Switch (Scene Controller)',
+    category: '💡 Έξυπνοι Διακόπτες & Relays',
+    brand: 'Shelly',
+    model: 'Shelly Plus i4 + Shelly Wall Switch 4 Button',
+    link: 'https://www.shelly.com/en/products/shelly-plus-i4',
+    estimatedPriceEur: 34,
+    priceRange: '€28 - €40',
+    quantity: 2,
+    unit: 'σετ',
+    rooms: ['🛋️ Σαλόνι / Τραπεζαρία', '🛏️ Master Bedroom', '🚪 Χώρος Εισόδου'],
+    isTask: false,
+    notes: '4-κάναλος ελεγκτής μπουτόν σκηνών (χωρίς ρελέ φορτίου). Διαβάζει 4 πλήκτρα και στέλνει έως 16 εντολές/σενάρια (single, double, triple, long press) στο Home Assistant. Απαιτεί βαθύ κουτί 60mm και ουδέτερο.',
+    purchased: false
+  },
 
   // --- 🖥️ Κεντρικός Έλεγχος & Δίκτυο ---
   {
@@ -299,6 +315,40 @@ export const PROCUREMENT_ITEMS: ProcurementItem[] = [
     isTask: true,
     taskDescription: 'Επιλογή μοντέλου ακουστικού αισθητήρα θραύσης συμβατού με τον κεντρικό πίνακα συναγερμού (CHM Security / Eyetouch). Καλωδίωση 12V ψηλά κοντά στις μεγάλες τζαμαρίες.',
     notes: 'Άμεση ανίχνευση θραύσης κρυστάλλων σε μεγάλες μπαλκονόπορτες και παράθυρα (συνεργάτες CHM Security / Eyetouch).',
+    purchased: false
+  },
+  {
+    id: 'buy_alarm_keypad',
+    name: 'Πληκτρολόγιο Συναγερμού με Ενσωματωμένο Beeper / LCD (Alarm Keypad)',
+    category: '🔒 Συναγερμός & Ασφάλεια',
+    brand: 'DSC / Paradox / CHM Security',
+    model: 'Ενσύρματο Πληκτρολόγιο LCD / Touch με ενσωματωμένο Piezo Buzzer',
+    link: undefined,
+    estimatedPriceEur: 95,
+    priceRange: '€80 - €130',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🚪 Χώρος Εισόδου'],
+    isTask: true,
+    taskDescription: 'Επιλογή ενσύρματου πληκτρολογίου συναγερμού για τον χώρο εισόδου. Το keypad διαθέτει ενσωματωμένο piezo buzzer (Επιλογή 3) για τα ηχητικά chimes και τα beep-beep καθυστέρησης εξόδου/εισόδου (exit/entry delay) κατά το arming/disarming.',
+    notes: 'Επίσημο πληκτρολόγιο εισόδου συνδεδεμένο στο bus του συναγερμού. Αξιόπιστη ηχητική ανατροφοδότηση χωρίς ανάγκη μπαταριών.',
+    purchased: false
+  },
+  {
+    id: 'buy_smart_gate_lock',
+    name: 'Ηλεκτρική Κλειδαριά / Ηλεκτρικό Κυπρί Βαρέως Τύπου Καγκελόπορτας (Smart Gate Lock)',
+    category: '🔒 Συναγερμός & Ασφάλεια',
+    brand: 'Cisa / Iseo / Dorcas / YLI',
+    model: '12V AC/DC Fail-Secure Heavy Duty Electric Rim Lock / Strike (Αδιάβροχη IP65)',
+    link: undefined,
+    estimatedPriceEur: 110,
+    priceRange: '€85 - €160',
+    quantity: 1,
+    unit: 'τεμ.',
+    rooms: ['🌳 Κήπος / Πισίνα'],
+    isTask: true,
+    taskDescription: 'Επιλογή αδιάβροχης ηλεκτρικής κλειδαριάς (rim lock) ή ηλεκτρικού κυπρίου βαρέως τύπου για εξωτερική καγκελόπορτα πεζών. Σύνδεση με τροφοδοτικό 12V DC/AC, μπουτόν εξόδου και ρελέ Shelly Plus 1 Dry Contact / Konnected / UniFi Access για απομακρυσμένο ξεκλείδωμα.',
+    notes: 'Ενσύρματη τροφοδοσία 12V DC μέσω σπιράλ καλωδίωσης από το rack/πίνακα. Ελεγχόμενο άνοιγμα μέσω UniFi G4 Doorbell Pro, Home Assistant, PIN keypad ή RFID.',
     purchased: false
   },
 

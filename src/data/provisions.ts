@@ -259,7 +259,15 @@ export const PROVISIONS: Provision[] = [
     completed: false,
     details: 'Βαρέως τύπου ενσύρματη μαγνητική επαφή (heavy duty reed switch) στην κάσα της κύριας εξώπορτας για ένδειξη ανοίγματος/κλεισίματος, αυτοματισμούς εισόδου και συναγερμό.'
   },
-  { id: 'eis_3', name: 'Πληκτρολόγιο Συναγερμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '🔒 Ασφάλεια', completed: false },
+  { 
+    id: 'eis_3', 
+    name: 'Πληκτρολόγιο Συναγερμού & Ηχητικό Beeper (Keypad Exit/Entry Buzzer)', 
+    room: '🚪 Χώρος Εισόδου', 
+    wall: 'Εσωτερικός Τοίχος', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Επίσημο ενσύρματο πληκτρολόγιο συναγερμού (LCD/Touch) με ενσωματωμένο piezo buzzer (Επιλογή 3) για ηχητική σήμανση όπλισης/αφόπλισης, beep-beep καθυστέρησης εξόδου/εισόδου (exit/entry delay) και door chimes. Καλωδίωση bus 4-core προς το κεντρικό panel συναγερμού / Konnected.'
+  },
   { id: 'eis_4', name: 'Διακόπτες Φωτισμού', room: '🚪 Χώρος Εισόδου', wall: 'Εσωτερικός Τοίχος', type: '📡 Έξυπνο Σπίτι', completed: false },
   { 
     id: 'eis_water_meter', 
@@ -282,7 +290,24 @@ export const PROVISIONS: Provision[] = [
   { id: 'kyp_1', name: 'Φωτισμός Overflow Πισίνας (Ειδική καλωδίωση)', room: '🌳 Κήπος / Πισίνα', wall: 'Υπερυψωμένο Overflow', type: '💡 Φώτα', completed: false },
   { id: 'kyp_2', name: 'Εξωτερική Τουαλέτα & Ντους Πισίνας (Υδραυλικά/Ρεύμα)', room: '🌳 Κήπος / Πισίνα', wall: 'Χώρος Ντους', type: '🚰 Υδραυλικά', completed: false },
   { id: 'kyp_3', name: 'Smart Doorbell (Καγκελόπορτα) - PoE Cat6a', room: '🌳 Κήπος / Πισίνα', wall: 'Καγκελόπορτα', type: '🔒 Ασφάλεια', completed: false },
-  { id: 'kyp_4', name: 'Πρόνοια Remote Ανοίγματος Καγκελόπορτας', room: '🌳 Κήπος / Πισίνα', wall: 'Καγκελόπορτα', type: '📡 Έξυπνο Σπίτι', completed: false },
+  { 
+    id: 'kyp_4', 
+    name: 'Πρόνοια Remote Ανοίγματος Καγκελόπορτας (Shelly Relay / Dry Contact)', 
+    room: '🌳 Κήπος / Πισίνα', 
+    wall: 'Καγκελόπορτα', 
+    type: '📡 Έξυπνο Σπίτι', 
+    completed: false,
+    details: 'Αναμονή για έξυπνο ρελέ (π.χ. Shelly Plus 1 Dry Contact) για παλμό εντολής ανοίγματος της ηλεκτρικής κλειδαριάς ή του αυτοματισμού της εξωτερικής πόρτας.'
+  },
+  { 
+    id: 'kyp_gate_smart_lock', 
+    name: 'Έξυπνη Ηλεκτρική Κλειδαριά Καγκελόπορτας (Smart Gate Lock / Κυπρί)', 
+    room: '🌳 Κήπος / Πισίνα', 
+    wall: 'Καγκελόπορτα / Είσοδος Αυλής', 
+    type: '🔒 Ασφάλεια', 
+    completed: false,
+    details: 'Αναμονή ενσύρματης τροφοδοσίας 12V DC/AC (καλώδιο 2x1.5mm² ή καλώδιο συναγερμού σε σπιράλ) από το Server Cabinet / τροφοδοτικό προς την καγκελόπορτα για ηλεκτρική κλειδαριά / κυπρί βαρέως τύπου (Fail-Secure IP65). Διασύνδεση με dry-contact ρελέ (Shelly Plus 1 ή Konnected) και UniFi G4 Doorbell Pro για απομακρυσμένο άνοιγμα μέσω Home Assistant, NFC tag, και έξυπνου κουδουνιού.'
+  },
   { id: 'kyp_5', name: 'Κάμερες Παρακολούθησης PoE (Περιμετρικά)', room: '🌳 Κήπος / Πισίνα', wall: 'Περίφραξη', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kyp_6', name: 'Εξωτερική Σειρήνα Συναγερμού', room: '🌳 Κήπος / Πισίνα', wall: 'Πρόσοψη', type: '🔒 Ασφάλεια', completed: false },
   { id: 'kyp_7', name: 'Αδιάβροχες Πρίζες Κήπου (π.χ. για φουσκωτό)', room: '🌳 Κήπος / Πισίνα', wall: 'Κήπος', type: '🔌 Πρίζες', completed: false },
